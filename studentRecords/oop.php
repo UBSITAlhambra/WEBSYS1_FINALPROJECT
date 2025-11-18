@@ -21,16 +21,15 @@ class oop_class {
         }
     }
 
-    public function insert_data($genericName, $dosage, $brand, $category, $addDate, $expDate){
-        $insert = "INSERT INTO inventory(genericName, dosage, brand, category, addDate, expDate) VALUES(:genericname, :Dosage, :Brand, :Category, :AddDate, :ExpDate)";
+    public function insert_data($name, $idNum, $department, $complaint, $visitDate){
+        $insert = "INSERT INTO studentrecord(name, idNum, department, complaint, visitDate) VALUES(:sName, :IDnum, :Department, :Complaint, :VisitDate)";
         $stmt = $this->conn->prepare($insert);
         $result = $stmt->execute([
-            ':genericname'=>$genericName,
-            ':Dosage'=>$dosage,
-            ':Brand'=>$brand,
-            ':Category'=>$category,
-            ':AddDate'=>$addDate,
-            ':ExpDate'=>$expDate
+            ':sName'=>$name,
+            ':IDnum'=>$idNum,
+            ':Department'=>$department,
+            ':Complaint'=>$complaint,
+            ':VisitDate'=>$visitDate,
         ]);
 
         if($result){
@@ -43,14 +42,14 @@ class oop_class {
     }
 
     public function show_data(){
-        $select = "SELECT * FROM inventory";
+        $select = "SELECT * FROM studentrecord";
         $stmt = $this->conn->prepare($select);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function delete_data($ID){
-        $delete = "DELETE FROM inventory WHERE itemID = :id";
+        $delete = "DELETE FROM studentrecord WHERE ID = :id";
         $stmt = $this->conn->prepare($delete);
         $result = $stmt->execute([':id' => $ID]);
 
@@ -64,25 +63,24 @@ class oop_class {
     }
 
     public function show_update_data($ID){
-        $update = "SELECT * FROM inventory WHERE itemID = :id";
+        $update = "SELECT * FROM studentrecord WHERE ID = :id";
         $stmt = $this->conn->prepare($update);
         $stmt->execute([':id' => $ID]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function update_data($genericName, $dosage, $brand, $category, $addDate, $expDate, $ID){
-        $update = "UPDATE inventory SET 
-                   genericName = :genericname, dosage = :Dosage, brand = :Brand, 
-                   category = :Category, addDate = :AddDate, expDate = :ExpDate
+    public function update_data($name, $idNum, $department, $complaint, $visitDate, $ID){
+        $update = "UPDATE studentrecord SET 
+                   name = :sName, idNum = :IDnum, department = :Department, 
+                   complaint = :Complaint, visitDate = :VisitDate
                    WHERE ID = :id";
         $stmt = $this->conn->prepare($update);
         $result = $stmt->execute([
-            ':genericname'=>$genericName,
-            ':Dosage'=>$dosage,
-            ':Brand'=>$brand,
-            ':Category'=>$category,
-            ':AddDate'=>$addDate,
-            ':ExpDate'=>$expDate,
+            ':sName'=>$name,
+            ':IDnum'=>$idNum,
+            ':Department'=>$department,
+            ':Complaint'=>$complaint,
+            ':VisitDate'=>$visitDate,
             ':id' => $ID
         ]);
 
