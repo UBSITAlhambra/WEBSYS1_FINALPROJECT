@@ -21,77 +21,100 @@ class oop_class {
         }
     }
 
-    public function insert_data($name, $idNum, $department, $complaint, $visitDate){
-        $insert = "INSERT INTO studentrecord(name, idNum, department, complaint, visitDate) VALUES(:sName, :IDnum, :Department, :Complaint, :VisitDate)";
-        $stmt = $this->conn->prepare($insert);
-        $result = $stmt->execute([
-            ':sName'=>$name,
-            ':IDnum'=>$idNum,
-            ':Department'=>$department,
-            ':Complaint'=>$complaint,
-            ':VisitDate'=>$visitDate,
+   public function register($fullname, $email, $password) { // Removed $role parameter
+        // 1. Check if email already exists
+        $check = "SELECT id FROM users WHERE email = :email";
+        $check_stmt = $this->conn->prepare($check);
+        $check_stmt->execute([':email' => $email]);
+
+        if ($check_stmt->rowCount() > 0) {
+            echo "
+                <script>
+                    alert('Email already registered!');
+                    window.location.href='register.php';
+                </script>
+            ";
+            return;
+        } 
+        
+        // 2. Hash the password
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        
+        // 3. Insert new user. Defaulting role to 'Staff'.
+        $insert_role = 'Staff'; // Enforcing the role for clinic staff
+        $insert = "INSERT INTO users (fullname, email, password, role, created_at) 
+                   VALUES(:sName, :Email, :Password, :Role, NOW())";
+        $insert_stmt = $this->conn->prepare($insert);
+        $result = $insert_stmt->execute([
+            ':sName' => $fullname,
+            ':Email' => $email,
+            ':Password' => $hashed,
+            ':Role' => $insert_role
         ]);
 
-        if($result){
+        if ($result) {
             echo "
                 <script>
-                alert('Insert Complete');
+                    alert('Staff Account Registered Successfully! You can now log in.');
+                    window.location.href='index.php';
+                </script>
+            ";
+        } else {
+            echo "
+                <script>
+                    alert('Registration Failed! Please check details.');
+                    window.location.href='register.php';
                 </script>
             ";
         }
     }
 
-    public function show_data(){
-        $select = "SELECT * FROM studentrecord";
-        $stmt = $this->conn->prepare($select);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    /**
+     * Handles staff login and session creation.
+     * Redirects all successful logins to the main dashboard.
+     * @param string $email Staff member's email.
+     * @param string $password Staff member's plain-text password.
+     */
+    public function login($email, $password) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-    public function delete_data($ID){
-        $delete = "DELETE FROM studentrecord WHERE ID = :id";
-        $stmt = $this->conn->prepare($delete);
-        $result = $stmt->execute([':id' => $ID]);
+        // 1. Retrieve user data by email
+        $query = "SELECT id, fullname, password, role FROM users WHERE email = :email";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if($result){
+        // 2. Verify password
+        if ($user && password_verify($password, $user['password'])) {
+            // Success: Set session variables
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['fullname'] = $user['fullname'];
+            $_SESSION['role'] = $user['role']; // Will be 'Staff' or 'Admin'
+
+            // 3. Redirect to the main clinic tracking dashboard
+            header("location: dashboard_staff.php"); 
+            exit;
+        } else {
+            // Failure
             echo "
                 <script>
-                    alert('ITEM DELETED');
+                    alert('Invalid Email or Password!');
+                    window.location.href='login.php';
                 </script>
             ";
         }
     }
 
-    public function show_update_data($ID){
-        $update = "SELECT * FROM studentrecord WHERE ID = :id";
-        $stmt = $this->conn->prepare($update);
-        $stmt->execute([':id' => $ID]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function update_data($name, $idNum, $department, $complaint, $visitDate, $ID){
-        $update = "UPDATE studentrecord SET 
-                   name = :sName, idNum = :IDnum, department = :Department, 
-                   complaint = :Complaint, visitDate = :VisitDate
-                   WHERE ID = :id";
-        $stmt = $this->conn->prepare($update);
-        $result = $stmt->execute([
-            ':sName'=>$name,
-            ':IDnum'=>$idNum,
-            ':Department'=>$department,
-            ':Complaint'=>$complaint,
-            ':VisitDate'=>$visitDate,
-            ':id' => $ID
-        ]);
-
-        if($result){
-            echo "
-                <script>
-                alert('Update Complete');
-                </script>
-            ";
+    public function logout() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
+        session_unset();
+        session_destroy();
+        header("location: index.php"); 
+        exit;
     }
-}
 
 
