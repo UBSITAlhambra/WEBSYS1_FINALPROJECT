@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2025 at 03:44 PM
+-- Generation Time: Nov 20, 2025 at 07:52 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -45,6 +45,30 @@ CREATE TABLE `inventory` (
 INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `brand`, `category`, `addDate`, `expDate`, `quantity`) VALUES
 (2, 'paracetamol', '12', 'tempra', 'qweq', '2025-11-02', '2025-11-17', 86);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `login`
+--
+
+CREATE TABLE `login` (
+  `ID` int(11) NOT NULL,
+  `FirstName` varchar(50) NOT NULL,
+  `MiddleName` varchar(50) DEFAULT NULL,
+  `LastName` varchar(50) NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Password` varchar(255) NOT NULL,
+  `Role` varchar(20) NOT NULL DEFAULT 'Staff',
+  `Created_At` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `login`
+--
+
+INSERT INTO `login` (`ID`, `FirstName`, `MiddleName`, `LastName`, `Email`, `Password`, `Role`, `Created_At`) VALUES
+(0, 'Regina', '', 'George', 'regina@gmail.com', '$2y$10$awryAXW69OiCHl4ElKXHYexbCIcEk8HgQ8NxbYS7xt5Lz8qB7wcem', 'Staff', '2025-11-20 18:25:29');
+
 --
 -- Indexes for dumped tables
 --
@@ -54,6 +78,13 @@ INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `brand`, `category`,
 --
 ALTER TABLE `inventory`
   ADD PRIMARY KEY (`itemID`);
+
+--
+-- Indexes for table `login`
+--
+ALTER TABLE `login`
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `Email` (`Email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
