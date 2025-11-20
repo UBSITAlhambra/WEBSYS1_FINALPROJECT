@@ -23,6 +23,7 @@ $data = $inventory->show_data();
         <th>Generic Name</th>
         <th>Dosage</th>
         <th>Brand</th>
+        <th>Quantity</th>
         <th>Category</th>
         <th>Added Date</th>
         <th>Expiry Date</th>
@@ -33,6 +34,7 @@ $data = $inventory->show_data();
             <td><?= htmlspecialchars($row['genericName']) ?></td>
             <td><?= htmlspecialchars($row['dosage']) ?></td>
             <td><?= htmlspecialchars($row['brand']) ?></td>
+            <td><?= htmlspecialchars($row['quantity']) ?></td>
             <td><?= htmlspecialchars($row['category']) ?></td>
             <td><?= htmlspecialchars($row['addDate']) ?></td>
             <td><?= htmlspecialchars($row['expDate']) ?></td>

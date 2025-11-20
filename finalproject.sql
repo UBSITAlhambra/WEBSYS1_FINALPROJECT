@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2025 at 01:19 PM
+-- Generation Time: Nov 20, 2025 at 03:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -34,15 +34,16 @@ CREATE TABLE `inventory` (
   `brand` varchar(32) NOT NULL,
   `category` varchar(32) NOT NULL,
   `addDate` date NOT NULL,
-  `expDate` date NOT NULL
+  `expDate` date NOT NULL,
+  `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `brand`, `category`, `addDate`, `expDate`) VALUES
-(2, 'paracetamol', '12', 'tempra', 'qweq', '2025-11-02', '2025-11-17');
+INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `brand`, `category`, `addDate`, `expDate`, `quantity`) VALUES
+(2, 'paracetamol', '12', 'tempra', 'qweq', '2025-11-02', '2025-11-17', 86);
 
 --
 -- Indexes for dumped tables

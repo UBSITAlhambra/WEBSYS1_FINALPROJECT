@@ -21,8 +21,8 @@ class oop_class {
         }
     }
 
-    public function insert_data($genericName, $dosage, $brand, $category, $addDate, $expDate){
-        $insert = "INSERT INTO inventory(genericName, dosage, brand, category, addDate, expDate) VALUES(:genericname, :Dosage, :Brand, :Category, :AddDate, :ExpDate)";
+    public function insert_data($genericName, $dosage, $brand, $category, $quantity, $addDate, $expDate){
+        $insert = "INSERT INTO inventory(genericName, dosage, brand, category, addDate, expDate, quantity) VALUES(:genericname, :Dosage, :Brand, :Category, :AddDate, :ExpDate, :Quantity)";
         $stmt = $this->conn->prepare($insert);
         $result = $stmt->execute([
             ':genericname'=>$genericName,
@@ -30,7 +30,8 @@ class oop_class {
             ':Brand'=>$brand,
             ':Category'=>$category,
             ':AddDate'=>$addDate,
-            ':ExpDate'=>$expDate
+            ':ExpDate'=>$expDate,
+            ':Quantity'=>$quantity,
         ]);
 
         if($result){
@@ -70,10 +71,10 @@ class oop_class {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function update_data($genericName, $dosage, $brand, $category, $addDate, $expDate, $ID){
+    public function update_data($genericName, $dosage, $brand, $category, $addDate, $expDate, $ID, $quantity){
         $update = "UPDATE inventory SET 
                    genericName = :genericname, dosage = :Dosage, brand = :Brand, 
-                   category = :Category, addDate = :AddDate, expDate = :ExpDate
+                   category = :Category, addDate = :AddDate, expDate = :ExpDate, quantity= :Quantity
                    WHERE ID = :id";
         $stmt = $this->conn->prepare($update);
         $result = $stmt->execute([
@@ -83,7 +84,8 @@ class oop_class {
             ':Category'=>$category,
             ':AddDate'=>$addDate,
             ':ExpDate'=>$expDate,
-            ':id' => $ID
+            ':id' => $ID,
+            ':Quantity'=>$quantity,
         ]);
 
         if($result){
