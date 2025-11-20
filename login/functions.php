@@ -3,14 +3,11 @@
 define("SERVER", "localhost");
 define("USER", "root");
 define("PASS", "");
-define("DBNAME", "clinic_tracker"); // <<< FINAL DATABASE NAME
+define("DBNAME", "finalproject"); // <<< FINAL DATABASE NAME
 
 class AuthSystem {
     private $conn;
 
-    /**
-     * Constructor: Establishes PDO database connection.
-     */
     function __construct(){
         try {
             $connection = "mysql:host=" . SERVER . ";dbname=" . DBNAME . ";charset=utf8";
