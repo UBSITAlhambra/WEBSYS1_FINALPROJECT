@@ -1,11 +1,9 @@
 <?php
-// Include the class definition file
-include 'functions.php';
+// Include the core class file
+require_once 'functions.php';
 
-// Instantiate the class
 $auth = new AuthSystem();
 
-// Call the dedicated logout method
-// This function handles session_destroy() and redirects to index.php
+// Calls the method that destroys the session and redirects to index.php
 $auth->logout();
 ?>
