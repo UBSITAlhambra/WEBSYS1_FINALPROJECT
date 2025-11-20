@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="form-container">
-        <h2>Clinic Staff Registration 🧑‍⚕️</h2>
+        <h2>Clinic Staff Registration </h2>
         <?php if (!empty($error_message)): ?>
             <p class="error"><?php echo $error_message; ?></p>
         <?php endif; ?>
