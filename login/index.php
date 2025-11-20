@@ -1,6 +1,6 @@
 <?php
 // Include the core class file
-require_once 'functions.php';
+include 'functions.php';
 
 $auth = new AuthSystem();
 $error_message = '';
