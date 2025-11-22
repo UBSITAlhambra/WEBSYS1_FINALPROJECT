@@ -8,10 +8,10 @@ $medicineStmt = $conn->prepare("SELECT genericName FROM inventory ORDER BY gener
 $medicineStmt->execute();
 $medicines = $medicineStmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Fetch student names
-$studentStmt = $conn->prepare("SELECT name FROM studentrecord ORDER BY name ASC");
+// Fetch student names + visitDate (MOST RECENT FIRST)
+$studentStmt = $conn->prepare("SELECT name, visitDate FROM studentrecord ORDER BY visitDate DESC");
 $studentStmt->execute();
-$students = $studentStmt->fetchAll(PDO::FETCH_COLUMN);
+$students = $studentStmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $quantity = $_POST['quantity'] ?? '';
@@ -100,20 +100,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <form method="POST" action="">
         <h1>Add Transaction</h1>
+
         <input type="text" name="quantity" placeholder="Quantity" required>
         <input type="date" name="transactionDate" placeholder="Transaction Date" required>
+
+        <!-- Medicine Dropdown -->
         <select name="medicineName" required>
             <option value="">-- Select Medicine --</option>
             <?php foreach ($medicines as $medicine): ?>
-                <option value="<?= htmlspecialchars($medicine) ?>"><?= htmlspecialchars($medicine) ?></option>
+                <option value="<?= htmlspecialchars($medicine) ?>">
+                    <?= htmlspecialchars($medicine) ?>
+                </option>
             <?php endforeach; ?>
         </select>
+
+        <!-- Student Dropdown (Most Recent visitDate First) -->
         <select name="studentName" required>
             <option value="">-- Select Student --</option>
             <?php foreach ($students as $student): ?>
-                <option value="<?= htmlspecialchars($student) ?>"><?= htmlspecialchars($student) ?></option>
+                <option value="<?= htmlspecialchars($student['name']) ?>">
+                    <?= htmlspecialchars($student['name'] . " – " . $student['visitDate']) ?>
+                </option>
             <?php endforeach; ?>
         </select>
+
         <button type="submit">➕ ADD</button>
     </form>
 </body>
