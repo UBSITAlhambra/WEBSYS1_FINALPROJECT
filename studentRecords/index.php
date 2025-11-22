@@ -13,6 +13,26 @@ $data = $student->show_data();
         table { border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #999; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
+        .btn {
+            padding: 6px 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .update-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -46,6 +66,10 @@ $data = $student->show_data();
     <?php endforeach; ?>
 
 </table>
-
+<br>
+<!-- Add New Item Button -->
+<a href="add.php" class="btn add-btn">Add New Item</a>
+<!-- Add New Item Button -->
+<a href="#" class="btn add-btn">Home</a>
 </body>
 </html>
