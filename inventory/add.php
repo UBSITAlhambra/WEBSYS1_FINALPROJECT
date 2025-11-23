@@ -1,16 +1,18 @@
 <?php
-include "oop.php";
-$oop = new oop_class();
+    include "oop.php";
+    $oop = new oop_class();
 
-if (isset($_POST['add'])) {
-    $genericName = $_POST['genericName'] ?? '';
-    $dosage = $_POST['dosage'] ?? '';
-    $brand = $_POST['brand'] ?? '';
-    $category = $_POST['category'] ?? '';
-    $addDate = $_POST['addDate'] ?? '';
-    $expDate = $_POST['expDate'] ?? '';
-    $oop->insert_data($genericName, $dosage, $brand, $category, $addDate, $expDate);
-}
+    if (isset($_POST['add'])) {
+        $genericName = $_POST['genericName'] ?? '';
+        $dosage = $_POST['dosage'] ?? '';
+        $brand = $_POST['brand'] ?? '';
+        $category = $_POST['category'] ?? '';
+        $addDate = $_POST['addDate'] ?? '';
+        $expDate = $_POST['expDate'] ?? '';
+        $quantity = $_POST['quantity'] ?? '';
+
+        $oop->insert_data($genericName, $dosage, $brand, $category, $quantity, $addDate, $expDate);
+    }
 ?>
 
 <!DOCTYPE html>
