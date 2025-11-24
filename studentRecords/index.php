@@ -70,6 +70,8 @@ $data = $student->show_data();
 <!-- Add New Item Button -->
 <a href="add.php" class="btn add-btn">Add New Item</a>
 <!-- Add New Item Button -->
-<a href="#" class="btn add-btn">Home</a>
+<a href="../dashboard_staff/" class="btn add-btn">Dashboard</a>
+<a href="../transaction/" class="btn add-btn">Create Transaction</a>
+<a href="../studentVital/" class="btn add-btn">Student Vitals</a>
 </body>
 </html>
