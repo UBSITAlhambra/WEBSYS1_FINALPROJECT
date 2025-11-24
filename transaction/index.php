@@ -82,6 +82,8 @@ $data = $oop->show_data();
 <!-- Add New Item Button -->
 <a href="add.php" class="btn add-btn">Add New Item</a>
 <!-- Add New Item Button -->
-<a href="#" class="btn add-btn">Home</a>
+<a href="../dashboard_staff/" class="btn add-btn">Dashboard</a>
+
+
 </body>
 </html>
