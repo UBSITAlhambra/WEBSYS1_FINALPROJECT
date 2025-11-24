@@ -31,6 +31,18 @@ $data = $oop->show_data();
         a.btn.delete {
             background: red;
         }
+        .btn {
+            padding: 6px 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -39,7 +51,6 @@ $data = $oop->show_data();
 
 <table>
     <tr>
-        <th>ID</th>
         <th>Medicine</th>
         <th>Student</th>
         <th>Quantity</th>
@@ -49,7 +60,6 @@ $data = $oop->show_data();
 
     <?php foreach ($data as $row) { ?>
         <tr>
-            <td><?= $row['transactionID']; ?></td>
             <td><?= $row['medicineName']; ?></td>
             <td><?= $row['studentName']; ?></td>
             <td><?= $row['quantity']; ?></td>
@@ -66,7 +76,14 @@ $data = $oop->show_data();
         </tr>
     <?php } ?>
 
+    
 </table>
+<br>
+<!-- Add New Item Button -->
+<a href="add.php" class="btn add-btn">Add New Item</a>
+<!-- Add New Item Button -->
+<a href="../dashboard_staff/" class="btn add-btn">Dashboard</a>
+
 
 </body>
 </html>
