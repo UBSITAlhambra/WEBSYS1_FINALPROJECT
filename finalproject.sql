@@ -3,12 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 21, 2025 at 01:26 PM
+-- Generation Time: Nov 24, 2025 at 07:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
--- Generation Time: Nov 20, 2025 at 03:44 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -70,7 +67,8 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`ID`, `FirstName`, `MiddleName`, `LastName`, `Email`, `Password`, `Role`, `Created_At`) VALUES
-(0, 'Regina', '', 'George', 'regina@gmail.com', '$2y$10$awryAXW69OiCHl4ElKXHYexbCIcEk8HgQ8NxbYS7xt5Lz8qB7wcem', 'Staff', '2025-11-20 18:25:29');
+(1, 'Regina', '', 'George', 'regina@gmail.com', '$2y$10$awryAXW69OiCHl4ElKXHYexbCIcEk8HgQ8NxbYS7xt5Lz8qB7wcem', 'Staff', '2025-11-20 18:25:29'),
+(2, 'Juan', 'De', 'La Cruz', 'juan@gmail.com', '$2y$10$6s74LJqDZ8EYoYc0jkzDwugKaGkCsJkdlgEsNnZ2asCZJUurYAOG2', 'Staff', '2025-11-24 17:08:31');
 
 -- --------------------------------------------------------
 
@@ -82,7 +80,7 @@ CREATE TABLE `studentrecord` (
   `ID` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   `idNum` int(11) NOT NULL,
-  `department` int(11) NOT NULL,
+  `department` varchar(30) NOT NULL,
   `complaint` varchar(255) NOT NULL,
   `visitDate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -92,7 +90,7 @@ CREATE TABLE `studentrecord` (
 --
 
 INSERT INTO `studentrecord` (`ID`, `name`, `idNum`, `department`, `complaint`, `visitDate`) VALUES
-(1, '123', 123, 123, '123', '2025-11-20');
+(1, '123', 123, '123', '123', '2025-11-20');
 
 -- --------------------------------------------------------
 
@@ -156,6 +154,12 @@ ALTER TABLE `transaction`
 --
 ALTER TABLE `inventory`
   MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `login`
+--
+ALTER TABLE `login`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `studentrecord`
