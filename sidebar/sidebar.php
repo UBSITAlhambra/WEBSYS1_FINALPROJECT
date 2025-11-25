@@ -40,22 +40,27 @@
 
         <a class="nav-link <?= ($activePage=='dashboard'?'active':'') ?>" 
            href="../dashboard_staff/">
-           Dashboard
+           Clinic Dashboard
         </a>
 
         <a class="nav-link <?= ($activePage=='visits'?'active':'') ?>" 
            href="../studentRecords/">
-           Visits
+           Student Visits
         </a>
 
         <a class="nav-link <?= ($activePage=='inventory'?'active':'') ?>" 
            href="../inventory/">
-           Inventory
+           Clinic Inventory
         </a>
 
+        
         <a class="nav-link <?= ($activePage=='vitals'?'active':'') ?>" 
            href="../studentVital/">
-           Vitals
+           Student Vitals
+        </a>
+        <a class="nav-link <?= ($activePage=='reports'?'active':'') ?>" 
+           href="../report_analytics/">
+           Clinic Report Summary
         </a>
         <a class="nav-link <?= ($activePage=='settings'?'active':'') ?>" 
            href="../dashboard_staff/settings.php">
