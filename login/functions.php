@@ -80,7 +80,7 @@ class AuthSystem {
             $_SESSION['fullname'] = trim($user['FirstName'] . ' ' . $user['MiddleName'] . ' ' . $user['LastName']);
             $_SESSION['role'] = $user['Role'];
 
-            header("location: ../dashboard_staff/index.php"); 
+            header("location: ../dashboard_staff/"); 
             exit;
         } else {
             echo "<script>alert('Invalid Email or Password!'); window.location.href='index.php';</script>";
