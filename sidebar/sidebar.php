@@ -39,26 +39,26 @@
     <nav class="nav flex-column">
 
         <a class="nav-link <?= ($activePage=='dashboard'?'active':'') ?>" 
-           href="/WEBSYS1_FINALPROJECT/dashboard_staff/index.php">
+           href="../dashboard_staff/">
            Dashboard
         </a>
 
         <a class="nav-link <?= ($activePage=='visits'?'active':'') ?>" 
-           href="/WEBSYS1_FINALPROJECT/studentRecords/index.php">
+           href="../studentRecords/">
            Visits
         </a>
 
         <a class="nav-link <?= ($activePage=='inventory'?'active':'') ?>" 
-           href="/WEBSYS1_FINALPROJECT/inventory/index.php">
+           href="../inventory/">
            Inventory
         </a>
 
         <a class="nav-link <?= ($activePage=='vitals'?'active':'') ?>" 
-           href="/WEBSYS1_FINALPROJECT/studentVital/index.php">
+           href="../studentVital/">
            Vitals
         </a>
-
-        <a class="nav-link" href="#">
+        <a class="nav-link <?= ($activePage=='settings'?'active':'') ?>" 
+           href="../dashboard_staff/settings.php">
            Settings
         </a>
 
