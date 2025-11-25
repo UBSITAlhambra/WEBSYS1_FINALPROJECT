@@ -3,7 +3,8 @@ include 'oop.php';
 $inventory = new oop_class();
 $data = $inventory->show_data();
 ?>
-
+<?php $activePage = 'inventory'; ?>
+<?php include '../sidebar/sidebar.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +38,8 @@ $data = $inventory->show_data();
 </head>
 <body>
 
-<h2>Inventory List</h2>
+<div class="main-content" style="margin-left: 270px; padding: 25px;">
+    <h2>Inventory List</h2>
 
 
 
@@ -79,6 +81,5 @@ $data = $inventory->show_data();
 <!-- Add New Item Button -->
 <a href="add.php" class="btn add-btn">Add New Item</a>
 <!-- Add New Item Button -->
-<a href="#" class="btn add-btn">Home</a>
 </body>
 </html>
