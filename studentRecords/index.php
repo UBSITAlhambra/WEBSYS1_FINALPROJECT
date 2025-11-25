@@ -3,7 +3,8 @@ include 'oop.php';
 $student = new oop_class();
 $data = $student->show_data();
 ?>
-
+<?php $activePage = 'visits'; ?>
+<?php include '../sidebar/sidebar.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,8 +37,8 @@ $data = $student->show_data();
     </style>
 </head>
 <body>
-
-<h2>Student Clinic Records</h2>
+    <div class="main-content" style="margin-left: 270px; padding: 25px;">
+        <h2>Student Clinic Records</h2>
 
 <table>
     <tr>
@@ -70,8 +71,9 @@ $data = $student->show_data();
 <!-- Add New Item Button -->
 <a href="add.php" class="btn add-btn">Add New Item</a>
 <!-- Add New Item Button -->
-<a href="../dashboard_staff/" class="btn add-btn">Dashboard</a>
 <a href="../transaction/" class="btn add-btn">Create Transaction</a>
 <a href="../studentVital/" class="btn add-btn">Student Vitals</a>
+
+    </div>
 </body>
 </html>

@@ -38,5 +38,40 @@ class oop_class {
         $stmt->execute();
         return $stmt;
     }
+    public function get_weekly_visits() {
+        $sql = "SELECT COUNT(*) AS total
+            FROM studentrecord
+            WHERE visitDate >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+        return $this->conn->query($sql);
+    }
+
+
+    public function get_items_used_weekly() {
+        $sql = "SELECT SUM(quantity) AS total
+            FROM `transaction`
+            WHERE transactionDate >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+    return $this->conn->query($sql);
+    }
+
+
+    public function get_new_inventory_weekly() {
+        $sql = "SELECT COUNT(*) AS total
+            FROM inventory
+            WHERE addDate >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+        return $this->conn->query($sql);
+    }
+
+
+    public function get_common_complaint_weekly() {
+        $sql = "SELECT complaint, COUNT(*) AS count
+            FROM studentrecord
+            WHERE visitDate >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            GROUP BY complaint
+            ORDER BY count DESC
+            LIMIT 1";
+        return $this->conn->query($sql);
+    }
+
+
     
 }

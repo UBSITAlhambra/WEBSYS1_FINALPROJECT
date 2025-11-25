@@ -3,6 +3,8 @@ include "oop.php";
 $studentVitals = new studentVitals();
 $data = $studentVitals->show_data();
 ?>
+<?php $activePage = 'vitals'; ?>
+<?php include '../sidebar/sidebar.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,7 +107,6 @@ $data = $studentVitals->show_data();
     </table>
 
     <br>
-    <a href="../dashboard_staff/" class="btn add-btn" style="background:#7f8c8d;">Dashboard</a>
         <!-- Add Button -->
         <a href="add.php" class="btn add-btn">Add New Vital Record</a>
 

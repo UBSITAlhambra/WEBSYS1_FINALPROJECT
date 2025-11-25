@@ -1,224 +1,238 @@
 <?php
 include 'pdo.php';
 $oop = new oop_class();
-// session_start();
-// if (!isset($_SESSION['staff_id'])) {
-//     header('Location: ../login/index.php');
-//     exit();
-// }
 
 $fetch_inventory = $oop->show_inventory();           
 $fetch_studentRecords = $oop->show_studentRecords(); 
 $fetch_transactions = $oop->show_transactions();     
+
+$weekly_visits = $oop->get_weekly_visits()->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+$weekly_items_used = $oop->get_items_used_weekly()->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+$weekly_new_inventory = $oop->get_new_inventory_weekly()->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+$common_complaint = $oop->get_common_complaint_weekly()->fetch(PDO::FETCH_ASSOC)['complaint'] ?? 'None';
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>School Clinic Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Optional: make sidebar links stand out */
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.9);
-        }
-        .sidebar .nav-link.active {
-            background: rgba(255,255,255,0.1);
-            border-radius: .25rem;
-        }
-        /* Ensure main content has some vertical spacing on small screens */
-        .main-content { padding: 1.5rem; }
-
-        /* Sidebar improvements: keep it visible and let it behave as a column so the bottom area stays at the bottom */
-        .sidebar {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 1rem;
-            overflow-y: auto;
-        }
-        .sidebar nav {
-            /* allow nav to grow so the "Logged in as" stays at the bottom */
-            flex: 1 1 auto;
-        }
-
-        /* On very small screens keep the sidebar compact (stacking behavior already handled by grid) */
-        @media (max-width: 575.98px) {
-            .sidebar {
-                height: auto;
-                position: static;
-            }
+        .main-content {
+            margin-left: 270px; /* same width as sidebar */
+            padding: 25px;
         }
     </style>
 </head>
+
 <body class="bg-light">
-<div class="container-fluid">
-    <div class="row g-0">
-        <!-- Sidebar -->
-        <aside class="col-12 col-md-3 col-lg-2 bg-primary text-white sidebar p-3">
-            <div class="d-flex align-items-center mb-3">
-                <a class="navbar-brand text-white fs-5 fw-bold me-auto" href="#">School Clinic</a>
-            </div>
-            <nav class="nav nav-pills flex-column">
-                <a class="nav-link active mb-1" aria-current="page" href="/WEBSYS1_FINALPROJECT/dashboard_staff/index.php">Dashboard</a>
-                <a class="nav-link mb-1" href="/WEBSYS1_FINALPROJECT/studentRecords/index.php">Visits</a>
-                <a class="nav-link mb-1" href="/WEBSYS1_FINALPROJECT/inventory/index.php">Inventory</a>
-                <a class="nav-link mb-1" href="#">Settings</a>
-            </nav>
-            <div class="mt-auto small text-white-50 pt-3">
-                <div>Logged in as: Clinic Staff</div>
-            </div>
-        </aside>
 
-        <!-- Main content -->
-        <main class="col-12 col-md-9 col-lg-10 main-content">
-            <div class="bg-white rounded p-4 shadow-sm">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4 gap-3">
-                    <div>
-                        <h2 class="mb-1 fw-bold">Welcome, Clinic Staff!</h2>
-                        <p class="text-muted mb-0">Overview of today's activity</p>
+<?php 
+    $activePage = 'dashboard'; 
+    include '../sidebar/sidebar.php'; 
+?>
+
+<div class="main-content">
+
+    <div class="bg-white rounded p-4 shadow-sm">
+        
+        <!-- Header -->
+        <div class="d-flex justify-content-between flex-wrap">
+            <div>
+                <h2 class="fw-bold mb-1">Welcome, Clinic Staff!</h2>
+                <p class="text-muted">Overview of today's activity</p>
+            </div>
+
+            <div class="text-muted small">
+                Last updated: <?= date('Y-m-d H:i:s'); ?>
+            </div>
+        </div>
+
+        <!-- ROWS -->
+        <div class="row g-4 mt-2">
+            <!-- WEEKLY SUMMARY -->
+            <div class="col-12 mb-3">
+                <h5 class="text-primary mb-2">Weekly Summary</h5>
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <h6 class="text-muted">Visits This Week</h6>
+                            <div class="fs-3 fw-bold text-primary"><?= $weekly_visits ?></div>
+                        </div>
                     </div>
-                    <div class="text-muted small d-none d-md-block" id="last-updated-header">Last updated: <?php echo date('Y-m-d H:i:s'); ?></div>
+
+                    <div class="col-md-3">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <h6 class="text-muted">Items Used</h6>
+                            <div class="fs-3 fw-bold text-success"><?= $weekly_items_used ?></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <h6 class="text-muted">New Items Added</h6>
+                            <div class="fs-3 fw-bold text-warning"><?= $weekly_new_inventory ?></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <h6 class="text-muted">Top Complaint</h6>
+                            <div class="fw-bold"><?= $common_complaint ?></div>
+                        </div>
+                    </div>
+
                 </div>
+            </div>
 
-                <div class="row g-4">
-                    <div class="col-12 col-lg-7">
-                        <div class="mb-3">
-                            <h5 class="text-primary">Recent Visits</h5>
-                        </div>
-                        <div class="table-responsive bg-white rounded shadow-sm mb-3">
-                            <?php
-                            // show only recent 5 items
-                            $limit = 5;
-                            if ($fetch_studentRecords->rowCount() > 0) {
-                                echo '<table class="table table-striped table-hover align-middle mb-0 small">';
-                                echo '<thead class="table-light">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>ID Number</th>
-                                            <th>Department</th>
-                                            <th>Complaint</th>
-                                            <th>Visit Date</th>
-                                        </tr>
-                                      </thead><tbody>';
-                                $count = 0;
-                                while ($row = $fetch_studentRecords->fetch(PDO::FETCH_ASSOC)) {
-                                    if ($count >= $limit) break;
-                                    $id = htmlspecialchars($row['ID'] ?? '');
-                                    $name = htmlspecialchars($row['name'] ?? '');
-                                    $idNum = htmlspecialchars($row['idNum'] ?? '');
-                                    $dept = htmlspecialchars($row['department'] ?? '');
-                                    $complaint = htmlspecialchars($row['complaint'] ?? '');
-                                    $visitDate = htmlspecialchars($row['visitDate'] ?? '');
-                                    echo '<tr>';
-                                    echo "<td>{$id}</td>";
-                                    echo "<td>{$name}</td>";
-                                    echo "<td>{$idNum}</td>";
-                                    echo "<td>{$dept}</td>";
-                                    echo "<td>{$complaint}</td>";
-                                    echo "<td>{$visitDate}</td>";
-                                    echo '</tr>';
-                                    $count++;
-                                }
-                                echo '</tbody></table>';
-                            } else {
-                                echo '<div class="p-4 text-center text-muted">No recent visits.</div>';
-                            }
-                            ?>
-                        </div>
-                    </div>
+            <!-- ======= RECENT VISITS ======= -->
+            <div class="col-lg-7">
+                <h5 class="text-primary mb-2">Recent Visits</h5>
 
-                    <div class="col-12 col-lg-5">
-                        <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <h5 class="text-primary mb-0">Inventory</h5>
-                            <small class="text-muted">Snapshot</small>
-                        </div>
+                <div class="table-responsive bg-white rounded shadow-sm p-2">
+                    <?php
+                    $limit = 5;
+                    if ($fetch_studentRecords->rowCount() > 0) {
+                        echo '<table class="table table-striped table-hover mb-0 small">';
+                        echo '<thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>ID #</th>
+                                    <th>Department</th>
+                                    <th>Complaint</th>
+                                    <th>Date</th>
+                                </tr>
+                              </thead><tbody>';
 
-                        <div class="table-responsive bg-white rounded shadow-sm mb-3">
-                            <?php
-                            // show only recent 5 items
-                            $limit = 5;
-                            if ($fetch_inventory && $fetch_inventory->rowCount() > 0) {
-                                echo '<table class="table table-sm mb-0">';
-                                echo '<thead class="table-light">
-                                        <tr>
-                                            <th>Generic Name</th>
-                                            <th>Dosage</th>
-                                            <th>Brand</th>
-                                            <th>Category</th>
-                                            <th>Qty</th>
-                                            <th>Add Date</th>
-                                            <th>Expiry</th>
-                                        </tr>
-                                      </thead><tbody>';
-                                $count = 0;
-                                while ($row = $fetch_inventory->fetch(PDO::FETCH_ASSOC)) {
-                                    if ($count >= $limit) break;
-                                    echo '<tr>';
-                                    echo '<td>' . htmlspecialchars($row['genericName'] ?? '') . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['dosage'] ?? '') . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['brand'] ?? '') . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['category'] ?? '') . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['quantity'] ?? '') . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['addDate'] ?? '') . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['expDate'] ?? '') . '</td>';
-                                    echo '</tr>';
-                                    $count++;
-                                }
-                                echo '</tbody></table>';
-                            } else {
-                                echo '<div class="p-4 text-center text-muted">No Inventory Records.</div>';
-                            }
-                            ?>
-                        </div>
+                        $count = 0;
+                        while ($row = $fetch_studentRecords->fetch(PDO::FETCH_ASSOC)) {
+                            if ($count >= $limit) break;
 
-                <div class="mt-4">
-                    <h5 class="text-primary mb-3">Recent Transactions</h5>
-                    <div class="table-responsive bg-white rounded shadow-sm">
-                        <?php
-                        // show only recent 5 items
-                        $limit = 5;
-                        if ($fetch_transactions && $fetch_transactions->rowCount() > 0) {
-                            echo '<table class="table table-striped table-hover mb-0">';
-                            echo '<thead class="table-light">
-                                    <tr>
-                                        <th>Quantity</th>
-                                        <th>Transaction Date</th>
-                                        <th>Item ID</th>
-                                        <th>Student ID</th>
-                                    </tr>
-                                  </thead><tbody>';
-                            $count = 0;
-                            while ($row = $fetch_transactions->fetch(PDO::FETCH_ASSOC)) {
-                                if ($count >= $limit) break;
-                                echo '<tr>';
-                                echo '<td>' . htmlspecialchars($row['quantity'] ?? '') . '</td>';
-                                echo '<td>' . htmlspecialchars($row['transactionDate'] ?? '') . '</td>';
-                                echo '<td>' . htmlspecialchars($row['itemID'] ?? '') . '</td>';
-                                echo '<td>' . htmlspecialchars($row['studentID'] ?? '') . '</td>';
-                                echo '</tr>';
-                                $count++;
-                            }
-                            echo '</tbody></table>';
-                        } else {
-                            echo '<div class="p-4 text-center text-muted">No Transactions.</div>';
+                            echo "<tr>
+                                    <td>{$row['ID']}</td>
+                                    <td>{$row['name']}</td>
+                                    <td>{$row['idNum']}</td>
+                                    <td>{$row['department']}</td>
+                                    <td>{$row['complaint']}</td>
+                                    <td>{$row['visitDate']}</td>
+                                  </tr>";
+
+                            $count++;
                         }
-                        ?>
-                    </div>
+
+                        echo '</tbody></table>';
+
+                    } else {
+                        echo '<div class="p-4 text-center text-muted">No recent visits.</div>';
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <!-- ======= INVENTORY SNAPSHOT ======= -->
+            <div class="col-lg-5">
+                <h5 class="text-primary mb-2 d-flex justify-content-between">
+                    Inventory <small class="text-muted">Snapshot</small>
+                </h5>
+
+                <div class="table-responsive bg-white rounded shadow-sm p-2">
+                    <?php
+                    $limit = 5;
+                    if ($fetch_inventory && $fetch_inventory->rowCount() > 0) {
+
+                        echo '<table class="table table-sm mb-0 small">';
+                        echo '<thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Dosage</th>
+                                    <th>Brand</th>
+                                    <th>Category</th>
+                                    <th>Qty</th>
+                                    <th>Added</th>
+                                    <th>Expiry</th>
+                                </tr>
+                              </thead><tbody>';
+
+                        $count = 0;
+                        while ($row = $fetch_inventory->fetch(PDO::FETCH_ASSOC)) {
+                            if ($count >= $limit) break;
+
+                            echo "<tr>
+                                    <td>{$row['genericName']}</td>
+                                    <td>{$row['dosage']}</td>
+                                    <td>{$row['brand']}</td>
+                                    <td>{$row['category']}</td>
+                                    <td>{$row['quantity']}</td>
+                                    <td>{$row['addDate']}</td>
+                                    <td>{$row['expDate']}</td>
+                                  </tr>";
+
+                            $count++;
+                        }
+
+                        echo '</tbody></table>';
+
+                    } else {
+                        echo '<div class="p-4 text-center text-muted">No Inventory Records.</div>';
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <!-- ======= RECENT TRANSACTIONS ======= -->
+            <div class="col-12">
+                <h5 class="text-primary mb-2">Recent Transactions</h5>
+
+                <div class="table-responsive bg-white rounded shadow-sm p-2">
+
+                    <?php
+                    $limit = 5;
+                    if ($fetch_transactions && $fetch_transactions->rowCount() > 0) {
+
+                        echo '<table class="table table-striped table-hover mb-0 small">';
+                        echo '<thead class="table-light">
+                                <tr>
+                                    <th>Qty</th>
+                                    <th>Date</th>
+                                    <th>Item ID</th>
+                                    <th>Student ID</th>
+                                </tr>
+                              </thead><tbody>';
+
+                        $count = 0;
+                        while ($row = $fetch_transactions->fetch(PDO::FETCH_ASSOC)) {
+                            if ($count >= $limit) break;
+
+                            echo "<tr>
+                                    <td>{$row['quantity']}</td>
+                                    <td>{$row['transactionDate']}</td>
+                                    <td>{$row['itemID']}</td>
+                                    <td>{$row['studentID']}</td>
+                                  </tr>";
+
+                            $count++;
+                        }
+
+                        echo '</tbody></table>';
+
+                    } else {
+                        echo '<div class="p-4 text-center text-muted">No Transactions.</div>';
+                    }
+                    ?>
                 </div>
 
             </div>
-        </main>
-    </div>
-</div>
 
-<!-- Bootstrap JS (optional) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </div><!-- row -->
+    </div><!-- card -->
+
+</div><!-- main-content -->
+
 
 </body>
 </html>
