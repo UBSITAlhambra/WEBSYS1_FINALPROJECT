@@ -5,6 +5,12 @@ $oop = new oop_class();
 $fetch_inventory = $oop->show_inventory();           
 $fetch_studentRecords = $oop->show_studentRecords(); 
 $fetch_transactions = $oop->show_transactions();     
+
+$weekly_visits = $oop->get_weekly_visits()->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+$weekly_items_used = $oop->get_items_used_weekly()->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+$weekly_new_inventory = $oop->get_new_inventory_weekly()->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+$common_complaint = $oop->get_common_complaint_weekly()->fetch(PDO::FETCH_ASSOC)['complaint'] ?? 'None';
+
 ?>
 
 <!DOCTYPE html>
@@ -13,9 +19,6 @@ $fetch_transactions = $oop->show_transactions();
     <meta charset="UTF-8">
     <title>School Clinic Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         .main-content {
             margin-left: 270px; /* same width as sidebar */
@@ -49,6 +52,42 @@ $fetch_transactions = $oop->show_transactions();
 
         <!-- ROWS -->
         <div class="row g-4 mt-2">
+            <!-- WEEKLY SUMMARY -->
+            <div class="col-12 mb-3">
+                <h5 class="text-primary mb-2">Weekly Summary</h5>
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <h6 class="text-muted">Visits This Week</h6>
+                            <div class="fs-3 fw-bold text-primary"><?= $weekly_visits ?></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <h6 class="text-muted">Items Used</h6>
+                            <div class="fs-3 fw-bold text-success"><?= $weekly_items_used ?></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <h6 class="text-muted">New Items Added</h6>
+                            <div class="fs-3 fw-bold text-warning"><?= $weekly_new_inventory ?></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <h6 class="text-muted">Top Complaint</h6>
+                            <div class="fw-bold"><?= $common_complaint ?></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
             <!-- ======= RECENT VISITS ======= -->
             <div class="col-lg-7">
@@ -194,8 +233,6 @@ $fetch_transactions = $oop->show_transactions();
 
 </div><!-- main-content -->
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
