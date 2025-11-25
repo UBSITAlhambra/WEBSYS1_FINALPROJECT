@@ -40,15 +40,116 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Staff Registration</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .form-container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 350px; }
-        h2 { text-align: center; color: #333; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #1e7e34; }
-        .error { color: red; text-align: center; margin-bottom: 15px; }
-        .link { text-align: center; margin-top: 15px; }
+        
+        :root {
+            --primary-maroon: #800000; 
+            --light-bg: #f8f8f8;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            --hover-shadow: 0 8px 25px rgba(128, 0, 0, 0.4);
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        
+        .form-container { 
+            background: white; 
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: var(--box-shadow); 
+            width: 350px; 
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .form-container:hover {
+            box-shadow: var(--hover-shadow);
+        }
+        
+        h2 { 
+            text-align: center; 
+            color: var(--primary-maroon);
+            margin-bottom: 30px; 
+            font-weight: 600;
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 500;
+            color: #444; 
+            font-size: 0.95rem;
+        }
+        
+        input { 
+            width: 100%; 
+            padding: 12px;
+            margin-bottom: 25px; 
+            border: 1px solid #ddd; 
+            border-radius: 6px;
+            box-sizing: border-box; 
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary-maroon);
+            outline: none;
+            box-shadow: 0 0 5px rgba(128, 0, 0, 0.3);
+        }
+        
+        
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            
+        
+            background-color: white; 
+            color: var(--primary-maroon); 
+            border: 2px solid var(--primary-maroon);
+            
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out; 
+        }
+        
+        button:hover { 
+            
+            background-color: var(--primary-maroon); 
+            color: white; 
+            box-shadow: 0 4px 8px rgba(128, 0, 0, 0.4); 
+        }
+        
+        
+        .error { 
+            color: red; 
+            text-align: center; 
+            margin-bottom: 15px; 
+            font-weight: bold;
+        }
+        
+        .link { 
+            text-align: center; 
+            margin-top: 20px; 
+            font-size: 0.9rem;
+        }
+
+        .link a {
+            color: var(--primary-maroon);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
