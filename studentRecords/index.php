@@ -8,7 +8,6 @@
     $page_title = 'Student Clinic Records';
 
     if (!empty($searchTerm)) {
-        // This calls the search_studentRecords function we added to oop.php
         $data = $student->search_studentRecords($searchTerm); 
         $page_title = 'Search Results for: ' . htmlspecialchars($searchTerm);
     } else {
@@ -84,10 +83,8 @@
             const selectedFormat = formatSelect.value;
             if (selectedFormat === 'csv' || selectedFormat === 'sql') {
                 filenameInput.style.display = 'inline-block';
-                filenameInput.setAttribute('required', 'required'); 
             } else {
                 filenameInput.style.display = 'none';
-                filenameInput.removeAttribute('required');
             }
         }
 

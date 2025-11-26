@@ -4,15 +4,12 @@
     $data = $student->show_data(); 
     $format = strtolower($_GET['format'] ?? 'csv');
     $base_name = $_GET['filename'] ?? 'student_records_export';
-    $date_tag = date('Ymd_His');
     $clean_base_name = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $base_name);
-    if (empty(trim($clean_base_name, '_'))) {
-        $clean_base_name = 'student_records_export';
-    }
+    $final_name_base = empty(trim($clean_base_name, '_')) ? 'Student_Records' : $clean_base_name;
 
     switch ($format) {
         case 'sql':
-            $filename = $clean_base_name . '_' . $date_tag . '.sql';
+            $filename = $final_name_base . '.sql';
             header('Content-Type: application/sql');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
             
@@ -44,7 +41,7 @@
             break;
 
         case 'json':
-            $filename = $clean_base_name . '_' . $date_tag . '.json';
+            $filename = $final_name_base . '.json';
             header('Content-Type: application/json');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
             echo json_encode($data, JSON_PRETTY_PRINT);
@@ -52,7 +49,7 @@
 
         case 'csv':
         default:
-            $filename = $clean_base_name . '_' . $date_tag . '.csv';
+            $filename = $final_name_base . '.csv';
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
             $output = fopen('php://output', 'w');
