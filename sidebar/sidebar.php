@@ -99,6 +99,10 @@
            href="../studentVital/">
             Student Vitals
         </a>
+        <a class="nav-link <?= ($activePage=='transaction'?'active':'') ?>" 
+           href="../transaction/">
+            View Transactions
+        </a>
         <a class="nav-link <?= ($activePage=='reports'?'active':'') ?>" 
            href="../report_analytics/">
             Clinic Report Summary

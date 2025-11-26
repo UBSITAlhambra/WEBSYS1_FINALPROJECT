@@ -87,7 +87,6 @@ include '../sidebar/sidebar.php';
     <h2>Student Vitals Records</h2>
     <table>
         <tr>
-            <th>Vital ID</th>
             <th>Student Name</th>
             <th>Date</th>
             <th>Temperature</th>
@@ -99,7 +98,6 @@ include '../sidebar/sidebar.php';
         <?php if (count($data) > 0): ?>
             <?php foreach ($data as $row): ?>
                 <tr>
-                    <td><?= htmlspecialchars($row['vitalID']) ?></td>
                     <td><?= htmlspecialchars($row['studentName']) ?></td>
                     <td><?= htmlspecialchars($row['vitalDate']) ?></td>
                     <td><?= htmlspecialchars($row['temperature']) ?></td>

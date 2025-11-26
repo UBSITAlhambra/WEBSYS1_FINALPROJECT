@@ -2,7 +2,7 @@
 include "oop.php";
 $oop = new oop_class();
 $data = $oop->show_data();
-$activePage = 'dashboard';
+$activePage = 'transaction';
 include '../sidebar/sidebar.php';
 ?>
 <!DOCTYPE html>

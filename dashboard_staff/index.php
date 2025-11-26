@@ -1,5 +1,5 @@
 <?php
-include 'pdo.php';
+include 'pdo.php'; // include your OOP class file
 $oop = new oop_class();
 
 $fetch_inventory = $oop->show_inventory();
@@ -21,99 +21,202 @@ include '../sidebar/sidebar.php';
     <meta charset="UTF-8">
     <title>School Clinic Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-    /* CSS Variables matching the Login/Register aesthetic */
+<style>
 :root {
-    --primary-maroon: #800000; /* Deep Maroon */
+    --primary-maroon: #800000;
+    --primary-maroon-hover: #a00000;
     --light-bg: #f8f8f8;
-    --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+    --card-bg: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --text-muted: #6c757d;
 }
- 
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--light-bg);
+    margin: 0;
+    padding: 0;
 }
 
 .main-content {
-    margin-left: 270px; /* Preserve sidebar spacing */
-    padding: 25px;
+    margin-left: 270px;
+    padding: 30px 40px;
+    min-height: 100vh;
+    background-color: var(--light-bg);
 }
- 
-/* General styling for cards and tables */
+
+.bg-white {
+    background-color: var(--card-bg);
+}
+
 .rounded {
-    border-radius: 8px !important;
+    border-radius: 10px !important;
 }
+
 .shadow-sm {
-    box-shadow: var(--box-shadow) !important;
+    box-shadow: 0 4px 12px var(--shadow-color);
     transition: box-shadow 0.3s ease-in-out;
 }
 
-/* Titles and Colors */
+.shadow-sm:hover {
+    box-shadow: 0 6px 20px var(--shadow-color);
+}
+
+h2, h5, h6 {
+    color: var(--primary-maroon);
+    margin-bottom: 15px;
+}
+
+.fw-bold {
+    font-weight: 700 !important;
+}
+
 .text-primary {
     color: var(--primary-maroon) !important;
 }
-.fw-bold { font-weight: 600 !important; }
 
-/* Search Bar Styling */
+.text-muted {
+    color: var(--text-muted);
+}
+
+.fs-3 {
+    font-size: 2rem;
+}
+
+.fs-4 {
+    font-size: 1.5rem;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.col-md-3, .col-lg-5, .col-lg-7, .col-12 {
+    padding: 0 15px;
+    margin-bottom: 30px;
+}
+
+/* Uniform Summary Cards */
+.col-md-3 > div {
+    padding: 25px;
+    border: 1px solid #e7e7e7;
+    text-align: center;
+    cursor: default;
+    user-select: none;
+    border-radius: 10px;
+    height: 140px; /* Fixed height for uniformity */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.col-md-3 > div h6 {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Uniform Boxes for Tables */
+.col-lg-5 > .table-responsive,
+.col-lg-7 > .table-responsive,
+.col-12 > .table-responsive {
+    background-color: var(--card-bg);
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px 20px;
+    
+    /* Fixed min height for all tables box */
+    min-height: 330px;
+    
+    /* Box shadow */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    
+    /* Ensure consistent scroll if content overflows */
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+/* Tables */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.6rem;
+    font-size: 0.92rem;
+}
+
+.table thead tr th {
+    background-color: var(--primary-maroon);
+    color: #fff;
+    font-weight: 700;
+    padding: 12px 15px;
+    border-radius: 10px 10px 0 0;
+    text-align: left;
+}
+
+.table tbody tr {
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 10px -4px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #fff0f0;
+}
+
+.table tbody tr td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+/* Search Bar */
 .search-bar {
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin: 14px 0 24px 0;
+    margin: 25px 0 35px;
 }
+
 #searchBox {
-    padding: 10px 17px;
-    font-size: 15px;
-    width: 260px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-right: 8px;
-}
-#Searchresult {
-    margin-bottom: 18px;
-    min-height: 38px;
-    width: 65%;
-    margin-left: auto;
-    margin-right: auto;
+    width: 300px;
+    padding: 14px 18px;
+    font-size: 16px;
+    border: 2px solid var(--primary-maroon);
+    border-radius: 8px 0 0 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
-/* Maroon Search Button */
+#searchBox:focus {
+    border-color: var(--primary-maroon-hover);
+    box-shadow: 0 0 8px var(--primary-maroon-hover);
+}
+
 button.search-btn {
-    padding: 10px 18px;
-    background: var(--primary-maroon); /* Maroon background */
-    color: #fff;
+    padding: 14px 26px;
+    font-weight: 600;
+    background-color: var(--primary-maroon);
     border: none;
-    border-radius: 5px;
-    font-weight: bold;
+    color: #fff;
+    border-radius: 0 8px 8px 0;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background-color 0.3s ease;
 }
+
 button.search-btn:hover {
-    background: #a00000; /* Darker maroon on hover */
+    background-color: var(--primary-maroon-hover);
 }
 
-/* Summary Cards */
-.col-md-3 > div {
-    border: 1px solid #ddd;
-    transition: transform 0.2s;
+/* Responsive */
+@media (max-width: 1200px) {
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
 }
-.col-md-3 > div:hover {
-    transform: translateY(-3px); /* Lift effect on hover */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
+</style>
 
-/* Table Styling */
-.table-light {
-    background-color: var(--light-bg) !important;
-    border-bottom: 2px solid var(--primary-maroon);
-}
-.table-striped > tbody > tr:nth-of-type(odd) > * {
-    background-color: #f5f5f5; /* Light gray for alternating rows */
-}
-.table-hover tbody tr:hover td {
-    background-color: #ffeaea; /* Very light pink/maroon hue on hover */
-}
-    </style>
 </head>
 <body class="bg-light">
 <div class="main-content">
@@ -133,6 +236,12 @@ button.search-btn:hover {
 
         <!-- ROWS -->
         <div class="row g-4 mt-2">
+        <!-- ======= AJAX SEARCH BAR ======= -->
+<div class="search-bar">
+    <input type="text" id="searchBox" placeholder="Enter Student LRN" oninput="ajaxSearch(this.value)">
+    <button class="search-btn" onclick="ajaxSearch()">Search</button>
+</div>
+<div id="Searchresult"></div>
             <!-- WEEKLY SUMMARY -->
             <div class="col-12 mb-3">
                 <h5 class="text-primary mb-2">Weekly Summary</h5>
@@ -140,25 +249,25 @@ button.search-btn:hover {
                     <div class="col-md-3">
                         <div class="bg-white p-3 rounded shadow-sm">
                             <h6 class="text-muted">Visits This Week</h6>
-                            <div class="fs-3 fw-bold text-primary"><?= $weekly_visits ?></div>
+                            <div class="fs-3 fw-bold text-primary"><?= htmlspecialchars($weekly_visits) ?></div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="bg-white p-3 rounded shadow-sm">
                             <h6 class="text-muted">Items Used</h6>
-                            <div class="fs-3 fw-bold text-success"><?= $weekly_items_used ?></div>
+                            <div class="fs-3 fw-bold text-success"><?= htmlspecialchars($weekly_items_used) ?></div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="bg-white p-3 rounded shadow-sm">
                             <h6 class="text-muted">New Items Added</h6>
-                            <div class="fs-3 fw-bold text-warning"><?= $weekly_new_inventory ?></div>
+                            <div class="fs-3 fw-bold text-warning"><?= htmlspecialchars($weekly_new_inventory) ?></div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="bg-white p-3 rounded shadow-sm">
                             <h6 class="text-muted">Top Complaint</h6>
-                            <div class="fw-bold"><?= $common_complaint ?></div>
+                            <div class="fw-bold"><?= htmlspecialchars($common_complaint) ?></div>
                         </div>
                     </div>
                 </div>
@@ -174,26 +283,23 @@ button.search-btn:hover {
                         echo '<table class="table table-striped table-hover mb-0 small">';
                         echo '<thead class="table-light">
                                 <tr>
-                                    <th>ID</th>
                                     <th>Name</th>
-                                    <th>ID #</th>
-                                    <th>Department</th>
+                                    <th>LRN</th>
+                                    <th>Grade & Section</th>
                                     <th>Complaint</th>
                                     <th>Date</th>
                                 </tr>
                               </thead><tbody>';
-
                         $count = 0;
                         while ($row = $fetch_studentRecords->fetch(PDO::FETCH_ASSOC)) {
                             if ($count >= $limit) break;
                             echo "<tr>
-                                    <td>{$row['ID']}</td>
-                                    <td>{$row['name']}</td>
-                                    <td>{$row['idNum']}</td>
-                                    <td>{$row['department']}</td>
-                                    <td>{$row['complaint']}</td>
-                                    <td>{$row['visitDate']}</td>
-                                  </tr>";
+                                    <td>" . htmlspecialchars($row['name']) . "</td>
+                                    <td>" . htmlspecialchars($row['idNum']) . "</td>
+                                    <td>" . htmlspecialchars($row['department']) . "</td>
+                                    <td>" . htmlspecialchars($row['complaint']) . "</td>
+                                    <td>" . htmlspecialchars($row['visitDate']) . "</td>
+                                </tr>";
                             $count++;
                         }
                         echo '</tbody></table>';
@@ -203,6 +309,7 @@ button.search-btn:hover {
                     ?>
                 </div>
             </div>
+
             <!-- ======= INVENTORY SNAPSHOT ======= -->
             <div class="col-lg-5">
                 <h5 class="text-primary mb-2 d-flex justify-content-between">
@@ -228,14 +335,14 @@ button.search-btn:hover {
                         while ($row = $fetch_inventory->fetch(PDO::FETCH_ASSOC)) {
                             if ($count >= $limit) break;
                             echo "<tr>
-                                    <td>{$row['genericName']}</td>
-                                    <td>{$row['dosage']}</td>
-                                    <td>{$row['brand']}</td>
-                                    <td>{$row['category']}</td>
-                                    <td>{$row['quantity']}</td>
-                                    <td>{$row['addDate']}</td>
-                                    <td>{$row['expDate']}</td>
-                                  </tr>";
+                                    <td>" . htmlspecialchars($row['genericName']) . "</td>
+                                    <td>" . htmlspecialchars($row['dosage']) . "</td>
+                                    <td>" . htmlspecialchars($row['brand']) . "</td>
+                                    <td>" . htmlspecialchars($row['category']) . "</td>
+                                    <td>" . htmlspecialchars($row['quantity']) . "</td>
+                                    <td>" . htmlspecialchars($row['addDate']) . "</td>
+                                    <td>" . htmlspecialchars($row['expDate']) . "</td>
+                                </tr>";
                             $count++;
                         }
                         echo '</tbody></table>';
@@ -256,21 +363,26 @@ button.search-btn:hover {
                         echo '<table class="table table-striped table-hover mb-0 small">';
                         echo '<thead class="table-light">
                                 <tr>
-                                    <th>Qty</th>
+                                 <th>Student Name</th>
+                                 <th>Medicine Name</th>
+                                   
+                                    <th>Quantity</th>
                                     <th>Date</th>
-                                    <th>Item ID</th>
-                                    <th>Student ID</th>
+                                   
                                 </tr>
                               </thead><tbody>';
                         $count = 0;
                         while ($row = $fetch_transactions->fetch(PDO::FETCH_ASSOC)) {
                             if ($count >= $limit) break;
                             echo "<tr>
-                                    <td>{$row['quantity']}</td>
-                                    <td>{$row['transactionDate']}</td>
-                                    <td>{$row['itemID']}</td>
-                                    <td>{$row['studentID']}</td>
-                                  </tr>";
+                                    <td>" . htmlspecialchars($row['studentName'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['medicineName'] ?? 'N/A') . "</td>
+                                   
+
+                                    <td>" . htmlspecialchars($row['quantity']) . "</td>
+                                    <td>" . htmlspecialchars($row['transactionDate']) . "</td>
+                                    
+                                </tr>";
                             $count++;
                         }
                         echo '</tbody></table>';
@@ -281,7 +393,9 @@ button.search-btn:hover {
                 </div>
             </div>
         </div><!-- row -->
+
     </div><!-- card -->
+    
 </div><!-- main-content -->
 
 <script>
@@ -301,11 +415,7 @@ function ajaxSearch() {
     xhr.send();
 }
 </script>
-<!-- ======= AJAX SEARCH BAR ======= -->
-    <div class="search-bar">
-        <input type="text" id="searchBox" placeholder="Enter Student LRN" oninput="ajaxSearch(this.value)">
-        <button class="search-btn" onclick="ajaxSearch()">Search</button>
-    </div>
-    <div id="Searchresult"></div>
+
+
 </body>
 </html>
