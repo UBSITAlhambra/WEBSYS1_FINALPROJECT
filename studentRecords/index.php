@@ -83,8 +83,10 @@
             const selectedFormat = formatSelect.value;
             if (selectedFormat === 'csv' || selectedFormat === 'sql') {
                 filenameInput.style.display = 'inline-block';
+                filenameInput.setAttribute('required', 'required'); 
             } else {
                 filenameInput.style.display = 'none';
+                filenameInput.removeAttribute('required');
             }
         }
 
@@ -94,6 +96,109 @@
             toggleFilenameVisibility();
         });
     </script>
+</head>
+<body>
+<div class="main-content">
+    
+    <h2 style="margin-top: 15px;"><?= $page_title ?></h2>
+
+    <div class="action-bar">
+        <div class="search-input-container">
+            <input type="text" 
+                   id="search_input" 
+                   name="search"
+                   placeholder="Search by Name, ID, Department, or Complaint..." 
+                   value="<?= htmlspecialchars($searchTerm) ?>"
+                   oninput="showSearchRecord(this.value);" 
+                   onkeydown="handleSearchKeyPress(event);"
+                   autocomplete="off">
+
+            <div id="searchResultArea"></div>
+        </div>
+
+        <form method="GET" action="export.php" style="display: inline-block;">
+            <input type="text" 
+                   name="filename" 
+                   id="filename-input"
+                   class="filename-input" 
+                   placeholder="Optional Filename"> 
+            
+            <select name="format" id="export-format-select" class="export-select">
+                <option value="csv">CSV (Spreadsheet)</option>
+                <option value="json">JSON (Data)</option>
+                <option value="sql">SQL (Database)</option>
+            </select>
+            <button type="submit" class="btn update-btn" 
+                    style="background-color: #555;" 
+                    onclick="return confirm('Exporting all student records now. Continue?');">
+                Export Data
+            </button>
+        </form>
+    </div>
+
+    <?php if (!empty($searchTerm)): ?>
+        <div style="margin-bottom: 15px; width: 97%; margin-left: auto; margin-right: auto; text-align: left;">
+            <a href="index.php" class="btn delete-btn">Clear Search</a>
+        </div>
+    <?php endif; ?>
+
+    <!-- STUDENT RECORDS TABLE -->
+    <?php if (empty($data) && !empty($searchTerm)): ?>
+        <div style="padding: 50px; text-align: center;">
+            <h1>No Records Found for "<?= htmlspecialchars($searchTerm) ?>"</h1>
+            <p>Please try a different search term or <a href="index.php">clear the search filter</a></p>
+        </div>
+    <?php else: ?>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>ID Number</th>
+                <th>Department</th>
+                <th>Complaint</th>
+                <th>Visit Date</th>
+                <th class="table-actions">Actions</th>
+            </tr>
+            <?php if(count($data)): ?>
+                <?php foreach ($data as $row): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['name']) ?></td>
+                        <td><?= htmlspecialchars($row['idNum']) ?></td>
+                        <td><?= htmlspecialchars($row['department']) ?></td>
+                        <td><?= htmlspecialchars($row['complaint']) ?></td>
+                        <td><?= htmlspecialchars($row['visitDate']) ?></td>
+                        <td>
+                            <a href="update.php?id=<?= $row['ID'] ?>" class="btn update-btn">Edit</a>
+                            <a href="delete.php?id=<?= $row['ID'] ?>" class="btn delete-btn"
+                               onclick="return confirm('Delete this record?');">Delete</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7" style="color:#b53d3d;font-weight:bold;">No Student Clinic Records Found.</td>
+                </tr>
+            <?php endif; ?>
+        </table>
+    <?php endif; ?>
+    
+    <a href="add.php" class="btn add-btn">➕ Add New Item</a>
+    <a href="../transaction/" class="btn add-btn" style="background:#2977f6;">View Transaction</a>
+</div>
+</body>
+</html>
+<?php
+include 'oop.php';
+$student = new oop_class();
+$data = $student->show_data();
+$activePage = 'visits';
+include '../sidebar/sidebar.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Student Clinic Records</title>
+    <style>
        /* CSS Variables matching the Login/Register aesthetic */
 :root {
     --primary-maroon: #800000;
@@ -192,57 +297,8 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
     </style>
 </head>
 <body>
-<div class="main-content">
-    
-    <h2 style="margin-top: 15px;"><?= $page_title ?></h2>
-
-    <div class="action-bar">
-        <div class="search-input-container">
-            <input type="text" 
-                   id="search_input" 
-                   name="search"
-                   placeholder="Search by Name, ID, Department, or Complaint..." 
-                   value="<?= htmlspecialchars($searchTerm) ?>"
-                   oninput="showSearchRecord(this.value);" 
-                   onkeydown="handleSearchKeyPress(event);"
-                   autocomplete="off">
-
-            <div id="searchResultArea"></div>
-        </div>
-
-        <form method="GET" action="export.php" style="display: inline-block;">
-            <input type="text" 
-                   name="filename" 
-                   id="filename-input"
-                   class="filename-input" 
-                   placeholder="Optional Filename"> 
-            
-            <select name="format" id="export-format-select" class="export-select">
-                <option value="csv">CSV (Spreadsheet)</option>
-                <option value="json">JSON (Data)</option>
-                <option value="sql">SQL (Database)</option>
-            </select>
-            <button type="submit" class="btn update-btn" 
-                    style="background-color: #555;" 
-                    onclick="return confirm('Exporting all student records now. Continue?');">
-                Export Data
-            </button>
-        </form>
-    </div>
-
-    <?php if (!empty($searchTerm)): ?>
-        <div style="margin-bottom: 15px; width: 97%; margin-left: auto; margin-right: auto; text-align: left;">
-            <a href="index.php" class="btn delete-btn">Clear Search</a>
-        </div>
-    <?php endif; ?>
-
-    <!-- STUDENT RECORDS TABLE -->
-    <?php if (empty($data) && !empty($searchTerm)): ?>
-        <div style="padding: 50px; text-align: center;">
-            <h1>No Records Found for "<?= htmlspecialchars($searchTerm) ?>"</h1>
-            <p>Please try a different search term or <a href="index.php">clear the search filter</a></p>
-        </div>
-    <?php else: ?>
+    <div class="main-content">
+        <h2>Student Clinic Records</h2>
         <table>
             <tr>
                 <th>Name</th>
@@ -275,10 +331,5 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
         </table>
         <a href="add.php" class="btn add-btn"> Add New Student</a>
     </div>
-    <?php endif; ?>
-    
-    <a href="add.php" class="btn add-btn">➕ Add New Item</a>
-    <a href="../transaction/" class="btn add-btn" style="background:#2977f6;">View Transaction</a>
-</div>
 </body>
 </html>
