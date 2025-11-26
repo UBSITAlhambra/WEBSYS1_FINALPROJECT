@@ -274,14 +274,15 @@ button.search-btn:hover {
             </div>
 
             <!-- ======= RECENT VISITS ======= -->
-            <div class="col-lg-7">
+                <div class="col-lg-7">
                 <h5 class="text-primary mb-2">Recent Visits</h5>
-                <div class="table-responsive bg-white rounded shadow-sm p-2">
+                
+                <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 250px; overflow-y: auto;">
                     <?php
-                    $limit = 5;
+                
                     if ($fetch_studentRecords->rowCount() > 0) {
                         echo '<table class="table table-striped table-hover mb-0 small">';
-                        echo '<thead class="table-light">
+                        echo '<thead class="table-light sticky-top" style="background-color: #f8f9fa;">
                                 <tr>
                                     <th>Name</th>
                                     <th>LRN</th>
@@ -289,10 +290,10 @@ button.search-btn:hover {
                                     <th>Complaint</th>
                                     <th>Date</th>
                                 </tr>
-                              </thead><tbody>';
-                        $count = 0;
+                            </thead><tbody>';
+                        
+                        
                         while ($row = $fetch_studentRecords->fetch(PDO::FETCH_ASSOC)) {
-                            if ($count >= $limit) break;
                             echo "<tr>
                                     <td>" . htmlspecialchars($row['name']) . "</td>
                                     <td>" . htmlspecialchars($row['idNum']) . "</td>
@@ -300,7 +301,6 @@ button.search-btn:hover {
                                     <td>" . htmlspecialchars($row['complaint']) . "</td>
                                     <td>" . htmlspecialchars($row['visitDate']) . "</td>
                                 </tr>";
-                            $count++;
                         }
                         echo '</tbody></table>';
                     } else {
@@ -309,7 +309,7 @@ button.search-btn:hover {
                     ?>
                 </div>
             </div>
-
+            
             <!-- ======= INVENTORY SNAPSHOT ======= -->
             <div class="col-lg-5">
                 <h5 class="text-primary mb-2 d-flex justify-content-between">
