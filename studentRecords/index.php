@@ -83,10 +83,8 @@
             const selectedFormat = formatSelect.value;
             if (selectedFormat === 'csv' || selectedFormat === 'sql') {
                 filenameInput.style.display = 'inline-block';
-                filenameInput.setAttribute('required', 'required'); 
             } else {
                 filenameInput.style.display = 'none';
-                filenameInput.removeAttribute('required');
             }
         }
 
