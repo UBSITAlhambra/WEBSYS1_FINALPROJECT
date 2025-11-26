@@ -7,10 +7,16 @@
         $dosage = $_POST['dosage'] ?? '';
         $brand = $_POST['brand'] ?? '';
         $category = $_POST['category'] ?? '';
+<<<<<<< Updated upstream
         $addDate = $_POST['addDate'] ?? '';
         $expDate = $_POST['expDate'] ?? '';
         $quantity = $_POST['quantity'] ?? '';
 
+=======
+        $quantity = $_POST['quantity'] ?? ''; 
+        $addDate = $_POST['addDate'] ?? '';
+        $expDate = $_POST['expDate'] ?? '';
+>>>>>>> Stashed changes
         $oop->insert_data($genericName, $dosage, $brand, $category, $quantity, $addDate, $expDate);
     }
 ?>
@@ -95,6 +101,7 @@
         <input type="text" name="dosage" placeholder="Dosage" required>
         <input type="text" name="brand" placeholder="Brand" required>
         <input type="text" name="category" placeholder="Category" required>
+        <input type="text" name="quantity" placeholder="Quantity" required>
         <input type="date" name="addDate" placeholder="Add Date" required>
         <input type="date" name="expDate" placeholder="Expiry Date" required>
         <button name="add">➕ ADD</button>

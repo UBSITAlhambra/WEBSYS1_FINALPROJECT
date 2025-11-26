@@ -15,11 +15,16 @@
         $category = $_POST['category'] ?? '';
         $addDate = $_POST['addDate'] ?? '';
         $expDate = $_POST['expDate'] ?? '';
+<<<<<<< Updated upstream
         
         $quantity = $_POST['quantity'] ?? ''; // NEW: Declare $quantity
         
         $ID = $_POST['id'] ?? '';
 
+=======
+        $quantity = $_POST['quantity'] ?? ''; 
+        $ID = $_POST['id'] ?? '';
+>>>>>>> Stashed changes
         $oop->update_data($genericName, $dosage, $brand, $category, $addDate, $expDate, $quantity, $ID);
     }
 ?>
@@ -124,11 +129,16 @@
             <td><input type="text" name="genericName" value="<?= htmlspecialchars($row['genericName']) ?>" required></td>
             <td><input type="text" name="dosage" value="<?= htmlspecialchars($row['dosage']) ?>" required></td>
             <td><input type="text" name="brand" value="<?= htmlspecialchars($row['brand']) ?>" required></td>
+<<<<<<< Updated upstream
             
             <td><input type="text" name="category" value="<?= htmlspecialchars($row['category']) ?>" required></td>
             
             <td><input type="text" name="quantity" value="<?= htmlspecialchars($row['quantity']) ?>" required></td>
             
+=======
+            <td><input type="text" name="category" value="<?= htmlspecialchars($row['category']) ?>" required></td>
+            <td><input type="text" name="quantity" value="<?= htmlspecialchars($row['quantity']) ?>" required></td>
+>>>>>>> Stashed changes
             <td><input type="date" name="addDate" value="<?= htmlspecialchars($row['addDate']) ?>" required></td>
             <td><input type="date" name="expDate" value="<?= htmlspecialchars($row['expDate']) ?>" required></td>
         </tr>

@@ -1,6 +1,7 @@
 <?php
     include 'oop.php';
     $inventory = new oop_class();
+<<<<<<< Updated upstream
 
     $data = $inventory->show_data(); 
 
@@ -9,6 +10,12 @@
     $base_name = $_GET['filename'] ?? 'inventory_export';
     $date_tag = date('Ymd_His');
 
+=======
+    $data = $inventory->show_data(); 
+    $format = strtolower($_GET['format'] ?? 'csv');
+    $base_name = $_GET['filename'] ?? 'inventory_export';
+    $date_tag = date('Ymd_His');
+>>>>>>> Stashed changes
     $clean_base_name = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $base_name);
     if (empty(trim($clean_base_name, '_'))) {
         $clean_base_name = 'inventory_export';
@@ -19,12 +26,16 @@
             $filename = $clean_base_name . '_' . $date_tag . '.sql';
             header('Content-Type: application/sql');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             $sql_content = "-- Exported Inventory Data from WEBSYS1_FINALPROJECT\n";
             $sql_content .= "-- Host: " . SERVER . "\n";
             $sql_content .= "-- Database: " . DBNAME . "\n\n";
             $sql_content .= "SET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";\n";
             $sql_content .= "START TRANSACTION;\n\n";
+<<<<<<< Updated upstream
 
             $table_name = 'inventory';
             $columns = ['itemID', 'genericName', 'dosage', 'brand', 'quantity', 'category', 'addDate', 'expDate'];
@@ -53,6 +64,25 @@
             $sql_content .= "\n/*!40000 ALTER TABLE `{$table_name}` ENABLE KEYS */; \n";
             $sql_content .= "COMMIT;\n";
             
+=======
+            $table_name = 'inventory';
+            $columns = ['itemID', 'genericName', 'dosage', 'brand', 'quantity', 'category', 'addDate', 'expDate'];
+            $column_list = implode(', ', $columns);
+            $sql_content .= "/*!40000 ALTER TABLE `{$table_name}` DISABLE KEYS */; \n";
+            if (!empty($data)) {
+                foreach ($data as $row) {
+                    $values = array_map(function($value) {
+                        if (is_numeric($value)) { return $value; }
+                        if ($value === null || $value === '') { return 'NULL'; }
+                        return "'" . str_replace("'", "''", $value) . "'"; 
+                    }, array_values($row));
+                    $value_list = implode(', ', $values);
+                    $sql_content .= "INSERT INTO `{$table_name}` ({$column_list}) VALUES ({$value_list});\n";
+                }
+            }
+            $sql_content .= "\n/*!40000 ALTER TABLE `{$table_name}` ENABLE KEYS */; \n";
+            $sql_content .= "COMMIT;\n";
+>>>>>>> Stashed changes
             echo $sql_content;
             break;
 
@@ -60,7 +90,10 @@
             $filename = $clean_base_name . '_' . $date_tag . '.json';
             header('Content-Type: application/json');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             echo json_encode($data, JSON_PRETTY_PRINT);
             break;
 
@@ -69,6 +102,7 @@
             $filename = $clean_base_name . '_' . $date_tag . '.csv';
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
+<<<<<<< Updated upstream
             
             $output = fopen('php://output', 'w');
 
@@ -97,12 +131,23 @@
                         $row['addDate'],
                         $row['expDate']
                     ];
+=======
+            $output = fopen('php://output', 'w');
+            $header_row = ['ID', 'Generic Name', 'Dosage', 'Brand', 'Quantity', 'Category', 'Added Date', 'Expiry Date'];
+            fputcsv($output, $header_row);
+            if (!empty($data)) {
+                foreach ($data as $row) {
+                    $csv_row = [$row['itemID'], $row['genericName'], $row['dosage'], $row['brand'], $row['quantity'], $row['category'], $row['addDate'], $row['expDate']];
+>>>>>>> Stashed changes
                     fputcsv($output, $csv_row);
                 }
             }
             fclose($output);
             break;
     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     exit();
 ?>

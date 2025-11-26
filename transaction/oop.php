@@ -8,6 +8,7 @@
         private $conn;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     function __construct() {
         try {
             $connection = "mysql:host=" . SERVER . ";dbname=" . DBNAME . ";charset=utf8";
@@ -229,6 +230,50 @@
             $stockCheck->execute([':id' => $itemID]);
             $stock = $stockCheck->fetchColumn();
 
+=======
+        function __construct() {
+            try {
+                $connection = "mysql:host=" . SERVER . ";dbname=" . DBNAME . ";charset=utf8";
+                $this->conn = new PDO($connection, USER, PASS);
+                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                echo "<script>alert('Connection Failed');</script>";
+            }
+        }
+
+        public function get_connection() {
+            return $this->conn;
+        }
+
+        public function get_itemID_by_name($genericName) {
+            $query = "SELECT itemID FROM inventory WHERE genericName = :name LIMIT 1";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute([':name' => $genericName]);
+            return $stmt->fetchColumn();
+        }
+
+        public function get_studentID_by_name($studentName) {
+            $query = "SELECT ID FROM studentrecord WHERE name = :name LIMIT 1";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute([':name' => $studentName]);
+            return $stmt->fetchColumn();
+        }
+
+        // INSERT using NAME
+        public function insert_data_by_name($quantity, $transactionDate, $medicineName, $studentName) {
+            $itemID = $this->get_itemID_by_name($medicineName);
+            $studentID = $this->get_studentID_by_name($studentName);
+
+            if (!$itemID || !$studentID) {
+                echo "<script>alert('Invalid Medicine or Student Name');</script>";
+                return;
+            }
+
+            $stockCheck = $this->conn->prepare("SELECT quantity FROM inventory WHERE itemID = :id");
+            $stockCheck->execute([':id' => $itemID]);
+            $stock = $stockCheck->fetchColumn();
+
+>>>>>>> Stashed changes
             if ($stock < $quantity) {
                 echo "<script>alert('Not Enough Stock');</script>";
                 return;
@@ -238,7 +283,11 @@
 
             try {
                 $insert = "INSERT INTO transaction (quantity, transactionDate, itemID, studentID)
+<<<<<<< Updated upstream
                         VALUES (:quantity, :date, :itemID, :studentID)";
+=======
+                            VALUES (:quantity, :date, :itemID, :studentID)";
+>>>>>>> Stashed changes
                 $stmt = $this->conn->prepare($insert);
                 $stmt->execute([
                     ':quantity' => $quantity,
@@ -263,7 +312,11 @@
             }
         }
 
+<<<<<<< Updated upstream
         // SHOW all transactions with names
+=======
+        // SHOW all transactions with names (Used for Index List and Export)
+>>>>>>> Stashed changes
         public function show_data() {
             $select = "
                 SELECT 
@@ -271,7 +324,13 @@
                     t.quantity,
                     t.transactionDate,
                     i.genericName AS medicineName,
+<<<<<<< Updated upstream
                     s.name AS studentName
+=======
+                    s.name AS studentName,
+                    t.itemID,
+                    t.studentID
+>>>>>>> Stashed changes
                 FROM transaction t
                 LEFT JOIN inventory i ON t.itemID = i.itemID
                 LEFT JOIN studentrecord s ON t.studentID = s.ID
@@ -359,7 +418,11 @@
                             transactionDate = :date,
                             itemID = :itemID,
                             studentID = :studentID
+<<<<<<< Updated upstream
                         WHERE transactionID = :id";
+=======
+                            WHERE transactionID = :id";
+>>>>>>> Stashed changes
                 $stmt = $this->conn->prepare($update);
                 $stmt->execute([
                     ':quantity' => $quantity,
@@ -377,19 +440,32 @@
                 echo "<script>alert('Error during update');</script>";
             }
         }
+<<<<<<< Updated upstream
 
         //SEARCH
         public function search_transactions_by_name($searchTerm) {
             $term = '%' . $searchTerm . '%';
             
             //Define the complex SQL query using LEFT JOINs.
+=======
+        
+        //SEARCH FUNCTION
+        public function search_transactions_by_name($searchTerm) {
+            $term = '%' . $searchTerm . '%';
+>>>>>>> Stashed changes
             $search = "
                 SELECT 
                     t.transactionID,
                     t.quantity,
                     t.transactionDate,
                     i.genericName AS medicineName,
+<<<<<<< Updated upstream
                     s.name AS studentName
+=======
+                    s.name AS studentName,
+                    t.itemID,
+                    t.studentID
+>>>>>>> Stashed changes
                 FROM transaction t
                 LEFT JOIN inventory i ON t.itemID = i.itemID
                 LEFT JOIN studentrecord s ON t.studentID = s.ID
@@ -399,11 +475,18 @@
                     t.transactionID LIKE :term 
                 ORDER BY t.transactionDate DESC
             ";
+<<<<<<< Updated upstream
     
             $stmt = $this->conn->prepare($search);
             
             $stmt->execute([':term' => $term]);
             
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+>>>>>>> Stashed changes
+=======
+            
+            $stmt = $this->conn->prepare($search);
+            $stmt->execute([':term' => $term]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC); 
 >>>>>>> Stashed changes
         }
