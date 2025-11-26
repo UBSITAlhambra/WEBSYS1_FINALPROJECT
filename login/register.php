@@ -1,6 +1,6 @@
 <?php
-// Include the core class file
-include 'functions.php';
+// Adjust path if functions.php is in a different location relative to this file
+include 'functions.php'; 
 
 $auth = new AuthSystem();
 $error_message = '';
@@ -22,13 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_message = "Password must be at least 6 characters long.";
     } else {
         
-        // Sanitize inputs before passing to the method
         $clean_fname = htmlspecialchars($fname);
         $clean_mname = htmlspecialchars($mname);
         $clean_lname = htmlspecialchars($lname);
         $clean_email = filter_var($email, FILTER_SANITIZE_EMAIL); 
         
-        // The class method handles hashing and database insertion.
         $auth->register($clean_fname, $clean_mname, $clean_lname, $clean_email, $password);
     }
 }
@@ -38,52 +36,151 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Staff Registration</title>
+    
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .form-container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 350px; }
-        h2 { text-align: center; color: #333; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #1e7e34; }
-        .error { color: red; text-align: center; margin-bottom: 15px; }
-        .link { text-align: center; margin-top: 15px; }
+        :root {
+            --primary-maroon: #800000;
+            --light-bg: #f8f8f8;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+            --hover-shadow: 0 8px 25px rgba(128, 0, 0, 0.4);
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+        }
+        .custom-card { 
+            box-shadow: var(--box-shadow); 
+            transition: all 0.3s ease-in-out;
+            border: none;
+        }
+        .custom-card:hover {
+            box-shadow: var(--hover-shadow);
+        }
+        h2 { 
+            color: var(--primary-maroon);
+            font-weight: 600;
+        }
+        .btn-custom-maroon { 
+            background-color: white; 
+            color: var(--primary-maroon); 
+            border: 2px solid var(--primary-maroon); 
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-custom-maroon:hover { 
+            background-color: var(--primary-maroon); 
+            color: white; 
+            box-shadow: 0 4px 8px rgba(128, 0, 0, 0.4);
+        }
+        .link a {
+            color: var(--primary-maroon);
+            text-decoration: none;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Clinic Staff Registration </h2>
-        <?php if (!empty($error_message)): ?>
-            <p class="error"><?php echo $error_message; ?></p>
-        <?php endif; ?>
-        
-        <form action="register.php" method="POST">
-            
-            <label for="fname">First Name</label>
-            <input type="text" id="fname" name="fname" required value="<?php echo htmlspecialchars($fname); ?>">
-            
-            <label for="mname">Middle Name (Optional)</label>
-            <input type="text" id="mname" name="mname" value="<?php echo htmlspecialchars($mname); ?>">
-            
-            <label for="lname">Last Name</label>
-            <input type="text" id="lname" name="lname" required value="<?php echo htmlspecialchars($lname); ?>">
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="card p-4 custom-card" style="width: 400px;"> 
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Clinic Staff Registration </h2>
+                
+                <?php if (!empty($error_message)): ?>
+                    <div class="alert alert-danger text-center" role="alert"><?php echo $error_message; ?></div>
+                <?php endif; ?>
+                
+                <form action="register.php" method="POST">
+                    
+                    <div class="mb-3">
+                        <label for="fname" class="form-label">First Name</label>
+                        <input type="text" id="fname" name="fname" class="form-control" required value="<?php echo htmlspecialchars($fname); ?>">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mname" class="form-label">Middle Name (Optional)</label>
+                        <input type="text" id="mname" name="mname" class="form-control" value="<?php echo htmlspecialchars($mname); ?>">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="lname" class="form-label">Last Name</label>
+                        <input type="text" id="lname" name="lname" class="form-control" required value="<?php echo htmlspecialchars($lname); ?>">
+                    </div>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($email); ?>">
-            
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-            
-            <label for="confirm_password">Confirm Password</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
-            
-            <button type="submit">Register Account</button>
-        </form>
-        
-        <div class="link">
-            <p>Already have an account? <a href="index.php">Login Here</a></p>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-control" 
+                            required 
+                            value="<?php echo htmlspecialchars($email); ?>"
+                            onkeyup="checkEmailAvailability()" >
+                        <div id="emailAvailabilityResult" class="mt-1">
+                            </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-custom-maroon w-100 mt-2">Register Account</button>
+                </form>
+                
+                <div class="link text-center mt-3">
+                    <p>Already have an account? <a href="index.php">Login Here</a></p>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    function checkEmailAvailability() {
+        var email = document.getElementById('email').value;
+        var resultDiv = document.getElementById('emailAvailabilityResult');
+        
+        if (email.length < 5) {
+            resultDiv.innerHTML = '';
+            return;
+        }
+
+        resultDiv.innerHTML = '<span class="text-info small">Checking availability...</span>';
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                var response = this.responseText.trim();
+                
+                if (response === 'taken') {
+                    resultDiv.innerHTML = '<span class="text-danger small fw-bold">❌ Email already registered.</span>';
+                } else if (response === 'available') {
+                    resultDiv.innerHTML = '<span class="text-success small fw-bold">✅ Email available!</span>';
+                } else {
+                    resultDiv.innerHTML = '<span class="text-warning small">Error checking email.</span>';
+                }
+            }
+        };
+        
+        // Ensure the path to check_email.php is correct
+        xhr.open("GET", "check_email.php?email=" + encodeURIComponent(email), true);
+        xhr.send();
+    }
+    </script>
 </body>
 </html>

@@ -1,0 +1,23 @@
+{
+  "name": "websys1_finalproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UBSITAlhambra/WEBSYS1_FINALPROJECT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UBSITAlhambra/WEBSYS1_FINALPROJECT/issues"
+  },
+  "homepage": "https://github.com/UBSITAlhambra/WEBSYS1_FINALPROJECT#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.8"
+  }
+}

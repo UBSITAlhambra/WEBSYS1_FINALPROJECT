@@ -22,43 +22,97 @@ include '../sidebar/sidebar.php';
     <title>School Clinic Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        .main-content {
-            margin-left: 270px;
-            padding: 25px;
-        }
-        .search-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 14px 0 24px 0;
-        }
-        #searchBox {
-            padding: 8px 17px;
-            font-size: 15px;
-            width: 260px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-right: 8px;
-        }
-        #Searchresult {
-            margin-bottom: 18px;
-            min-height: 38px;
-            width: 65%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        button.search-btn {
-            padding: 8px 18px;
-            background: #298afc;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        button.search-btn:hover {
-            background: #1765b8;
-        }
+    /* CSS Variables matching the Login/Register aesthetic */
+:root {
+    --primary-maroon: #800000; /* Deep Maroon */
+    --light-bg: #f8f8f8;
+    --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+}
+ 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-bg);
+}
+
+.main-content {
+    margin-left: 270px; /* Preserve sidebar spacing */
+    padding: 25px;
+}
+ 
+/* General styling for cards and tables */
+.rounded {
+    border-radius: 8px !important;
+}
+.shadow-sm {
+    box-shadow: var(--box-shadow) !important;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Titles and Colors */
+.text-primary {
+    color: var(--primary-maroon) !important;
+}
+.fw-bold { font-weight: 600 !important; }
+
+/* Search Bar Styling */
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 14px 0 24px 0;
+}
+#searchBox {
+    padding: 10px 17px;
+    font-size: 15px;
+    width: 260px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 8px;
+}
+#Searchresult {
+    margin-bottom: 18px;
+    min-height: 38px;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Maroon Search Button */
+button.search-btn {
+    padding: 10px 18px;
+    background: var(--primary-maroon); /* Maroon background */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+button.search-btn:hover {
+    background: #a00000; /* Darker maroon on hover */
+}
+
+/* Summary Cards */
+.col-md-3 > div {
+    border: 1px solid #ddd;
+    transition: transform 0.2s;
+}
+.col-md-3 > div:hover {
+    transform: translateY(-3px); /* Lift effect on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styling */
+.table-light {
+    background-color: var(--light-bg) !important;
+    border-bottom: 2px solid var(--primary-maroon);
+}
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: #f5f5f5; /* Light gray for alternating rows */
+}
+.table-hover tbody tr:hover td {
+    background-color: #ffeaea; /* Very light pink/maroon hue on hover */
+}
     </style>
 </head>
 <body class="bg-light">
