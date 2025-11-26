@@ -11,83 +11,101 @@ include '../sidebar/sidebar.php';
     <meta charset="UTF-8" />
     <title>Student Clinic Records</title>
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .main-content {
-            margin-left: 220px; /* Adjust if your sidebar is wider/narrower */
-            padding: 30px 40px 0 40px;
-            background: #fafcff;
-            min-height: 100vh;
-        }
-        h2 {
-            margin-bottom: 26px;
-            color: #2b303a;
-            letter-spacing: 1px;
-            text-align: center;
-        }
-        table {
-            width: 97%;
-            border-collapse: collapse;
-            margin: 0 auto 18px auto;
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-        }
-        th, td {
-            border: 1px solid #eaeaea;
-            padding: 12px 12px;
-            text-align: center;
-        }
-        th {
-            background: #f0f4fb;
-            color: #222;
-            font-weight: 600;
-        }
-        tr:nth-child(even) { background: #f7fbfc; }
-        tr:hover { background: #e7f7ff; }
-        .btn {
-            padding: 7px 16px;
-            border-radius: 5px;
-            font-size: 15px;
-            text-decoration: none;
-            color: #fff !important;
-            display: inline-block;
-            margin: 0 2px;
-            font-weight: bold;
-            transition: background 0.15s;
-            border: none;
-        }
-        .btn.add-btn {
-            background-color: #29c772;
-            color: #fff;
-            margin-bottom: 0;
-            margin-right: 10px;
-            margin-top: 14px;
-        }
-        .btn.add-btn:hover { background-color: #178347; }
-        .btn.update-btn {
-            background-color: #298afc;
-        }
-        .btn.update-btn:hover {
-            background-color: #1765b8;
-        }
-        .btn.delete-btn {
-            background-color: #fb2555;
-        }
-        .btn.delete-btn:hover {
-            background-color: #ab092e;
-        }
-        .table-actions {
-            white-space: nowrap;
-            min-width: 135px;
-        }
-        @media (max-width: 900px) {
-            .main-content { margin-left: 0; padding: 12px; }
-            table { width: 98%; }
-        }
+       /* CSS Variables matching the Login/Register aesthetic */
+:root {
+    --primary-maroon: #800000;
+    --light-bg: #f8f8f8;
+    --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+}
+ 
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistent Font */
+    background: var(--light-bg);
+}
+
+.main-content {
+    margin-left: 250px; /* MATCHES standard sidebar width */
+    padding: 30px 40px 0 40px;
+    background: var(--light-bg);
+    min-height: 100vh;
+}
+h2 {
+    margin-bottom: 26px;
+    color: var(--primary-maroon); /* Maroon Heading */
+    letter-spacing: 1px;
+    text-align: center;
+    font-weight: 600;
+}
+table {
+    width: 97%;
+    border-collapse: collapse;
+    margin: 0 auto 18px auto;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--box-shadow); /* Consistent shadow */
+}
+th, td {
+    border: 1px solid #eaeaea;
+    padding: 12px 12px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+th {
+    background: var(--light-bg); /* Lighter header background */
+    color: var(--primary-maroon); /* Maroon Header Text */
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary-maroon); /* Stronger bottom border */
+}
+tr:nth-child(even) { background: #f7fbfc; }
+tr:hover { background: #ffeaea; } /* Light Maroon Hover */
+.btn {
+    padding: 7px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff !important;
+    display: inline-block;
+    margin: 0 2px;
+    font-weight: 600;
+    transition: background 0.15s;
+    border: none;
+}
+.btn.add-btn {
+    background-color: var(--primary-maroon); /* Maroon for Add */
+    color: #fff;
+    margin-bottom: 0;
+    margin-right: 10px;
+    margin-top: 14px;
+}
+.btn.add-btn:hover { background-color: #a00000; } /* Darker Maroon */
+.btn.update-btn {
+    background-color: #2e6db4; /* Blue for Edit */
+}
+.btn.update-btn:hover {
+    background-color: #1a4d8c;
+}
+.btn.delete-btn {
+    background-color: #e74c3c; /* Red for Delete */
+}
+.btn.delete-btn:hover {
+    background-color: #c0392b;
+}
+.table-actions {
+    white-space: nowrap;
+    min-width: 135px;
+    text-align: center;
+}
+.top-buttons {
+     text-align: right; 
+     margin-bottom: 10px;
+}
+
+@media (max-width: 900px) {
+    .main-content { margin-left: 0; padding: 12px; }
+    table { width: 98%; }
+}
     </style>
 </head>
 <body>

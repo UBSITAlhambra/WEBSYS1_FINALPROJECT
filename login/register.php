@@ -1,9 +1,11 @@
 <?php
-include 'functions.php';
+// Adjust path if functions.php is in a different location relative to this file
+include 'functions.php'; 
 
 $auth = new AuthSystem();
 $error_message = '';
 
+// Use null coalescing to retain input values on validation error
 $fname = $_POST['fname'] ?? '';
 $mname = $_POST['mname'] ?? ''; 
 $lname = $_POST['lname'] ?? '';
@@ -38,8 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Staff Registration</title>
     
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-</head>
-<body>
+    
     <style>
         :root {
             --primary-maroon: #800000;
@@ -47,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
             --hover-shadow: 0 8px 25px rgba(128, 0, 0, 0.4);
         }
-
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-bg);
@@ -56,22 +56,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             align-items: center; 
             min-height: 100vh;
         }
-        
         .custom-card { 
             box-shadow: var(--box-shadow); 
             transition: all 0.3s ease-in-out;
             border: none;
         }
-        
         .custom-card:hover {
             box-shadow: var(--hover-shadow);
         }
-
         h2 { 
             color: var(--primary-maroon);
             font-weight: 600;
         }
-        
         .btn-custom-maroon { 
             background-color: white; 
             color: var(--primary-maroon); 
@@ -79,19 +75,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 600;
             transition: all 0.2s ease-in-out;
         }
-        
         .btn-custom-maroon:hover { 
             background-color: var(--primary-maroon); 
             color: white; 
             box-shadow: 0 4px 8px rgba(128, 0, 0, 0.4);
         }
-        
         .link a {
             color: var(--primary-maroon);
             text-decoration: none;
             font-weight: 600;
         }
     </style>
+</head>
+<body>
     <div class="container d-flex justify-content-center align-items-center">
         <div class="card p-4 custom-card" style="width: 400px;"> 
             <div class="card-body">
@@ -120,7 +116,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" required value="<?php echo htmlspecialchars($email); ?>">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-control" 
+                            required 
+                            value="<?php echo htmlspecialchars($email); ?>"
+                            onkeyup="checkEmailAvailability()" >
+                        <div id="emailAvailabilityResult" class="mt-1">
+                            </div>
                     </div>
                     
                     <div class="mb-3">
@@ -144,5 +149,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    function checkEmailAvailability() {
+        var email = document.getElementById('email').value;
+        var resultDiv = document.getElementById('emailAvailabilityResult');
+        
+        if (email.length < 5) {
+            resultDiv.innerHTML = '';
+            return;
+        }
+
+        resultDiv.innerHTML = '<span class="text-info small">Checking availability...</span>';
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                var response = this.responseText.trim();
+                
+                if (response === 'taken') {
+                    resultDiv.innerHTML = '<span class="text-danger small fw-bold">❌ Email already registered.</span>';
+                } else if (response === 'available') {
+                    resultDiv.innerHTML = '<span class="text-success small fw-bold">✅ Email available!</span>';
+                } else {
+                    resultDiv.innerHTML = '<span class="text-warning small">Error checking email.</span>';
+                }
+            }
+        };
+        
+        // Ensure the path to check_email.php is correct
+        xhr.open("GET", "check_email.php?email=" + encodeURIComponent(email), true);
+        xhr.send();
+    }
+    </script>
 </body>
 </html>

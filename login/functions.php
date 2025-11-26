@@ -100,6 +100,13 @@ class AuthSystem {
         exit;
     }
     
+    public function check_email_availability($email) {
+    $query = "SELECT ID FROM login WHERE Email = :email";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute([':email' => $email]);
+    
+    return $stmt->rowCount() > 0; 
+}
     // NOTE: Your student tracking CRUD methods would be placed here.
 }
 ?>

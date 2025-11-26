@@ -121,7 +121,7 @@ include '../sidebar/sidebar.php';
             </tr>
         <?php endif; ?>
     </table>
-    <a href="add.php" class="btn add-btn">➕ Add New Item</a>
+    <a href="add.php" class="btn add-btn">Add New Item</a>
 </div>
 </body>
 </html>
