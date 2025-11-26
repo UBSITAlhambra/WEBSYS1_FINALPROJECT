@@ -9,7 +9,8 @@ if (isset($_POST['add'])) {
     $category = $_POST['category'] ?? '';
     $addDate = $_POST['addDate'] ?? '';
     $expDate = $_POST['expDate'] ?? '';
-    $oop->insert_data($genericName, $dosage, $brand, $category, $addDate, $expDate);
+    $quantity = $_POST['quantity'] ?? '';
+    $oop->insert_data($genericName, $dosage, $brand, $category, $quantity, $addDate, $expDate);
 }
 ?>
 
@@ -93,6 +94,7 @@ if (isset($_POST['add'])) {
         <input type="text" name="dosage" placeholder="Dosage" required>
         <input type="text" name="brand" placeholder="Brand" required>
         <input type="text" name="category" placeholder="Category" required>
+         <input type="text" name="quantity" placeholder="Quantity" required>
         <input type="date" name="addDate" placeholder="Add Date" required>
         <input type="date" name="expDate" placeholder="Expiry Date" required>
         <button name="add">➕ ADD</button>
