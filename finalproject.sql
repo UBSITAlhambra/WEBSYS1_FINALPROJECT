@@ -3,9 +3,15 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Nov 24, 2025 at 07:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
+=======
+-- Generation Time: Nov 23, 2025 at 10:13 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+>>>>>>> Victoria
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -43,7 +49,8 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `brand`, `category`, `addDate`, `expDate`, `quantity`) VALUES
-(2, 'paracetamol', '12', 'tempra', 'qweq', '2025-11-02', '2025-11-17', 86);
+(2, 'paracetamol', '12', 'tempra', 'qweq', '2025-11-02', '2025-11-17', 86),
+(3, 'Sertraline', '100mg', 'Zoloft', 'Selective Serotonin Reuptake Inh', '2025-11-24', '2025-11-24', 2000);
 
 -- --------------------------------------------------------
 
@@ -90,6 +97,7 @@ CREATE TABLE `studentrecord` (
 --
 
 INSERT INTO `studentrecord` (`ID`, `name`, `idNum`, `department`, `complaint`, `visitDate`) VALUES
+<<<<<<< HEAD
 (1, '123', 123, '123', '123', '2025-11-20');
 
 -- --------------------------------------------------------
@@ -114,6 +122,10 @@ CREATE TABLE `student_vitals` (
 
 INSERT INTO `student_vitals` (`vitalID`, `studentID`, `vitalDate`, `temperature`, `bloodPressure`, `pulse`, `respiratoryRate`) VALUES
 (2, 1, '2025-11-24', 999.9, '123/78', 123, 12);
+=======
+(1, '123', 123, 123, '123', '2025-11-20'),
+(3, 'Draven Clark Victoria', 20239090, 0, 'IAWDWDI', '2025-11-24');
+>>>>>>> Victoria
 
 -- --------------------------------------------------------
 
@@ -135,7 +147,8 @@ CREATE TABLE `transaction` (
 
 INSERT INTO `transaction` (`transactionID`, `quantity`, `transactionDate`, `itemID`, `studentID`) VALUES
 (4, 12, '2025-11-20', 2, 1),
-(5, 12, '2025-11-20', 2, 1);
+(5, 12, '2025-11-20', 2, 1),
+(6, 3000, '2025-11-24', 3, 3);
 
 --
 -- Indexes for dumped tables
@@ -183,7 +196,7 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `login`
@@ -195,7 +208,7 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT for table `studentrecord`
 --
 ALTER TABLE `studentrecord`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `student_vitals`
@@ -207,6 +220,7 @@ ALTER TABLE `student_vitals`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
+<<<<<<< HEAD
   MODIFY `transactionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
@@ -218,6 +232,9 @@ ALTER TABLE `transaction`
 --
 ALTER TABLE `student_vitals`
   ADD CONSTRAINT `student_vitals_ibfk_1` FOREIGN KEY (`studentID`) REFERENCES `studentrecord` (`ID`);
+=======
+  MODIFY `transactionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+>>>>>>> Victoria
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
