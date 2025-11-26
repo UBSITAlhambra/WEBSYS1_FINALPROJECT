@@ -1,7 +1,8 @@
 <?php
 include "oop.php";
 $oop = new studentVitals();
-
+$activePage = 'vitals';
+include '../sidebar/sidebar.php';
 // Fetch students via OOP
 $students = $oop->fetch_students();
 
@@ -110,7 +111,7 @@ if (isset($_POST['save'])) {
         <button type="submit" name="save">Save Vitals</button>
     </form>
 
-    <a href="show_vitals.php" class="back-btn">Back to Records</a>
+    <a href="index.php" class="back-btn">Back to Records</a>
 </div>
 
 </body>

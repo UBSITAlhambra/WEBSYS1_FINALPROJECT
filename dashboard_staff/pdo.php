@@ -33,9 +33,20 @@ class oop_class {
         return $stmt;
     }
 
-    // Fetch whole transactions table
+    // Fetch transactions with student name and medicine generic name for dashboard
     public function show_transactions(){
-        $select = "SELECT * FROM transaction";
+        $select = "
+            SELECT 
+                t.transactionID,
+                t.quantity,
+                t.transactionDate,
+                i.genericName AS medicineName,
+                s.name AS studentName
+            FROM transaction t
+            LEFT JOIN inventory i ON t.itemID = i.itemID
+            LEFT JOIN studentrecord s ON t.studentID = s.ID
+            ORDER BY t.transactionID DESC
+        ";
         $stmt = $this->conn->prepare($select);
         $stmt->execute();
         return $stmt;
@@ -76,7 +87,7 @@ class oop_class {
         return $this->conn->query($sql);
     }
 
-    // --- NEW: AJAX SEARCH BY STUDENT ID NUMBER ---
+    // --- AJAX SEARCH BY STUDENT ID NUMBER ---
     public function search_by_idNum($idNum) {
         $sql = "SELECT * FROM studentrecord WHERE idNum = :idNum LIMIT 1";
         $stmt = $this->conn->prepare($sql);

@@ -114,8 +114,8 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
         <table>
             <tr>
                 <th>Name</th>
-                <th>ID Number</th>
-                <th>Department</th>
+                <th>LRN</th>
+                <th>Grade & Section</th>
                 <th>Complaint</th>
                 <th>Visit Date</th>
                 <th class="table-actions">Actions</th>
@@ -142,7 +142,6 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
             <?php endif; ?>
         </table>
         <a href="add.php" class="btn add-btn"> Add New Student</a>
-        <a href="../transaction/" class="btn add-btn" style="background:#2977f6;">View Transaction</a>
     </div>
 </body>
 </html>
