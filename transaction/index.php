@@ -81,11 +81,9 @@
             const filenameInput = document.getElementById('filename-input');
             const selectedFormat = formatSelect.value;
             if (selectedFormat === 'csv' || selectedFormat === 'sql') {
-                filenameInput.style.display = 'inline-block';
-                filenameInput.setAttribute('required', 'required'); 
+                filenameInput.style.display = 'inline-block'; 
             } else {
                 filenameInput.style.display = 'none';
-                filenameInput.removeAttribute('required');
             }
         }
 
