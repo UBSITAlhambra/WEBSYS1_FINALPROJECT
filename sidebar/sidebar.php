@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 <style>
     :root {
-        --primary-maroon: #720000ff; /* Deep Maroon */
+        --primary-maroon: #800000; /* Deep Maroon */
         --light-bg: #f8f8f8;
     }
 
@@ -75,7 +75,7 @@
 
 <aside class="sidebar">
 
-    <h4 class="fw-bold text-white mb-4">School Clinic 🏥</h4>
+    <h4 class="fw-bold text-white mb-4">School Clinic </h4>
 
     <nav class="nav flex-column">
 

@@ -123,7 +123,7 @@ include '../sidebar/sidebar.php';
                 </tr>
             <?php endif; ?>
         </table>
-        <a href="add.php" class="btn add-btn">➕ Add New Item</a>
+        <a href="add.php" class="btn add-btn"> Add New Student</a>
         <a href="../transaction/" class="btn add-btn" style="background:#2977f6;">View Transaction</a>
     </div>
 </body>
