@@ -103,5 +103,34 @@
             $stmt->execute([':term' => $term]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC); 
         }
+        //NOTIFICATION FUNCTIONS
+        //Checks inventory for items with quantity BELOW THE DEFINED THRESHOLD.
+        //Change the value of the variable "threshold" if needed
+        //Threshold is currently set to 50
+        public function get_low_stock_items($threshold = 50) {
+            $sql = "SELECT itemID, genericName, quantity, category 
+                    FROM inventory 
+                    WHERE quantity < :threshold 
+                    ORDER BY quantity ASC";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':threshold', $threshold, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        //Checks inventory for items expiring WITHIN THE NEXT 90 DAYS.
+        //Change the value of the variable "days" if needed
+        public function get_expiring_items($days = 90) {
+            $expiry_date = date('Y-m-d', strtotime("+$days days"));
+            
+            $sql = "SELECT itemID, genericName, expDate, quantity 
+                    FROM inventory 
+                    WHERE expDate <= :expiry_date AND expDate >= CURDATE()
+                    ORDER BY expDate ASC";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':expiry_date', $expiry_date, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
     }
 ?>
