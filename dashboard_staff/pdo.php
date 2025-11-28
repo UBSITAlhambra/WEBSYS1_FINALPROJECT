@@ -94,5 +94,29 @@ class oop_class {
         $stmt->execute([':idNum' => $idNum]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    // Fetch student records along with their latest vitals
+public function show_studentRecords_with_vitals(){
+    $select = "
+        SELECT 
+            sr.*,
+            sv.temperature,
+            sv.bloodPressure,
+            sv.pulse,
+            sv.respiratoryRate,
+            sv.vitalDate
+        FROM studentrecord sr
+        LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
+            AND sv.vitalDate = (
+                SELECT MAX(vitalDate) 
+                FROM student_vitals sv2 
+                WHERE sv2.studentID = sr.ID
+            )
+        ORDER BY sr.visitDate DESC
+    ";
+    $stmt = $this->conn->prepare($select);
+    $stmt->execute();
+    return $stmt;
+}
+
 }
 ?>

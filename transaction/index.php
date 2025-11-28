@@ -92,15 +92,17 @@ include '../sidebar/sidebar.php';
             <th>Medicine</th>
             <th>Student</th>
             <th>Quantity</th>
+            <th>Remarks</th>
             <th>Date</th>
             <th class="table-actions">Action</th>
         </tr>
         <?php if(count($data)): ?>
             <?php foreach ($data as $row) { ?>
                 <tr>
-                    <td><?= htmlspecialchars($row['medicineName']) ?></td>
                     <td><?= htmlspecialchars($row['studentName']) ?></td>
+                    <td><?= htmlspecialchars($row['medicineName']) ?></td>
                     <td><?= htmlspecialchars($row['quantity']) ?></td>
+                    <td><?= htmlspecialchars($row['remarks']) ?></td>
                     <td><?= htmlspecialchars($row['transactionDate']) ?></td>
                     <td>
                         <a class="btn update" href="update.php?id=<?= $row['transactionID']; ?>">Update</a>

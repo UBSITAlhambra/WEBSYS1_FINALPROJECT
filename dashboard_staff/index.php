@@ -3,7 +3,7 @@ include 'pdo.php'; // include your OOP class file
 $oop = new oop_class();
 
 $fetch_inventory = $oop->show_inventory();
-$fetch_studentRecords = $oop->show_studentRecords();
+$fetch_studentRecords = $oop->show_studentRecords_with_vitals(); // must be with vitals
 $fetch_transactions = $oop->show_transactions();
 
 $weekly_visits = $oop->get_weekly_visits()->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
@@ -93,7 +93,7 @@ h2, h5, h6 {
     margin: 0 -15px;
 }
 
-.col-md-3, .col-lg-5, .col-lg-7, .col-12 {
+.col-md-3, .col-lg-6, .col-12 {
     padding: 0 15px;
     margin-bottom: 30px;
 }
@@ -106,7 +106,7 @@ h2, h5, h6 {
     cursor: default;
     user-select: none;
     border-radius: 10px;
-    height: 140px; /* Fixed height for uniformity */
+    height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -119,21 +119,17 @@ h2, h5, h6 {
 }
 
 /* Uniform Boxes for Tables */
-.col-lg-5 > .table-responsive,
-.col-lg-7 > .table-responsive,
+.col-lg-6 > .table-responsive,
 .col-12 > .table-responsive {
     background-color: var(--card-bg);
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 15px 20px;
-    
-    /* Fixed min height for all tables box */
+
     min-height: 330px;
-    
-    /* Box shadow */
+
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    
-    /* Ensure consistent scroll if content overflows */
+
     overflow-x: auto;
     overflow-y: auto;
 }
@@ -143,22 +139,23 @@ h2, h5, h6 {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 0.6rem;
-    font-size: 0.92rem;
+    font-size: 0.85rem;
 }
 
 .table thead tr th {
     background-color: var(--primary-maroon);
     color: #fff;
     font-weight: 700;
-    padding: 12px 15px;
-    border-radius: 10px 10px 0 0;
+    padding: 10px 12px;
+    border-radius: 8px 8px 0 0;
     text-align: left;
+    font-size: 0.8rem;
 }
 
 .table tbody tr {
     background-color: var(--card-bg);
     box-shadow: 0 2px 10px -4px rgba(0,0,0,0.1);
-    border-radius: 10px;
+    border-radius: 8px;
     transition: background-color 0.3s ease;
 }
 
@@ -167,7 +164,7 @@ h2, h5, h6 {
 }
 
 .table tbody tr td {
-    padding: 12px 15px;
+    padding: 10px 12px;
     vertical-align: middle;
 }
 
@@ -208,15 +205,17 @@ button.search-btn:hover {
     background-color: var(--primary-maroon-hover);
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
     .main-content {
         margin-left: 0;
         padding: 20px;
     }
+    .col-lg-6, .col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
 </style>
-
 </head>
 <body class="bg-light">
 <div class="main-content">
@@ -236,12 +235,13 @@ button.search-btn:hover {
 
         <!-- ROWS -->
         <div class="row g-4 mt-2">
-        <!-- ======= AJAX SEARCH BAR ======= -->
-<div class="search-bar">
-    <input type="text" id="searchBox" placeholder="Enter Student LRN" oninput="ajaxSearch(this.value)">
-    <button class="search-btn" onclick="ajaxSearch()">Search</button>
-</div>
-<div id="Searchresult"></div>
+            <!-- AJAX SEARCH BAR -->
+            <div class="search-bar">
+                <input type="text" id="searchBox" placeholder="Enter Student LRN" oninput="ajaxSearch(this.value)">
+                <button class="search-btn" onclick="ajaxSearch()">Search</button>
+            </div>
+            <div id="Searchresult"></div>
+
             <!-- WEEKLY SUMMARY -->
             <div class="col-12 mb-3">
                 <h5 class="text-primary mb-2">Weekly Summary</h5>
@@ -273,49 +273,46 @@ button.search-btn:hover {
                 </div>
             </div>
 
-            <!-- ======= RECENT VISITS ======= -->
-                <div class="col-lg-7">
-                <h5 class="text-primary mb-2">Recent Visits</h5>
-                
-                <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 250px; overflow-y: auto;">
+            <!-- TRANSACTIONS AND INVENTORY SIDE BY SIDE -->
+            <div class="col-lg-6">
+                <h5 class="text-primary mb-2">Recent Transactions</h5>
+                <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 350px; overflow-y: auto;">
                     <?php
-                
-                    if ($fetch_studentRecords->rowCount() > 0) {
+                    $limit = 5;
+                    if ($fetch_transactions && $fetch_transactions->rowCount() > 0) {
                         echo '<table class="table table-striped table-hover mb-0 small">';
                         echo '<thead class="table-light sticky-top" style="background-color: #f8f9fa;">
                                 <tr>
-                                    <th>Name</th>
-                                    <th>LRN</th>
-                                    <th>Grade & Section</th>
-                                    <th>Complaint</th>
+                                    <th>Student Name</th>
+                                    <th>Medicine Name</th>
+                                    <th>Quantity</th>
                                     <th>Date</th>
                                 </tr>
                             </thead><tbody>';
-                        
-                        
-                        while ($row = $fetch_studentRecords->fetch(PDO::FETCH_ASSOC)) {
+                        $count = 0;
+                        $fetch_transactions->execute();
+                        while ($row = $fetch_transactions->fetch(PDO::FETCH_ASSOC)) {
+                            if ($count >= $limit) break;
                             echo "<tr>
-                                    <td>" . htmlspecialchars($row['name']) . "</td>
-                                    <td>" . htmlspecialchars($row['idNum']) . "</td>
-                                    <td>" . htmlspecialchars($row['department']) . "</td>
-                                    <td>" . htmlspecialchars($row['complaint']) . "</td>
-                                    <td>" . htmlspecialchars($row['visitDate']) . "</td>
+                                    <td>" . htmlspecialchars($row['studentName'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['medicineName'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['quantity']) . "</td>
+                                    <td>" . date('M j', strtotime($row['transactionDate'])) . "</td>
                                 </tr>";
+                            $count++;
                         }
                         echo '</tbody></table>';
                     } else {
-                        echo '<div class="p-4 text-center text-muted">No recent visits.</div>';
+                        echo '<div class="p-4 text-center text-muted">No Transactions.</div>';
                     }
                     ?>
                 </div>
             </div>
-            
-            <!-- ======= INVENTORY SNAPSHOT ======= -->
-            <div class="col-lg-5">
+            <div class="col-lg-6">
                 <h5 class="text-primary mb-2 d-flex justify-content-between">
                     Inventory <small class="text-muted">Snapshot</small>
                 </h5>
-                <div class="table-responsive bg-white rounded shadow-sm p-2">
+                <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 350px; overflow-y: auto;">
                     <?php
                     $limit = 5;
                     if ($fetch_inventory && $fetch_inventory->rowCount() > 0) {
@@ -324,20 +321,18 @@ button.search-btn:hover {
                                 <tr>
                                     <th>Name</th>
                                     <th>Dosage</th>
-                                    <th>Brand</th>
                                     <th>Category</th>
                                     <th>Qty</th>
                                     <th>Added</th>
                                     <th>Expiry</th>
                                 </tr>
-                              </thead><tbody>';
+                            </thead><tbody>';
                         $count = 0;
                         while ($row = $fetch_inventory->fetch(PDO::FETCH_ASSOC)) {
                             if ($count >= $limit) break;
                             echo "<tr>
                                     <td>" . htmlspecialchars($row['genericName']) . "</td>
                                     <td>" . htmlspecialchars($row['dosage']) . "</td>
-                                    <td>" . htmlspecialchars($row['brand']) . "</td>
                                     <td>" . htmlspecialchars($row['category']) . "</td>
                                     <td>" . htmlspecialchars($row['quantity']) . "</td>
                                     <td>" . htmlspecialchars($row['addDate']) . "</td>
@@ -352,42 +347,45 @@ button.search-btn:hover {
                     ?>
                 </div>
             </div>
-
-            <!-- ======= RECENT TRANSACTIONS ======= -->
+            <!-- RECENT VISITS FULL-WIDTH -->
             <div class="col-12">
-                <h5 class="text-primary mb-2">Recent Transactions</h5>
-                <div class="table-responsive bg-white rounded shadow-sm p-2">
+                <h5 class="text-primary mb-2">Recent Visits</h5>
+                <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 350px; overflow-y: auto;">
                     <?php
-                    $limit = 5;
-                    if ($fetch_transactions && $fetch_transactions->rowCount() > 0) {
+                    if ($fetch_studentRecords && $fetch_studentRecords->rowCount() > 0) {
                         echo '<table class="table table-striped table-hover mb-0 small">';
-                        echo '<thead class="table-light">
+                        echo '<thead class="table-light sticky-top" style="background-color: #f8f9fa;">
                                 <tr>
-                                 <th>Student Name</th>
-                                 <th>Medicine Name</th>
-                                   
-                                    <th>Quantity</th>
+                                    <th>Name</th>
+                                    <th>Gender</th>
+                                    <th>LRN</th>
+                                    <th>Grade</th>
+                                    <th>Complaint</th>
+                                    <th>Temp</th>
+                                    <th>BP</th>
+                                    <th>Pulse</th>
+                                    <th>RR</th>
                                     <th>Date</th>
-                                   
                                 </tr>
-                              </thead><tbody>';
-                        $count = 0;
-                        while ($row = $fetch_transactions->fetch(PDO::FETCH_ASSOC)) {
-                            if ($count >= $limit) break;
+                            </thead><tbody>';
+                        $fetch_studentRecords->execute();
+                        while ($row = $fetch_studentRecords->fetch(PDO::FETCH_ASSOC)) {
                             echo "<tr>
-                                    <td>" . htmlspecialchars($row['studentName'] ?? 'N/A') . "</td>
-                                    <td>" . htmlspecialchars($row['medicineName'] ?? 'N/A') . "</td>
-                                   
-
-                                    <td>" . htmlspecialchars($row['quantity']) . "</td>
-                                    <td>" . htmlspecialchars($row['transactionDate']) . "</td>
-                                    
+                                    <td>" . htmlspecialchars($row['name']) . "</td>
+                                    <td>" . htmlspecialchars($row['gender'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['idNum']) . "</td>
+                                    <td>" . htmlspecialchars($row['department']) . "</td>
+                                    <td>" . htmlspecialchars($row['complaint']) . "</td>
+                                    <td>" . htmlspecialchars($row['temperature'] ?? 'N/A') . "°C</td>
+                                    <td>" . htmlspecialchars($row['bloodPressure'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['pulse'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['respiratoryRate'] ?? 'N/A') . "</td>
+                                    <td>" . date('M j', strtotime($row['visitDate'])) . "</td>
                                 </tr>";
-                            $count++;
                         }
                         echo '</tbody></table>';
                     } else {
-                        echo '<div class="p-4 text-center text-muted">No Transactions.</div>';
+                        echo '<div class="p-4 text-center text-muted">No recent visits.</div>';
                     }
                     ?>
                 </div>
@@ -415,7 +413,6 @@ function ajaxSearch() {
     xhr.send();
 }
 </script>
-
 
 </body>
 </html>

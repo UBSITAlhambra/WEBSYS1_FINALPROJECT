@@ -11,13 +11,12 @@ if (isset($_GET['id'])) {
 if (isset($_POST['enter'])) {
     $genericName = $_POST['genericName'] ?? '';
     $dosage = $_POST['dosage'] ?? '';
-    $brand = $_POST['brand'] ?? '';
     $category = $_POST['category'] ?? '';
     $addDate = $_POST['addDate'] ?? '';
     $expDate = $_POST['expDate'] ?? '';
     $expDate = $_POST['quantity'] ?? '';
     $ID = $_POST['id'] ?? '';
-    $oop->update_data($genericName, $dosage, $brand, $category, $addDate, $expDate, $ID, $quantity);
+    $oop->update_data($genericName, $dosage, $category, $addDate, $expDate, $ID, $quantity);
 }
 ?>
 
@@ -119,8 +118,7 @@ if (isset($_POST['enter'])) {
         <tr>
             <td><input type="text" name="genericName" value="<?= htmlspecialchars($row['genericName']) ?>" required></td>
             <td><input type="text" name="dosage" value="<?= htmlspecialchars($row['dosage']) ?>" required></td>
-            <td><input type="text" name="brand" value="<?= htmlspecialchars($row['brand']) ?>" required></td>
-            <td><input type="text" name="brand" value="<?= htmlspecialchars($row['quantity']) ?>" required></td>
+            <td><input type="text" name="quantity" value="<?= htmlspecialchars($row['quantity']) ?>" required></td>
             <td><input type="text" name="category" value="<?= htmlspecialchars($row['category']) ?>" required></td>
             <td><input type="date" name="addDate" value="<?= htmlspecialchars($row['addDate']) ?>" required></td>
             <td><input type="date" name="expDate" value="<?= htmlspecialchars($row['expDate']) ?>" required></td>

@@ -89,7 +89,6 @@ include '../sidebar/sidebar.php';
         <tr>
             <th>Generic Name</th>
             <th>Dosage</th>
-            <th>Brand</th>
             <th>Quantity</th>
             <th>Category</th>
             <th>Added Date</th>
@@ -101,7 +100,6 @@ include '../sidebar/sidebar.php';
                 <tr>
                     <td><?= htmlspecialchars($row['genericName']) ?></td>
                     <td><?= htmlspecialchars($row['dosage']) ?></td>
-                    <td><?= htmlspecialchars($row['brand']) ?></td>
                     <td><?= htmlspecialchars($row['quantity']) ?></td>
                     <td><?= htmlspecialchars($row['category']) ?></td>
                     <td><?= htmlspecialchars($row['addDate']) ?></td>

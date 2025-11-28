@@ -17,7 +17,7 @@ include '../sidebar/sidebar.php';
     --light-bg: #f8f8f8;
     --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
 }
- 
+
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistent Font */
@@ -102,7 +102,7 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
      margin-bottom: 10px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
     .main-content { margin-left: 0; padding: 12px; }
     table { width: 98%; }
 }
@@ -114,9 +114,14 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
         <table>
             <tr>
                 <th>Name</th>
+                <th>Gender</th>
                 <th>LRN</th>
                 <th>Grade & Section</th>
                 <th>Complaint</th>
+                <th>Temperature</th>
+                <th>Blood Pressure</th>
+                <th>Pulse</th>
+                <th>Respiratory Rate</th>
                 <th>Visit Date</th>
                 <th class="table-actions">Actions</th>
             </tr>
@@ -124,9 +129,14 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
                 <?php foreach ($data as $row): ?>
                     <tr>
                         <td><?= htmlspecialchars($row['name']) ?></td>
+                        <td><?= htmlspecialchars($row['gender']) ?></td>
                         <td><?= htmlspecialchars($row['idNum']) ?></td>
                         <td><?= htmlspecialchars($row['department']) ?></td>
                         <td><?= htmlspecialchars($row['complaint']) ?></td>
+                        <td><?= htmlspecialchars($row['temperature']) ?></td>
+                        <td><?= htmlspecialchars($row['bloodPressure']) ?></td>
+                        <td><?= htmlspecialchars($row['pulse']) ?></td>
+                        <td><?= htmlspecialchars($row['respiratoryRate']) ?></td>
                         <td><?= htmlspecialchars($row['visitDate']) ?></td>
                         <td>
                             <a href="update.php?id=<?= $row['ID'] ?>" class="btn update-btn">Edit</a>
@@ -137,7 +147,7 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="7" style="color:#b53d3d;font-weight:bold;">No Student Clinic Records Found.</td>
+                    <td colspan="11" style="color:#b53d3d;font-weight:bold;">No Student Clinic Records Found.</td>
                 </tr>
             <?php endif; ?>
         </table>
