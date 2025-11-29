@@ -95,28 +95,60 @@ class oop_class {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     // Fetch student records along with their latest vitals
-public function show_studentRecords_with_vitals(){
-    $select = "
-        SELECT 
+    public function show_studentRecords_with_vitals(){
+        $select = "
+            SELECT 
             sr.*,
             sv.temperature,
             sv.bloodPressure,
             sv.pulse,
             sv.respiratoryRate,
             sv.vitalDate
-        FROM studentrecord sr
-        LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
+            FROM studentrecord sr
+            LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
             AND sv.vitalDate = (
                 SELECT MAX(vitalDate) 
                 FROM student_vitals sv2 
                 WHERE sv2.studentID = sr.ID
             )
-        ORDER BY sr.visitDate DESC
-    ";
-    $stmt = $this->conn->prepare($select);
-    $stmt->execute();
-    return $stmt;
-}
+            ORDER BY sr.visitDate DESC
+        ";
+        $stmt = $this->conn->prepare($select);
+        $stmt->execute();
+        return $stmt;
+        }
+    // =======================
+    // USER ACCOUNT FUNCTIONS
+    // =======================
+
+    // Fetch staff user by ID
+    public function get_user($id) {
+        $sql = "SELECT * FROM login WHERE ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Update user WITHOUT password change
+    public function update_user_no_password($id, $first, $middle, $last, $email) {
+        $sql = "UPDATE login SET 
+            FirstName=?, MiddleName=?, LastName=?, Email=?
+            WHERE ID=?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$first, $middle, $last, $email, $id]);
+    }
+
+    // Update user WITH password change
+    public function update_user_with_password($id, $first, $middle, $last, $email, $password) {
+        $hashed = password_hash($password, PASSWORD_BCRYPT);
+        $sql = "UPDATE login SET 
+            FirstName=?, MiddleName=?, LastName=?, Email=?, Password=?
+            WHERE ID=?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$first, $middle, $last, $email, $hashed, $id]);
+    }
+
+
 
 }
 ?>
