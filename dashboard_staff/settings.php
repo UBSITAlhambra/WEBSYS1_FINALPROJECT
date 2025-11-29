@@ -1,16 +1,22 @@
 <?php
 include 'pdo.php';
+session_start();
+
 $oop = new oop_class();
 
-// session_start();
-// if (!isset($_SESSION['staff_id'])) {
-//     header('Location: ../login/index.php');
-//     exit();
-// }
+// Require login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login/index.php");
+    exit();
+}
 
-// Placeholder until login works
-$staffName = "Clinic Staff";
-$staffEmail = "staff@example.com";
+$userID = $_SESSION['user_id'];
+
+// Fetch user data
+$user = $oop->get_user($userID);
+
+$staffName = trim($user['FirstName'] . " " . $user['MiddleName'] . " " . $user['LastName']);
+$staffEmail = $user['Email'];
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +40,6 @@ $staffEmail = "staff@example.com";
 <body class="bg-light">
 
 <?php 
-    // highlight Settings tab
     $activePage = 'settings'; 
     include '../sidebar/sidebar.php';
 ?>
@@ -60,12 +65,14 @@ $staffEmail = "staff@example.com";
 
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" name="full_name" value="<?= $staffName ?>">
+                                <input type="text" class="form-control" name="full_name" 
+                                       value="<?= htmlspecialchars($staffName) ?>" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" value="<?= $staffEmail ?>">
+                                <input type="email" class="form-control" name="email" 
+                                       value="<?= htmlspecialchars($staffEmail) ?>" required>
                             </div>
                         </div>
                     </div>

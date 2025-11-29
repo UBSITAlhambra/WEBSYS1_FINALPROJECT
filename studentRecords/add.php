@@ -19,8 +19,9 @@ if (isset($_POST['add'])) {
     $pulse = $_POST['pulse'] ?? null;
     $respiratoryRate = $_POST['respiratoryRate'] ?? null;
     $vitalDate = $_POST['vitalDate'] ?? date('Y-m-d');
+    $section = $_POST['section'] ?? '';
 
-    $oop->insert_data_with_vitals($name, $gender, $idNum, $department, $complaint, $visitDate, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate);
+    $oop->insert_data_with_vitals($name, $gender, $idNum, $department, $section, $complaint, $visitDate, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate);
 }
 ?>
 
@@ -168,62 +169,82 @@ if (isset($_POST['add'])) {
         
         <div class="form-container">
             <form method="POST" action="">
-                <!-- Student Record Section -->
-                <div class="form-section">
-                    <h3>Student Information</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Student Name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">Gender *</label>
-                            <select id="gender" name="gender" required>
-                                <option value="" disabled selected>Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="idNum">Student ID Number (LRN) *</label>
-                            <input type="text" id="idNum" name="idNum" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="department">Grade & Section *</label>
-                            <input type="text" id="department" name="department" placeholder="e.g., Grade 11 - ABM" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="complaint">Complaint *</label>
-                        <select id="complaint" name="complaint" required>
-                            <option value="" disabled selected>Select Complaint</option>
-                            <option value="Fever">Fever</option>
-                            <option value="Stomach ache">Stomach ache</option>
-                            <option value="Menstrual pains (dysmenorrhea)">Menstrual pains (dysmenorrhea)</option>
-                            <option value="Headache">Headache</option>
-                            <option value="Sore throat">Sore throat</option>
-                            <option value="Cough and cold symptoms">Cough and cold symptoms</option>
-                            <option value="Minor injuries (sprains, cuts, bruises)">Minor injuries (sprains, cuts, bruises)</option>
-                            <option value="Dizziness or fainting">Dizziness or fainting</option>
-                            <option value="Asthma exacerbation">Asthma exacerbation</option>
-                            <option value="Allergic reactions">Allergic reactions</option>
-                            <option value="Influenza (flu)">Influenza (flu)</option>
-                            <option value="Strep throat">Strep throat</option>
-                            <option value="Mononucleosis (Mono)">Mononucleosis (Mono)</option>
-                            <option value="Pink eye (conjunctivitis)">Pink eye (conjunctivitis)</option>
-                            <option value="Vomiting and diarrhea (gastroenteritis)">Vomiting and diarrhea (gastroenteritis)</option>
-                            <option value="Nosebleeds">Nosebleeds</option>
-                            <option value="Chickenpox">Chickenpox</option>
-                            <option value="Hand, foot, and mouth disease">Hand, foot, and mouth disease</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="visitDate">Visit Date *</label>
-                        <input type="date" id="visitDate" name="visitDate" value="<?= date('Y-m-d') ?>" required>
-                    </div>
-                </div>
+<!-- Student Record Section -->
+<div class="form-section">
+    <h3>Student Information</h3>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="name">Student Name *</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender *</label>
+            <select id="gender" name="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="idNum">Student ID Number (LRN) *</label>
+            <input type="text" id="idNum" name="idNum" required>
+        </div>
+
+        <!-- Updated GRADE & SECTION fields -->
+        <div class="form-group">
+            <label for="department">Grade Level *</label>
+            <select id="department" name="department" required>
+                <option value="">Select Grade Level</option>
+                <option value="Grade 7">Grade 7</option>
+                <option value="Grade 8">Grade 8</option>
+                <option value="Grade 9">Grade 9</option>
+                <option value="Grade 10">Grade 10</option>
+                <option value="Grade 11">Grade 11</option>
+                <option value="Grade 12">Grade 12</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="section">Section *</label>
+        <input type="text" id="section" name="section" placeholder="e.g., ABM, A, B, St. Matthew" required>
+    </div>
+
+    <div class="form-group">
+        <label for="complaint">Complaint *</label>
+        <select id="complaint" name="complaint" required>
+            <option value="" disabled selected>Select Complaint</option>
+            <option value="Fever">Fever</option>
+            <option value="Stomach ache">Stomach ache</option>
+            <option value="Menstrual pains (dysmenorrhea)">Menstrual pains (dysmenorrhea)</option>
+            <option value="Headache">Headache</option>
+            <option value="Sore throat">Sore throat</option>
+            <option value="Cough and cold symptoms">Cough and cold symptoms</option>
+            <option value="Minor injuries (sprains, cuts, bruises)">Minor injuries (sprains, cuts, bruises)</option>
+            <option value="Dizziness or fainting">Dizziness or fainting</option>
+            <option value="Asthma exacerbation">Asthma exacerbation</option>
+            <option value="Allergic reactions">Allergic reactions</option>
+            <option value="Influenza (flu)">Influenza (flu)</option>
+            <option value="Strep throat">Strep throat</option>
+            <option value="Mononucleosis (Mono)">Mononucleosis (Mono)</option>
+            <option value="Pink eye (conjunctivitis)">Pink eye (conjunctivitis)</option>
+            <option value="Vomiting and diarrhea (gastroenteritis)">Vomiting and diarrhea (gastroenteritis)</option>
+            <option value="Nosebleeds">Nosebleeds</option>
+            <option value="Chickenpox">Chickenpox</option>
+            <option value="Hand, foot, and mouth disease">Hand, foot, and mouth disease</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="visitDate">Visit Date *</label>
+        <input type="date" id="visitDate" name="visitDate" value="<?= date('Y-m-d') ?>" required>
+    </div>
+</div>
+
 
                 <!-- Vitals Section -->
                 <div class="form-section">
