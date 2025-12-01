@@ -17,26 +17,28 @@ include '../sidebar/sidebar.php';
     --light-bg: #f8f8f8;
     --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
 }
- 
+
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistent Font */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: var(--light-bg);
 }
 
 .main-content {
-    margin-left: 250px; /* MATCHES standard sidebar width */
+    margin-left: 250px;
     padding: 30px 40px 0 40px;
     background: var(--light-bg);
     min-height: 100vh;
 }
+
 h2 {
     margin-bottom: 26px;
-    color: var(--primary-maroon); /* Maroon Heading */
+    color: var(--primary-maroon);
     letter-spacing: 1px;
     text-align: center;
     font-weight: 600;
 }
+
 table {
     width: 97%;
     border-collapse: collapse;
@@ -44,22 +46,26 @@ table {
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: var(--box-shadow); /* Consistent shadow */
+    box-shadow: var(--box-shadow);
 }
+
 th, td {
     border: 1px solid #eaeaea;
     padding: 12px 12px;
     text-align: center;
     font-size: 0.95rem;
 }
+
 th {
-    background: var(--light-bg); /* Lighter header background */
-    color: var(--primary-maroon); /* Maroon Header Text */
+    background: var(--light-bg);
+    color: var(--primary-maroon);
     font-weight: 700;
-    border-bottom: 2px solid var(--primary-maroon); /* Stronger bottom border */
+    border-bottom: 2px solid var(--primary-maroon);
 }
+
 tr:nth-child(even) { background: #f7fbfc; }
-tr:hover { background: #ffeaea; } /* Light Maroon Hover */
+tr:hover { background: #ffeaea; }
+
 .btn {
     padding: 7px 16px;
     border-radius: 5px;
@@ -72,37 +78,42 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
     transition: background 0.15s;
     border: none;
 }
+
 .btn.add-btn {
-    background-color: var(--primary-maroon); /* Maroon for Add */
+    background-color: var(--primary-maroon);
     color: #fff;
     margin-bottom: 0;
     margin-right: 10px;
     margin-top: 14px;
 }
-.btn.add-btn:hover { background-color: #a00000; } /* Darker Maroon */
+.btn.add-btn:hover { background-color: #a00000; }
+
 .btn.update-btn {
-    background-color: #2e6db4; /* Blue for Edit */
+    background-color: #2e6db4;
 }
 .btn.update-btn:hover {
     background-color: #1a4d8c;
 }
+
 .btn.delete-btn {
-    background-color: #e74c3c; /* Red for Delete */
+    background-color: #e74c3c;
 }
 .btn.delete-btn:hover {
     background-color: #c0392b;
 }
+
 .table-actions {
     white-space: nowrap;
     min-width: 135px;
     text-align: center;
 }
+
 .top-buttons {
      text-align: right; 
      margin-bottom: 10px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
     .main-content { margin-left: 0; padding: 12px; }
     table { width: 98%; }
 }
@@ -111,23 +122,43 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
 <body>
     <div class="main-content">
         <h2>Student Clinic Records</h2>
+
         <table>
             <tr>
                 <th>Name</th>
+                <th>Gender</th>
                 <th>LRN</th>
                 <th>Grade & Section</th>
                 <th>Complaint</th>
+                <th>Temperature</th>
+                <th>Blood Pressure</th>
+                <th>Pulse</th>
+                <th>Respiratory Rate</th>
                 <th>Visit Date</th>
                 <th class="table-actions">Actions</th>
             </tr>
+
             <?php if(count($data)): ?>
                 <?php foreach ($data as $row): ?>
                     <tr>
                         <td><?= htmlspecialchars($row['name']) ?></td>
+                        <td><?= htmlspecialchars($row['gender']) ?></td>
                         <td><?= htmlspecialchars($row['idNum']) ?></td>
-                        <td><?= htmlspecialchars($row['department']) ?></td>
+
+                        <!-- FIXED: Show GRADER - SECTION -->
+                        <td>
+                            <?= htmlspecialchars($row['department']) ?> 
+                            - 
+                            <?= htmlspecialchars($row['section']) ?>
+                        </td>
+
                         <td><?= htmlspecialchars($row['complaint']) ?></td>
+                        <td><?= htmlspecialchars($row['temperature']) ?></td>
+                        <td><?= htmlspecialchars($row['bloodPressure']) ?></td>
+                        <td><?= htmlspecialchars($row['pulse']) ?></td>
+                        <td><?= htmlspecialchars($row['respiratoryRate']) ?></td>
                         <td><?= htmlspecialchars($row['visitDate']) ?></td>
+
                         <td>
                             <a href="update.php?id=<?= $row['ID'] ?>" class="btn update-btn">Edit</a>
                             <a href="delete.php?id=<?= $row['ID'] ?>" class="btn delete-btn"
@@ -135,12 +166,16 @@ tr:hover { background: #ffeaea; } /* Light Maroon Hover */
                         </td>
                     </tr>
                 <?php endforeach; ?>
+
             <?php else: ?>
                 <tr>
-                    <td colspan="7" style="color:#b53d3d;font-weight:bold;">No Student Clinic Records Found.</td>
+                    <td colspan="11" style="color:#b53d3d;font-weight:bold;">
+                        No Student Clinic Records Found.
+                    </td>
                 </tr>
             <?php endif; ?>
         </table>
+
         <a href="add.php" class="btn add-btn"> Add New Student</a>
     </div>
 </body>

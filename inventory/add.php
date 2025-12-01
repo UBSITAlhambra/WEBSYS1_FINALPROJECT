@@ -6,25 +6,12 @@ if (isset($_POST['add'])) {
     $genericName = $_POST['genericName'] ?? '';
     $dosage = $_POST['dosage'] ?? '';
     $brand = $_POST['brand'] ?? '';
-    $category = $_POST['category'] ?? ''; 
+    $category = $_POST['category'] ?? '';
     $addDate = $_POST['addDate'] ?? '';
     $expDate = $_POST['expDate'] ?? '';
     $quantity = $_POST['quantity'] ?? '';
-    
     $oop->insert_data($genericName, $dosage, $brand, $category, $quantity, $addDate, $expDate);
-    
 }
-
-$availableCategories = [
-    'Vitamins',
-    'Paracetamol',
-    'Antibiotics',
-    'Syrups',
-    'Topical Creams',
-    'Supplements',
-    'Pain Killers'
-    // Add many more options here...
-];
 ?>
 
 <!DOCTYPE html>
@@ -119,15 +106,8 @@ $availableCategories = [
         <input type="text" name="genericName" placeholder="Generic Name" required> 
         <input type="text" name="dosage" placeholder="Dosage" required>
         <input type="text" name="brand" placeholder="Brand" required>
-        
-        <select name="category" required>
-            <option value="" disabled selected>Select Category</option>
-            <?php foreach ($availableCategories as $cat): ?>
-                <option value="<?= htmlspecialchars($cat) ?>"><?= htmlspecialchars($cat) ?></option>
-            <?php endforeach; ?>
-        </select>
-        
-        <input type="text" name="quantity" placeholder="Quantity" required>
+        <input type="text" name="category" placeholder="Category" required>
+         <input type="text" name="quantity" placeholder="Quantity" required>
         <input type="date" name="addDate" placeholder="Add Date" required>
         <input type="date" name="expDate" placeholder="Expiry Date" required>
         
