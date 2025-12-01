@@ -13,10 +13,22 @@ if (!isset($_SESSION['user_id'])) {
 $userID = $_SESSION['user_id'];
 
 // Fetch user data
-$user = $oop->get_user($userID);
+$user = $oop->get_user($userID); // Line 16 - This call might return false on failure
 
-$staffName = trim($user['FirstName'] . " " . $user['MiddleName'] . " " . $user['LastName']);
-$staffEmail = $user['Email'];
+// --- FIX START ---
+// Initialize with default values
+$staffName = 'N/A';
+$staffEmail = 'N/A';
+
+// Check if $user is a valid array before trying to access array offsets (Line 18, 19)
+if (is_array($user)) {
+    $staffName = trim($user['FirstName'] . " " . $user['MiddleName'] . " " . $user['LastName']);
+    $staffEmail = $user['Email'];
+} else {
+    // Optionally log this error if the user ID is present but the user record is missing
+    // error_log("User ID " . $userID . " found in session but not in database.");
+}
+// --- FIX END ---
 ?>
 
 <!DOCTYPE html>
@@ -66,13 +78,13 @@ $staffEmail = $user['Email'];
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
                                 <input type="text" class="form-control" name="full_name" 
-                                       value="<?= htmlspecialchars($staffName) ?>" required>
+                                        value="<?= htmlspecialchars($staffName) ?>" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control" name="email" 
-                                       value="<?= htmlspecialchars($staffEmail) ?>" required>
+                                        value="<?= htmlspecialchars($staffEmail) ?>" required>
                             </div>
                         </div>
                     </div>
@@ -99,7 +111,6 @@ $staffEmail = $user['Email'];
                                 <label class="form-label">Confirm New Password</label>
                                 <input type="password" class="form-control" name="confirm_password">
                             </div>
-                        </div>
                     </div>
                 </div>
 
