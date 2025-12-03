@@ -1,7 +1,10 @@
 <?php
+session_start();
 include "oop.php";
 $reports = new reports();
-
+    if(!isset($_SESSION['user_id'])){
+        header('Location: ../login/');
+    }
 // Fetch analytics
 $topMeds = $reports->top_medicines();
 $monthlyVisits = $reports->visits_per_month();

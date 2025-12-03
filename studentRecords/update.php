@@ -4,7 +4,9 @@ include "oop.php";
 $oop = new oop_class();
 $activePage = 'visits';
 include '../sidebar/sidebar.php';
-
+    if(!isset($_SESSION['user_id'])){
+        header('Location: ../login/');
+    }
 // Fetch the record to update (with vitals)
 $show_update_data = null;
 if (isset($_GET['id'])) {

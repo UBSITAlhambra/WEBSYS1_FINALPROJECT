@@ -1,9 +1,12 @@
 <?php
 // Assuming oop.php contains your oop_class which has the insert_data_with_vitals method
+session_start();
 include "oop.php"; 
 $oop = new oop_class();
 include '../sidebar/sidebar.php';
-
+    if(!isset($_SESSION['user_id'])){
+        header('Location: ../login/');
+    }
 // Handle form submission
 if (isset($_POST['add'])) {
     $name = $_POST['name'] ?? '';
@@ -231,25 +234,17 @@ if (isset($_POST['add'])) {
         <label for="complaint" class="required-label">Chief Complaint</label>
         <select id="complaint" name="complaint" required>
             <option value="" disabled selected>Select Complaint</option>
-            <option value="Fever">Fever</option>
-            <option value="Stomach ache">Stomach ache</option>
+            <option value="Allergy">Allergy</option>
+            <option value="Wound">Wound</option>
+            <option value="Colds">Colds</option>
+            <option value="Cough">Cough</option>
+            <option value="Enlarge Tonsils">Enlarge Tonsils</option>
+            <option value="Inflammed Throat">Inflammed Throat</option>
+            <option value="Hyperacidity">Hyperacidity</option>
             <option value="Dysmenorrhea">Dysmenorrhea</option>
             <option value="Headache">Headache</option>
-            <option value="Sore throat">Sore throat</option>
-            <option value="Cough">Cough</option>
-            <option value="Colds">Colds</option>
-            <option value="Minor injuries (sprains, cuts, bruises)">Minor injuries (sprains, cuts, bruises)</option>
-            <option value="Dizziness">Dizziness</option>
-            <option value="Fainting">Fainting</option>
             <option value="Toothache">Toothache</option>
-            <option value="Allergy">Allergy</option>
-            <option value="Strep throat">Strep throat</option>
-            <option value="Headache">Headache</option>
-            <option value="Pink eye (conjunctivitis)">Pink eye (conjunctivitis)</option>
-            <option value="Hyperacidity">Hyperacidity</option>
-            <option value="Nosebleeds">Nosebleeds</option>
-            <option value="Chickenpox">Chickenpox</option>
-            <option value="Hand, foot, and mouth disease">Hand, foot, and mouth disease</option>
+            <option value="Toothache">Stomachache</option>
         </select>
     </div>
 

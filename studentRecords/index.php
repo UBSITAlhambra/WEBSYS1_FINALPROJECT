@@ -1,20 +1,20 @@
 <?php
 // PHP LOGIC RESOLUTION: Combining all necessary includes and search logic.
+session_start();
 include 'oop.php';
 $student = new oop_class();
 $activePage = 'visits';
 include '../sidebar/sidebar.php'; 
-
+    if(!isset($_SESSION['user_id'])){
+        header('Location: ../login/');
+    }
 $searchTerm = $_GET['search'] ?? '';
-$page_title = 'Student Clinic Records';
+$page_title = 'BCNHS Clinic Records';
 
 if (!empty($searchTerm)) {
-    // This calls the search_studentRecords function we added to oop.php
     $data = $student->search_studentRecords($searchTerm); 
     $page_title = 'Search Results for: ' . htmlspecialchars($searchTerm);
 } else {
-    // NOTE: This assumes the show_data() function in oop.php will be modified 
-    // to LEFT JOIN student_vitals and other necessary tables to fetch all columns (Gender/Temp/BP).
     $data = $student->show_data();
 }
 ?>
@@ -24,88 +24,176 @@ if (!empty($searchTerm)) {
     <meta charset="UTF-8" />
     <title><?= $page_title ?></title>
     <style>
-        /* --- CONSOLIDATED STYLES (Enforcing the requested aesthetic) --- */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #fafcff;
-        }
-        .main-content {
-            margin-left: 270px;
-            padding: 30px 40px 0 40px;
-            min-height: 100vh;
-        }
-        h2 {
-            margin-bottom: 26px;
-            color: #2b303a;
-            letter-spacing: 1px;
-            text-align: center;
-        }
-        
-        /* Table Styles */
-        table {
-            width: 97%;
-            border-collapse: collapse;
-            margin: 0 auto 18px auto;
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-            min-width: 1200px; /* Ensures space for all 11 columns */
-        }
-        th, td {
-            border: 1px solid #eaeaea;
-            padding: 12px 8px; /* Adjusted padding to fit more columns */
-            text-align: center;
-        }
-        th {
-            background: #f0f4fb;
-            color: #222;
-            font-weight: 600;
-        }
-        tr:nth-child(even) { background: #f7fbfc; }
-        tr:hover { background: #e7f7ff; }
-        .table-actions {
-            white-space: nowrap;
-            min-width: 100px; /* Reduced min-width for action column */
-        }
+:root {
+    --primary-maroon: #800000;
+    --light-bg: #f8f8f8;
+    --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+}
 
-        /* Button Styles */
-        .btn { padding: 7px 16px; border-radius: 5px; font-size: 15px; text-decoration: none; color: #fff !important; display: inline-block; margin: 0 2px; font-weight: bold; border: none; transition: background 0.15s; }
-        .btn.add-btn { background-color: #29c772; color: #fff; margin-bottom: 0; margin-right: 10px; margin-top: 14px; }
-        .btn.add-btn:hover { background-color: #178347; }
-        .btn.update-btn { background-color: #298afc; }
-        .btn.update-btn:hover { background-color: #1765b8; }
-        .btn.delete-btn { background-color: #fb2555; }
-        .btn.delete-btn:hover { background-color: #ab092e; }
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--light-bg);
+}
 
-        /* --- NEW SEARCH/EXPORT UI STYLES --- */
-        .action-bar {
-            margin: 15px 0 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 97%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .search-input-container { position: relative; width: 400px; margin: 0; }
-        #search_input { width: 100%; padding: 8px; border: 1px solid #999; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
-        #searchResultArea { position: absolute; width: 100%; top: 100%; z-index: 1000; background: #fff; border: 1px solid #999; border-top: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .export-select { padding: 6px 10px; border-radius: 4px; font-size: 15px; border: 1px solid #ccc; height: 34px; vertical-align: top; }
-        .filename-input { padding: 6px 10px; border-radius: 4px; font-size: 15px; border: 1px solid #ccc; height: 32px; vertical-align: top; width: 150px; margin-right: 10px; display: none; }
-        
-        @media (max-width: 900px) { .main-content { margin-left: 0; padding: 12px; } table { width: 98%; } }
+.main-content {
+    margin-left: 250px;
+    padding: 30px 40px 0 40px;
+    background: var(--light-bg);
+    min-height: 100vh;
+}
+
+h2 {
+    margin-bottom: 26px;
+    color: var(--primary-maroon);
+    letter-spacing: 1px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* ACTION BAR: search left, export right */
+.action-bar {
+    margin: 15px auto 20px auto;
+    width: 97%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* SEARCH */
+.search-input-container {
+    position: relative;
+    width: 380px;
+}
+#search_input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+#search_input:focus {
+    outline: none;
+    border-color: var(--primary-maroon);
+    box-shadow: 0 0 6px rgba(128,0,0,0.3);
+}
+#searchResultArea {
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    z-index: 1000;
+    background: #fff;
+    border: 1px solid #999;
+    border-top: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* EXPORT */
+.action-bar form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.export-select,
+.filename-input {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    height: 34px;
+    vertical-align: top;
+}
+.filename-input {
+    width: 150px;
+    margin-right: 10px;
+    display: none;
+}
+
+/* TABLE */
+table {
+    width: 97%;
+    border-collapse: collapse;
+    margin: 0 auto 18px auto;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+}
+th, td {
+    border: 1px solid #eaeaea;
+    padding: 12px 12px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+th {
+    background: var(--light-bg);
+    color: var(--primary-maroon);
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary-maroon);
+}
+tr:nth-child(even) { background: #f7fbfc; }
+tr:hover { background: #ffeaea; }
+
+.btn {
+    padding: 7px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff !important;
+    display: inline-block;
+    margin: 0 2px;
+    font-weight: 600;
+    transition: background 0.15s;
+    border: none;
+}
+.btn.add-btn {
+    background-color: var(--primary-maroon);
+    color: #fff;
+    margin-bottom: 0;
+    margin-right: 10px;
+    margin-top: 14px;
+}
+.btn.add-btn:hover { background-color: #a00000; }
+.btn.update-btn {
+    background-color: #2e6db4;
+}
+.btn.update-btn:hover {
+    background-color: #1a4d8c;
+}
+.btn.delete-btn {
+    background-color: #e74c3c;
+}
+.btn.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+.table-actions {
+    white-space: nowrap;
+    min-width: 135px;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .main-content { margin-left: 0; padding: 12px; }
+    table { width: 98%; }
+    .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+}
     </style>
-
     <script type="text/javascript">
-        // --- SEARCH FUNCTIONS ---
         function showSearchRecord(term) {
             const query = term.trim(); 
             const resultsArea = document.getElementById("searchResultArea");
             if (query === "") { resultsArea.innerHTML = ""; return; }
             const url = "getSearch.php?search_term=" + encodeURIComponent(query);
-            fetch(url).then(response => response.text()).then(data => resultsArea.innerHTML = data).catch(error => console.error("Fetch Error:", error));
+            fetch(url)
+                .then(response => response.text())
+                .then(data => resultsArea.innerHTML = data)
+                .catch(error => console.error("Fetch Error:", error));
         }
         function executeSearch(query) {
             window.location.href = "index.php?search=" + encodeURIComponent(query.trim());
@@ -123,7 +211,6 @@ if (!empty($searchTerm)) {
             }
         }
         
-        // --- EXPORT VISIBILITY TOGGLE ---
         function toggleFilenameVisibility() {
             const formatSelect = document.getElementById('export-format-select');
             const filenameInput = document.getElementById('filename-input');
@@ -143,7 +230,6 @@ if (!empty($searchTerm)) {
             toggleFilenameVisibility();
         });
         
-        // --- Custom Confirmation Modal (Retained) ---
         window.confirmDeletion = function(event, recordId) {
             event.preventDefault(); 
             const overlay = document.createElement('div');
@@ -183,9 +269,7 @@ if (!empty($searchTerm)) {
     
     <h2 style="margin-top: 15px;"><?= $page_title ?></h2>
 
-    <!-- NEW: ACTION BAR (SEARCH & EXPORT) -->
     <div class="action-bar">
-        <!-- SEARCH AREA -->
         <div class="search-input-container">
             <input type="text" 
                    id="search_input" 
@@ -195,18 +279,15 @@ if (!empty($searchTerm)) {
                    oninput="showSearchRecord(this.value);" 
                    onkeydown="handleSearchKeyPress(event);"
                    autocomplete="off">
-
             <div id="searchResultArea"></div>
         </div>
 
-        <!-- EXPORT FORM -->
-        <form method="GET" action="export.php" style="display: inline-block;">
+        <form method="GET" action="export.php">
             <input type="text" 
                    name="filename" 
                    id="filename-input"
                    class="filename-input" 
                    placeholder="Optional Filename"> 
-            
             <select name="format" id="export-format-select" class="export-select">
                 <option value="csv">CSV (Spreadsheet)</option>
                 <option value="json">JSON (Data)</option>
@@ -220,14 +301,12 @@ if (!empty($searchTerm)) {
         </form>
     </div>
 
-    <!-- Clear Search Button -->
     <?php if (!empty($searchTerm)): ?>
         <div style="margin-bottom: 15px; width: 97%; margin-left: auto; margin-right: auto; text-align: left;">
             <a href="index.php" class="btn delete-btn" style="color: #fff; text-decoration: none;">Clear Search</a>
         </div>
     <?php endif; ?>
 
-    <!-- STUDENT RECORDS TABLE -->
     <?php if (empty($data) && !empty($searchTerm)): ?>
         <div style="padding: 50px; text-align: center;">
             <h1>No Records Found for "<?= htmlspecialchars($searchTerm) ?>"</h1>
@@ -240,6 +319,7 @@ if (!empty($searchTerm)) {
                 <th>Gender</th>
                 <th>LRN</th>
                 <th>Grade & Section</th>
+                <th>Role</th>
                 <th>Complaint</th>
                 <th>Temp.</th>
                 <th>BP</th>
@@ -248,30 +328,20 @@ if (!empty($searchTerm)) {
                 <th>Visit Date</th>
                 <th class="table-actions">Actions</th>
             </tr>
-            <?php 
-                // NOTE: The data must be loaded using a JOIN in studentRecords/oop.php 
-                // to include Gender, Temp, BP, Pulse, and Resp. Rate.
-                if(count($data)): 
-            ?>
+            <?php if(count($data)): ?>
                 <?php foreach ($data as $row): ?>
                     <tr>
                         <td><?= htmlspecialchars($row['name'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($row['gender'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($row['idNum'] ?? 'N/A') ?></td>
-
-                        <!-- Grade & Section (Assuming department is the Grade/Section combined, or needs parsing) -->
                         <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td> 
-
+                        <td><?= htmlspecialchars($row['role'] ?? 'N/A') ?></td> 
                         <td><?= htmlspecialchars($row['complaint'] ?? 'N/A') ?></td>
-                        
-                        <!-- Vitals columns (These must come from a JOIN with student_vitals) -->
                         <td><?= htmlspecialchars($row['temperature'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($row['bloodPressure'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($row['pulse'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($row['respiratoryRate'] ?? 'N/A') ?></td>
-
                         <td><?= htmlspecialchars($row['visitDate'] ?? 'N/A') ?></td>
-                        
                         <td>
                             <a href="update.php?id=<?= $row['ID'] ?? '' ?>" class="btn update-btn">Edit</a>
                             <a href="delete.php?id=<?= $row['ID'] ?? '' ?>" class="btn delete-btn"
@@ -281,14 +351,13 @@ if (!empty($searchTerm)) {
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="11" style="color:#b53d3d;font-weight:bold;">No Student Clinic Records Found.</td>
+                    <td colspan="11" style="color:#b53d3d;font-weight:bold;">No Clinic Records Found.</td>
                 </tr>
             <?php endif; ?>
         </table>
     <?php endif; ?>
     
     <a href="add.php" class="btn add-btn">➕ Add New Item</a>
-    <a href="../transaction/" class="btn add-btn" style="background:#2977f6;">View Transaction</a>
 </div>
 </body>
 </html>

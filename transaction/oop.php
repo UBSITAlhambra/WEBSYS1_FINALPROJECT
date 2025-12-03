@@ -219,29 +219,29 @@
         
         //SEARCH FUNCTION
         public function search_transactions_by_name($searchTerm) {
-            $term = '%' . $searchTerm . '%';
-            $search = "
-                SELECT 
-                    t.transactionID,
-                    t.quantity,
-                    t.transactionDate,
-                    i.genericName AS medicineName,
-                    s.name AS studentName,
-                    t.itemID,
-                    t.studentID
-                FROM transaction t
-                LEFT JOIN inventory i ON t.itemID = i.itemID
-                LEFT JOIN studentrecord s ON t.studentID = s.ID
-                WHERE 
-                    i.genericName LIKE :term OR 
-                    s.name LIKE :term OR
-                    t.transactionID LIKE :term 
-                ORDER BY t.transactionDate DESC
-            ";
-            
-            $stmt = $this->conn->prepare($search);
-            $stmt->execute([':term' => $term]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC); 
-        }
+        $term = '%' . $searchTerm . '%';
+        $search = "
+            SELECT 
+                t.transactionID,
+                t.quantity,
+                t.transactionDate,
+                t.remarks,
+                i.genericName AS medicineName,
+                s.name AS studentName,
+                t.itemID,
+                t.studentID
+            FROM transaction t
+            LEFT JOIN inventory i ON t.itemID = i.itemID
+            LEFT JOIN studentrecord s ON t.studentID = s.ID
+            WHERE 
+                i.genericName LIKE :term OR 
+                s.name LIKE :term OR
+                t.transactionID LIKE :term 
+            ORDER BY t.transactionDate DESC
+        ";
+        $stmt = $this->conn->prepare($search);
+        $stmt->execute([':term' => $term]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+}
     }
 ?>

@@ -314,13 +314,55 @@
                     </div>
                 </div>
             </div>
+                     <!-- RECENT VISITS FULL-WIDTH -->
+            <div class="col-12">
+                <h5 class="text-primary mb-2">Recent Visits</h5>
+                <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 350px; overflow-y: auto;">
+                    <?php
+                    if ($fetch_studentRecords && $fetch_studentRecords->rowCount() > 0) {
+                        echo '<table class="table table-striped table-hover mb-0 small">';
+                        echo '<thead class="table-light sticky-top" style="background-color: #f8f9fa;">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Student ID</th>
+                                    <th>Gender</th>
+                                    <th>Grade & Section</th>
+                                    <th>Complaint</th>
+                                    <th>Medicine</th>
+                                    <th>Quantity</th>
+                                    <th>Remarks</th>
+                                    <th>Date</th>
+
+                                </tr>
+                            </thead><tbody>';
+                        $fetch_studentRecords->execute();
+                        while ($row = $fetch_studentRecords->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<tr>
+                                    <td>" . htmlspecialchars($row['name']) . "</td>
+                                    <td>" . htmlspecialchars($row['idNum']) . "</td>
+                                    <td>" . htmlspecialchars($row['gender'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['department'] . ' - ' . ($row['section'] ?? '')) . "</td>
+                                    <td>" . htmlspecialchars($row['complaint']) . "</td>
+                                    <td>" . htmlspecialchars($row['genericName'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['quantity'] ?? 'N/A') . "</td>
+                                    <td>" . htmlspecialchars($row['remarks'] ?? '') . "</td>
+                                    <td>" . date('M j', strtotime($row['visitDate'])) . "</td>
+                                </tr>";
+                        }
+                        echo '</tbody></table>';
+                    } else {
+                        echo '<div class="p-4 text-center text-muted">No recent visits.</div>';
+                    }
+                    ?>
+                </div>
+            </div>               
 
             <!-- TRANSACTIONS AND INVENTORY SIDE BY SIDE -->
             <div class="col-lg-6">
                 <h5 class="text-primary mb-2">Recent Transactions</h5>
                 <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 350px; overflow-y: auto;">
                     <?php
-                    $limit = 5;
+                    $limit = 10;
                     if ($fetch_transactions && $fetch_transactions->rowCount() > 0) {
                         echo '<table class="table table-striped table-hover mb-0 small">';
                         echo '<thead class="table-light sticky-top" style="background-color: #f8f9fa;">
@@ -356,13 +398,12 @@
                 </h5>
                 <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 350px; overflow-y: auto;">
                     <?php
-                    $limit = 5;
+                    $limit = 10;
                     if ($fetch_inventory && $fetch_inventory->rowCount() > 0) {
                         echo '<table class="table table-sm mb-0 small">';
                         echo '<thead class="table-light">
                                 <tr>
                                     <th>Name</th>
-                                    <th>Dosage</th>
                                     <th>Category</th>
                                     <th>Qty</th>
                                     <th>Added</th>
@@ -374,7 +415,6 @@
                             if ($count >= $limit) break;
                             echo "<tr>
                                     <td>" . htmlspecialchars($row['genericName']) . "</td>
-                                    <td>" . htmlspecialchars($row['dosage']) . "</td>
                                     <td>" . htmlspecialchars($row['category']) . "</td>
                                     <td>" . htmlspecialchars($row['quantity']) . "</td>
                                     <td>" . htmlspecialchars($row['addDate']) . "</td>
@@ -389,49 +429,7 @@
                     ?>
                 </div>
             </div>
-            <!-- RECENT VISITS FULL-WIDTH -->
-            <div class="col-12">
-                <h5 class="text-primary mb-2">Recent Visits</h5>
-                <div class="table-responsive bg-white rounded shadow-sm p-2" style="max-height: 350px; overflow-y: auto;">
-                    <?php
-                    if ($fetch_studentRecords && $fetch_studentRecords->rowCount() > 0) {
-                        echo '<table class="table table-striped table-hover mb-0 small">';
-                        echo '<thead class="table-light sticky-top" style="background-color: #f8f9fa;">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Gender</th>
-                                    <th>LRN</th>
-                                    <th>Grade</th>
-                                    <th>Complaint</th>
-                                    <th>Temp</th>
-                                    <th>BP</th>
-                                    <th>Pulse</th>
-                                    <th>RR</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead><tbody>';
-                        $fetch_studentRecords->execute();
-                        while ($row = $fetch_studentRecords->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<tr>
-                                    <td>" . htmlspecialchars($row['name']) . "</td>
-                                    <td>" . htmlspecialchars($row['gender'] ?? 'N/A') . "</td>
-                                    <td>" . htmlspecialchars($row['idNum']) . "</td>
-                                    <td>" . htmlspecialchars($row['department']) . "</td>
-                                    <td>" . htmlspecialchars($row['complaint']) . "</td>
-                                    <td>" . htmlspecialchars($row['temperature'] ?? 'N/A') . "°C</td>
-                                    <td>" . htmlspecialchars($row['bloodPressure'] ?? 'N/A') . "</td>
-                                    <td>" . htmlspecialchars($row['pulse'] ?? 'N/A') . "</td>
-                                    <td>" . htmlspecialchars($row['respiratoryRate'] ?? 'N/A') . "</td>
-                                    <td>" . date('M j', strtotime($row['visitDate'])) . "</td>
-                                </tr>";
-                        }
-                        echo '</tbody></table>';
-                    } else {
-                        echo '<div class="p-4 text-center text-muted">No recent visits.</div>';
-                    }
-                    ?>
-                </div>
-            </div>
+
         </div><!-- row -->
 
     </div><!-- card -->
