@@ -1,11 +1,20 @@
 <?php
-// Assume 'oop.php' and 'sidebar/sidebar.php' are correctly defined in the execution environment
+    // Assume 'oop.php' and 'sidebar/sidebar.php' are correctly defined in the execution environment
 include 'oop.php';
-// The class is named 'oop_class' in the original code, and used to fetch inventory data here.
+    // The class is named 'oop_class' in the original code, and used to fetch inventory data here.
 $inventory = new oop_class();
-$data = $inventory->show_data();
-$activePage = 'inventory';
-include '../sidebar/sidebar.php';
+    $activePage = 'inventory';
+    include '../sidebar/sidebar.php'; 
+
+    $searchTerm = $_GET['search'] ?? '';
+    $page_title = 'Inventory List';
+
+    if (!empty($searchTerm)) {
+        $data = $inventory->search_inventory($searchTerm); 
+        $page_title = 'Search Results for: ' . htmlspecialchars($searchTerm);
+    } else {
+        $data = $inventory->show_data();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,12 +112,22 @@ include '../sidebar/sidebar.php';
             text-align: center; /* Center header text */
         }
         
-        th:first-child, td:first-child { text-align: left; }
-        th:last-child, td:last-child { text-align: center; }
-
-
-        tr:nth-child(even) { background: #fefefe; } /* Lighter striping */
-        tr:hover { background: #fff5f5; }
+        th:first-child, td:first-child {
+            text-align: left;
+        }
+        th:last-child, td:last-child {
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background: #fefefe;
+        } /* Lighter striping */
+        tr:hover {
+            background: #fff5f5;
+        }
+        .table-actions {
+            white-space: nowrap;
+            min-width: 135px;
+        }
 
         /* Buttons */
         .btn {
@@ -203,150 +222,225 @@ include '../sidebar/sidebar.php';
                 margin: 10px 0;
             }
         }
+        .add-btn:hover {
+            background-color: #178347;
+        }
+        .update-btn {
+            background-color: #298afc;
+        }
+        .update-btn:hover {
+            background-color: #1765b8;
+        }
+        .delete-btn {
+            background-color: #fb2555;
+        }
+        .delete-btn:hover {
+            background-color: #ab092e;
+        }
+        .action-bar {
+            margin: 15px 0 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 98%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .search-input-container{
+            position: relative;
+            width: 500px;
+            margin: 0;
+        }
+        #search_input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #999;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        #searchResultArea {
+            position: absolute;
+            width: 100%;
+            top: 100%;
+            z-index: 1000;
+            background: #fff;
+            border: 1px solid #999;
+            border-top: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #searchResultArea table {
+            margin: 0;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #searchResultArea td {
+            border: none;
+            padding: 6px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        #searchResultArea tr:hover {
+            background-color: #e9e9e9;
+        }
+        .export-select {
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            height: 34px;
+            vertical-align: top;
+        }
+        .filename-input {
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            height: 32px;
+            vertical-align: top;
+            width: 150px;
+            margin-right: 10px;
+            display: none;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+                padding: 12px;
+            } table {
+                width: 98%;
+            }
+        }
     </style>
-</head>
-<body>
-    <div class="main-content">
-        
-        <div class="header-actions">
-            <h1 class="title">Inventory List</h1>
-            <input type="text" class="search-input" id="searchInput" placeholder="Search by Name, Dosage, or Category...">
-        </div>
-        
-        <div class="table-container">
-            <table>
-                <tr>
-                    <th style="text-align: left;">Generic Name</th>
-                    <th>Dosage</th>
-                    <th>Quantity</th>
-                    <th>Category</th>
-                    <th>Added Date</th>
-                    <th>Expiry Date</th>
-                    <th class="table-actions">Actions</th>
-                </tr>
-                <?php if (count($data) > 0): ?>
-                    <?php foreach ($data as $row): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($row['genericName'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($row['dosage'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($row['quantity'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($row['category'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($row['addDate'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($row['expDate'] ?? 'N/A') ?></td>
-                            <td class="btn-group">
-                                <a href="update.php?id=<?= $row['itemID'] ?? '' ?>" class="btn update-btn" title="Edit Item">Update</a>
-                                <a href="#" class="btn delete-btn"
-                                   onclick="confirmDeletion(event, '<?= $row['itemID'] ?? '' ?>'); return false;"
-                                   title="Delete Item">
-                                    Delete
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="7" class="no-records">No inventory data found.</td>
-                    </tr>
-                <?php endif; ?>
-            </table>
-        </div>
-        
-        <div style="margin-top: 20px;">
-            <a href="add.php" class="btn add-btn">Add New Item</a>
-        </div>
-    </div>
 
-    <script>
-        // --- Custom Deletion Confirmation Modal ---
-        function confirmDeletion(event, recordId) {
-            event.preventDefault(); 
-            closeDeletionMessage(); // Cleanup existing
-
-            // Simple overlay
-            const overlay = document.createElement('div');
-            overlay.id = 'overlay';
-            overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; backdrop-filter: blur(2px);';
-            document.body.appendChild(overlay);
-
-            // Confirmation message box
-            const confirmationMessage = document.createElement('div');
-            confirmationMessage.className = 'deletion-message';
-            confirmationMessage.style.cssText = `
-                position: fixed; top: 50%; left: 50%; 
-                transform: translate(-50%, -50%); 
-                background: #fff; padding: 30px; 
-                border-radius: 12px; 
-                box-shadow: 0 8px 25px rgba(0,0,0,0.4); 
-                z-index: 1000; text-align: center;
-                max-width: 90%;
-            `;
-            confirmationMessage.innerHTML = `
-                <p style="margin-bottom: 25px; font-weight: 700; color: var(--primary-maroon); font-size: 1.2rem;">Confirm Deletion</p>
-                <p style="margin-bottom: 30px; font-size: 1rem; color: #333;">Are you sure you want to delete this inventory item? This action cannot be undone.</p>
-                
-                <div style="display: flex; justify-content: center; gap: 15px;">
-                    <button onclick="performDeletion('${recordId}')" class="btn delete-btn" style="margin:0; width: 120px; padding: 10px 14px;">
-                        Yes, Delete
-                    </button>
-                    <button onclick="closeDeletionMessage()" class="btn" style="background-color: #95a5a6; color: white; margin:0; width: 120px; padding: 10px 14px;">
-                        Cancel
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(confirmationMessage);
-            
-            // Define functions globally for inline HTML event handlers
-            window.performDeletion = function(id) {
-                window.location.href = `delete.php?id=${id}`;
-                closeDeletionMessage();
-            }
-
-            window.closeDeletionMessage = function() {
-                const msg = document.querySelector('.deletion-message');
-                const ov = document.getElementById('overlay');
-                if (msg) msg.remove();
-                if (ov) ov.remove();
-            }
-
-            return false;
+    <script type="text/javascript">
+        function showSearchRecord(term) {
+            const query = term.trim(); 
+            const resultsArea = document.getElementById("searchResultArea");
+            if (query === "") { resultsArea.innerHTML = ""; return; }
+            const url = "getSearch.php?search_term=" + encodeURIComponent(query);
+            fetch(url).then(response => response.text()).then(data => resultsArea.innerHTML = data).catch(error => console.error("Fetch Error:", error));
         }
-
-        // --- Client-side Search/Filter Logic ---
+        function executeSearch(query) {
+            window.location.href = "index.php?search=" + encodeURIComponent(query.trim());
+        }
+        function getData(name) {
+            document.getElementById("search_input").value = name;
+            document.getElementById("searchResultArea").innerHTML = ""; 
+            executeSearch(name); 
+        }
+        function handleSearchKeyPress(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); 
+                const query = document.getElementById("search_input").value;
+                if (query.trim() !== "") { executeSearch(query); }
+            }
+        }
+        function toggleFilenameVisibility() {
+            const formatSelect = document.getElementById('export-format-select');
+            const filenameInput = document.getElementById('filename-input');
+            const selectedFormat = formatSelect.value;
+            if (selectedFormat === 'csv' || selectedFormat === 'sql') {
+                filenameInput.style.display = 'inline-block';
+            } else {
+                filenameInput.style.display = 'none';
+            }
+        }
         document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('keyup', filterTable);
-            }
+            const formatSelect = document.getElementById('export-format-select');
+            formatSelect.addEventListener('change', toggleFilenameVisibility);
+            toggleFilenameVisibility();
         });
-
-        function filterTable() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toUpperCase();
-            const table = document.querySelector('table');
-            const tr = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < tr.length; i++) {
-                // Skip header row (i=0) and the "no records" row if present
-                if (tr[i].querySelector('.no-records')) continue; 
-                
-                let found = false;
-                // Check Generic Name (Col 0), Dosage (Col 1), Category (Col 3)
-                const checkColumns = [0, 1, 3]; 
-                
-                for (let j = 0; j < tr[i].cells.length; j++) {
-                    if (checkColumns.includes(j)) {
-                        const td = tr[i].getElementsByTagName('td')[j];
-                        if (td) {
-                            if (td.textContent.toUpperCase().indexOf(filter) > -1) {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                tr[i].style.display = found ? "" : "none";
-            }
-        }
     </script>
+</head>
+
+<div class="main-content">
+    <h2><?= $page_title ?></h2>
+
+    <div class="action-bar">
+        <div class="search-input-container">
+            <input type="text" 
+                   id="search_input" 
+                   name="search"
+                   placeholder="Search by Name, Brand, Dosage, or Category..." 
+                   value="<?= htmlspecialchars($searchTerm) ?>"
+                   oninput="showSearchRecord(this.value);" 
+                   onkeydown="handleSearchKeyPress(event);"
+                   autocomplete="off">
+
+            <div id="searchResultArea"></div>
+        </div>
+        <form method="GET" action="export.php" style="display: inline-block;">
+            <input type="text" 
+                   name="filename" 
+                   id="filename-input"
+                   class="filename-input" 
+                   placeholder="Optional Filename"> 
+            
+            <select name="format" id="export-format-select" class="export-select">
+                <option value="csv">CSV (Spreadsheet)</option>
+                <option value="json">JSON (Data)</option>
+                <option value="sql">SQL (Database)</option>
+            </select>
+            <button type="submit" class="btn update-btn" 
+                    style="background-color: #555;" 
+                    onclick="return confirm('Exporting all inventory records now. Continue?');">
+                Export Data
+            </button>
+        </form>
+        </div>
+    <?php if (!empty($searchTerm)): ?>
+        <div style="margin-bottom: 15px; width: 98%; margin-left: auto; margin-right: auto; text-align: left;">
+            <a href="index.php" class="btn delete-btn">Clear Search</a>
+        </div>
+    <?php endif; ?>
+
+    <?php if (empty($data) && !empty($searchTerm)): ?>
+        <div style="padding: 50px; text-align: center;">
+            <h1>No Results Found for "<?= htmlspecialchars($searchTerm) ?>"</h1>
+            <p>Please try a different search term or <a href="index.php">clear the search filter</a></p>
+        </div>
+    <?php else: ?>
+        <table>
+            <tr>
+                <th>Generic Name</th>
+                <th>Dosage</th>
+                <th>Brand</th>
+                <th>Quantity</th>
+                <th>Category</th>
+                <th>Added Date</th>
+                <th>Expiry Date</th>
+                <th class="table-actions">Actions</th>
+            </tr>
+            <?php if (count($data) > 0): ?>
+                <?php foreach ($data as $row): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['genericName']) ?></td>
+                        <td><?= htmlspecialchars($row['dosage']) ?></td>
+                        <td><?= htmlspecialchars($row['brand']) ?></td>
+                        <td><?= htmlspecialchars($row['quantity']) ?></td>
+                        <td><?= htmlspecialchars($row['category']) ?></td>
+                        <td><?= htmlspecialchars($row['addDate']) ?></td>
+                        <td><?= htmlspecialchars($row['expDate']) ?></td>
+                        <td class="table-actions">
+                            <a href="update.php?id=<?= $row['itemID'] ?>" class="btn update-btn">Update</a>
+                            <a href="delete.php?id=<?= $row['itemID'] ?>" class="btn delete-btn"
+                               onclick="return confirm('Are you sure you want to delete this item?');">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="9" style="color:#b53d3d;font-weight:bold;">No inventory data found.</td>
+                </tr>
+            <?php endif; ?>
+        </table>
+    <?php endif; ?>
+
+    <a href="add.php" class="btn add-btn">➕ Add New Item</a>
+    <a href="#" class="btn add-btn">Home</a>
+</div>
 </body>
 </html>

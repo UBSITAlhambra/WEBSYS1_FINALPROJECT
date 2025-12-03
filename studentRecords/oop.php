@@ -34,6 +34,7 @@ class oop_class {
         ]);
 
         if($result){
+            // Redirect to Vitals form after successful record creation
             echo "<script>window.location='../studentVital/add.php';</script>";
         }
     }
@@ -51,17 +52,18 @@ class oop_class {
         FROM studentrecord sr
         LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
             AND sv.vitalDate = (
+                -- Subquery to find the MAX (most recent) vital date for this student
                 SELECT MAX(vitalDate) 
                 FROM student_vitals sv2 
                 WHERE sv2.studentID = sr.ID
             )
-        ORDER BY sr.visitDate DESC;";
+        ORDER BY sr.visitDate DESC";
         $stmt = $this->conn->prepare($select);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // DELETE – NO CHANGES NEEDED
+    // DELETE (Handles deletion in both studentrecord and student_vitals using transactions)
     public function delete_data($ID){
         $this->conn->beginTransaction();
         
@@ -88,19 +90,8 @@ class oop_class {
     // SHOW ONE – No change needed as sr.* is used
     public function show_update_data($ID){
         $select = "SELECT 
-            sr.*,
-            sv.temperature,
-            sv.bloodPressure,
-            sv.pulse,
-            sv.respiratoryRate,
-            sv.vitalDate
+            sr.*
         FROM studentrecord sr
-        LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
-            AND sv.vitalDate = (
-                SELECT MAX(vitalDate) 
-                FROM student_vitals sv2 
-                WHERE sv2.studentID = sr.ID
-            )
         WHERE sr.ID = :id";
         $stmt = $this->conn->prepare($select);
         $stmt->execute([':id' => $ID]);
@@ -164,6 +155,7 @@ class oop_class {
         $this->conn->beginTransaction();
         
         try {
+            // 1. Update Student Record
             $update_record = "UPDATE studentrecord SET 
                 name = :sName, 
                 gender = :gender,
@@ -240,6 +232,7 @@ class oop_class {
             
             $studentID = $this->conn->lastInsertId();
             
+            // 2. Insert Vitals Record
             if ($temperature || $bloodPressure || $pulse || $respiratoryRate) {
                 $insert_vitals = "INSERT INTO student_vitals (studentID, vitalDate, temperature, bloodPressure, pulse, respiratoryRate) 
                                  VALUES (:studentID, :vitalDate, :temperature, :bloodPressure, :pulse, :respiratoryRate)";
@@ -260,6 +253,35 @@ class oop_class {
             $this->conn->rollBack();
             echo "<script>alert('Add Failed: " . addslashes($e->getMessage()) . "');</script>";
         }
+    }
+
+
+    // SEARCH FUNCTION
+    public function search_studentRecords($searchTerm) {
+        $term = '%' . $searchTerm . '%';
+        $search = "SELECT 
+            sr.*,
+            sv.temperature,
+            sv.bloodPressure,
+            sv.pulse,
+            sv.respiratoryRate,
+            sv.vitalDate
+        FROM studentrecord sr
+        LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
+            AND sv.vitalDate = (
+                SELECT MAX(vitalDate) 
+                FROM student_vitals sv2 
+                WHERE sv2.studentID = sr.ID
+            )
+        WHERE sr.name LIKE :term 
+        OR sr.idNum LIKE :term 
+        OR sr.department LIKE :term
+        OR sr.complaint LIKE :term
+        ORDER BY sr.visitDate DESC";
+        
+        $stmt = $this->conn->prepare($search);
+        $stmt->execute([':term' => $term]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 }
 ?>
