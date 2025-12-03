@@ -1,27 +1,33 @@
 <?php
-session_start();
-include "oop.php";
+// Assuming oop.php contains your oop_class which has the insert_data_with_vitals method
+include "oop.php"; 
 $oop = new oop_class();
-$activePage = 'visits';
 include '../sidebar/sidebar.php';
 
 // Handle form submission
 if (isset($_POST['add'])) {
     $name = $_POST['name'] ?? '';
-    $gender = $_POST['gender'] ?? '';
-    $idNum = $_POST['idNum'] ?? '';
-    $department = $_POST['department'] ?? '';
+    $gender = $_POST['gender'] ?? null; // Can be null now
+    $role = $_POST['role'] ?? 'Student'; 
+    $idNum = $_POST['idNum'] ?? null;     // Can be null
+    $department = $_POST['department'] ?? null; // Can be null
     $complaint = $_POST['complaint'] ?? '';
-    $visitDate = $_POST['visitDate'] ?? '';
+    $visitDate = $_POST['visitDate'] ?? date('Y-m-d');
     
     $temperature = $_POST['temperature'] ?? null;
     $bloodPressure = $_POST['bloodPressure'] ?? null;
     $pulse = $_POST['pulse'] ?? null;
     $respiratoryRate = $_POST['respiratoryRate'] ?? null;
     $vitalDate = $_POST['vitalDate'] ?? date('Y-m-d');
-    $section = $_POST['section'] ?? '';
+    $section = $_POST['section'] ?? null; // Can be null
 
-    $oop->insert_data_with_vitals($name, $gender, $idNum, $department, $section, $complaint, $visitDate, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate);
+    // Server-Side Validation: Check only always-required fields (Name, Complaint)
+    if (empty($name) || empty($complaint)) {
+         echo "<script>alert('Error: Name and Complaint are required fields.');</script>";
+    } else {
+        // Pass all variables, letting the OOP method handle null insertion where appropriate
+        $oop->insert_data_with_vitals($name, $gender, $role, $idNum, $department, $section, $complaint, $visitDate, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate);
+    }
 }
 ?>
 
@@ -94,6 +100,12 @@ if (isset($_POST['add'])) {
             font-weight: 600;
             font-size: 0.95rem;
         }
+        /* Style required indicator */
+        .required-label::after {
+            content: ' *';
+            color: red;
+        }
+
         input[type="text"], 
         input[type="date"],
         input[type="number"],
@@ -150,16 +162,9 @@ if (isset($_POST['add'])) {
             transform: translateY(-1px);
         }
         @media (max-width: 900px) {
-            .main-content { 
-                margin-left: 0; 
-                padding: 20px; 
-            }
-            .form-container {
-                padding: 25px;
-            }
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+            .main-content { margin-left: 0; padding: 20px; }
+            .form-container { padding: 25px; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -169,36 +174,45 @@ if (isset($_POST['add'])) {
         
         <div class="form-container">
             <form method="POST" action="">
-<!-- Student Record Section -->
 <div class="form-section">
-    <h3>Student Information</h3>
+    <h3>Patient Information</h3>
+    <p>Note: All items with a (*) are required</p>
 
     <div class="form-row">
         <div class="form-group">
-            <label for="name">Student Name *</label>
+            <label for="name" class="required-label">Name</label>
             <input type="text" id="name" name="name" required>
         </div>
         <div class="form-group">
-            <label for="gender">Gender *</label>
-            <select id="gender" name="gender" required>
-                <option value="" disabled selected>Select Gender</option>
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender">
+                <option value="" selected>Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
             </select>
         </div>
     </div>
-
+    
     <div class="form-row">
         <div class="form-group">
-            <label for="idNum">Student ID Number (LRN) *</label>
-            <input type="text" id="idNum" name="idNum" required>
+            <label for="role" class="required-label">Status/Role</label>
+            <select id="role" name="role" required onchange="toggleFields()">
+                <option value="Student">Regular Student</option>
+                <option value="Teaching Staff">Teaching Staff</option>
+                <option value="Non-Teaching Staff">Non-Teaching Staff</option>
+            </select>
         </div>
-
-        <!-- Updated GRADE & SECTION fields -->
         <div class="form-group">
-            <label for="department">Grade Level *</label>
-            <select id="department" name="department" required>
-                <option value="">Select Grade Level</option>
+            <label for="idNum" id="idNumLabel">ID Number (LRN for Students)</label>
+            <input type="text" id="idNum" name="idNum">
+        </div>
+    </div>
+
+    <div class="form-row" id="gradeSectionRow">
+        <div class="form-group">
+            <label for="department" id="gradeLabel">Grade Level</label>
+            <select id="department" name="department">
+                <option value="" selected>Select Grade Level</option>
                 <option value="Grade 7">Grade 7</option>
                 <option value="Grade 8">Grade 8</option>
                 <option value="Grade 9">Grade 9</option>
@@ -207,32 +221,32 @@ if (isset($_POST['add'])) {
                 <option value="Grade 12">Grade 12</option>
             </select>
         </div>
+        <div class="form-group">
+            <label for="section" id="sectionLabel">Section</label>
+            <input type="text" id="section" name="section" placeholder="e.g., ABM, St. Matthew">
+        </div>
     </div>
-
+    
     <div class="form-group">
-        <label for="section">Section *</label>
-        <input type="text" id="section" name="section" placeholder="e.g., ABM, A, B, St. Matthew" required>
-    </div>
-
-    <div class="form-group">
-        <label for="complaint">Complaint *</label>
+        <label for="complaint" class="required-label">Chief Complaint</label>
         <select id="complaint" name="complaint" required>
             <option value="" disabled selected>Select Complaint</option>
             <option value="Fever">Fever</option>
             <option value="Stomach ache">Stomach ache</option>
-            <option value="Menstrual pains (dysmenorrhea)">Menstrual pains (dysmenorrhea)</option>
+            <option value="Dysmenorrhea">Dysmenorrhea</option>
             <option value="Headache">Headache</option>
             <option value="Sore throat">Sore throat</option>
-            <option value="Cough and cold symptoms">Cough and cold symptoms</option>
+            <option value="Cough">Cough</option>
+            <option value="Colds">Colds</option>
             <option value="Minor injuries (sprains, cuts, bruises)">Minor injuries (sprains, cuts, bruises)</option>
-            <option value="Dizziness or fainting">Dizziness or fainting</option>
-            <option value="Asthma exacerbation">Asthma exacerbation</option>
-            <option value="Allergic reactions">Allergic reactions</option>
-            <option value="Influenza (flu)">Influenza (flu)</option>
+            <option value="Dizziness">Dizziness</option>
+            <option value="Fainting">Fainting</option>
+            <option value="Toothache">Toothache</option>
+            <option value="Allergy">Allergy</option>
             <option value="Strep throat">Strep throat</option>
-            <option value="Mononucleosis (Mono)">Mononucleosis (Mono)</option>
+            <option value="Headache">Headache</option>
             <option value="Pink eye (conjunctivitis)">Pink eye (conjunctivitis)</option>
-            <option value="Vomiting and diarrhea (gastroenteritis)">Vomiting and diarrhea (gastroenteritis)</option>
+            <option value="Hyperacidity">Hyperacidity</option>
             <option value="Nosebleeds">Nosebleeds</option>
             <option value="Chickenpox">Chickenpox</option>
             <option value="Hand, foot, and mouth disease">Hand, foot, and mouth disease</option>
@@ -240,13 +254,12 @@ if (isset($_POST['add'])) {
     </div>
 
     <div class="form-group">
-        <label for="visitDate">Visit Date *</label>
-        <input type="date" id="visitDate" name="visitDate" value="<?= date('Y-m-d') ?>" required>
+        <label for="visitDate">Visit Date</label>
+        <input type="date" id="visitDate" name="visitDate" value="<?= date('Y-m-d') ?>">
     </div>
 </div>
 
 
-                <!-- Vitals Section -->
                 <div class="form-section">
                     <h3>Vital Signs (Optional)</h3>
                     <div class="form-row">
@@ -282,5 +295,65 @@ if (isset($_POST['add'])) {
             </form>
         </div>
     </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initial setup on page load
+        toggleFields(); 
+    });
+
+    function toggleFields() {
+        const role = document.getElementById('role').value;
+        
+        // Fields required only for Students (and optional for Staff)
+        const studentRequiredFields = [
+            { id: 'idNum', label: document.getElementById('idNumLabel'), required: true, newText: 'Student ID Number (LRN)' },
+            { id: 'department', label: document.getElementById('gradeLabel'), required: true, newText: 'Grade Level' },
+            { id: 'section', label: document.getElementById('sectionLabel'), required: true, newText: 'Section' },
+            { id: 'gender', label: document.querySelector('label[for="gender"]'), required: true, newText: 'Gender' },
+        ];
+        
+        // Define the required state based on the selected role
+        const isStudent = (role === 'Student');
+        
+        studentRequiredFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            const label = field.label;
+            
+            if (!element) return; // Skip if element isn't found
+            
+            if (isStudent) {
+                // If student is selected, fields are REQUIRED
+                element.setAttribute('required', 'required');
+                if (label) {
+                    label.classList.add('required-label');
+                }
+                // Update placeholder/text for context
+                if (field.id === 'idNum') element.setAttribute('placeholder', 'Student ID Number (LRN)');
+                
+            } else {
+                // If staff is selected, fields are OPTIONAL (nulls are passed to PHP)
+                element.removeAttribute('required');
+                if (label) {
+                    label.classList.remove('required-label');
+                }
+                // Clear values and update placeholder/text for staff
+                element.value = '';
+                if (field.id === 'idNum') element.setAttribute('placeholder', 'Optional Staff ID');
+            }
+        });
+        
+        // Gender is a special case: ensure the prompt is updated
+        const genderSelect = document.getElementById('gender');
+        if (!isStudent && genderSelect) {
+            // When staff is selected, reset gender dropdown to optional prompt
+            genderSelect.value = ''; 
+            genderSelect.querySelector('option[disabled]').textContent = 'Select Gender (Optional)';
+        } else if (isStudent && genderSelect) {
+             // When student is selected, change prompt to required
+            genderSelect.querySelector('option[disabled]').textContent = 'Select Gender *';
+        }
+    }
+</script>
 </body>
 </html>

@@ -73,17 +73,17 @@ include '../sidebar/sidebar.php';
         }
 
         table {
-            width: 100%; /* Changed from 97% to 100% for better layout inside container */
+            width: 100%;
             border-collapse: collapse;
             margin: 0;
             background: #fff;
-            min-width: 1000px; /* Ensure table doesn't compress too much */
+            min-width: 1100px; /* Increased min-width to accommodate new column */
         }
 
         th, td {
-            border: 1px solid #e0e0e0; /* Lighter border */
-            padding: 14px 15px; /* Increased padding */
-            text-align: left; /* Default text alignment to left for better reading */
+            border: 1px solid #e0e0e0;
+            padding: 14px 15px;
+            text-align: left;
             font-size: 0.9rem;
         }
         
@@ -96,14 +96,14 @@ include '../sidebar/sidebar.php';
             color: #fff;
             font-weight: 600;
             border-bottom: 2px solid var(--primary-maroon);
-            text-align: center; /* Center header text */
+            text-align: center;
         }
         
         th:first-child, td:first-child { text-align: left; }
         th:last-child, td:last-child { text-align: center; }
 
 
-        tr:nth-child(even) { background: #fefefe; } /* Lighter striping */
+        tr:nth-child(even) { background: #fefefe; }
         tr:hover { background: #fff5f5; }
 
         /* Buttons */
@@ -183,14 +183,11 @@ include '../sidebar/sidebar.php';
             .search-input { width: 100%; }
         }
         
-        /* Added for responsiveness on small screens */
         @media (max-width: 600px) {
             .table-container { 
-                /* Ensures horizontal scrolling for table content */
                 overflow-x: auto;
             }
             table {
-                 /* Minimum width to prevent crushing content */
                 min-width: 800px;
             }
         }
@@ -209,7 +206,7 @@ include '../sidebar/sidebar.php';
                 <tr>
                     <th style="text-align: left;">Name</th>
                     <th>Gender</th>
-                    <th>LRN</th>
+                    <th>Status/Role</th> <th>LRN</th>
                     <th>Grade & Section</th>
                     <th>Complaint</th>
                     <th>Temp.</th>
@@ -225,9 +222,8 @@ include '../sidebar/sidebar.php';
                         <tr>
                             <td><?= htmlspecialchars($row['name'] ?? 'N/A') ?></td>
                             <td><?= htmlspecialchars($row['gender'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($row['idNum'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($row['role'] ?? 'N/A') ?></td> <td><?= htmlspecialchars($row['idNum'] ?? 'N/A') ?></td>
 
-                            <!-- Grade & Section -->
                             <td>
                                 <?= htmlspecialchars($row['department'] ?? '') ?> 
                                 - 
@@ -252,8 +248,8 @@ include '../sidebar/sidebar.php';
 
                 <?php else: ?>
                     <tr>
-                        <td colspan="11" class="no-records">
-                            No Student Clinic Records Found.
+                        <td colspan="12" class="no-records">
+                            No Clinic Records Found.
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -261,23 +257,20 @@ include '../sidebar/sidebar.php';
         </div>
         
         <div style="margin-top: 20px;">
-            <a href="add.php" class="btn add-btn"> Add New Student Record</a>
+            <a href="add.php" class="btn add-btn"> Add New Record</a>
         </div>
     </div>
     
     <script>
-        // Custom deletion confirmation to adhere to the rule of avoiding alert()/confirm()
+        // Custom deletion confirmation (kept the original functionality)
         function confirmDeletion(event, recordId) {
-            // Prevent the default navigation for the time being
             event.preventDefault(); 
             
-            // Simple overlay
             const overlay = document.createElement('div');
             overlay.id = 'overlay';
             overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;';
             document.body.appendChild(overlay);
 
-            // Confirmation message box
             const confirmationMessage = document.createElement('div');
             confirmationMessage.className = 'deletion-message';
             confirmationMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; text-align: center;';
@@ -289,9 +282,7 @@ include '../sidebar/sidebar.php';
             `;
             document.body.appendChild(confirmationMessage);
             
-            // Define functions globally for inline HTML event handlers
             window.performDeletion = function(id) {
-                // Redirect to the deletion script
                 window.location.href = `delete.php?id=${id}`;
                 closeDeletionMessage();
             }
@@ -321,23 +312,21 @@ include '../sidebar/sidebar.php';
             const tr = table.getElementsByTagName('tr');
 
             for (let i = 1; i < tr.length; i++) {
-                // Skip header row (i=0) and the "no records" row if present
                 if (tr[i].querySelector('.no-records')) continue; 
                 
                 let found = false;
-                // Check Name (Col 0), LRN (Col 2), Complaint (Col 4)
-                // Note: Column indices are 0-based for Name, Gender, LRN, Grade/Section, Complaint...
-                const checkColumns = [0, 2, 4]; 
+                // CHECK Name (Col 0), LRN (Col 3), Complaint (Col 5)
+                const checkColumns = [0, 3, 5]; 
                 
                 for (let j = 0; j < tr[i].cells.length; j++) {
                     if (checkColumns.includes(j)) {
                          const td = tr[i].getElementsByTagName('td')[j];
                          if (td) {
-                            if (td.textContent.toUpperCase().indexOf(filter) > -1) {
-                                found = true;
-                                break;
-                            }
-                        }
+                             if (td.textContent.toUpperCase().indexOf(filter) > -1) {
+                                 found = true;
+                                 break;
+                             }
+                         }
                     }
                 }
                 tr[i].style.display = found ? "" : "none";

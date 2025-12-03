@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 03, 2025 at 02:18 AM
+-- Generation Time: Dec 03, 2025 at 05:59 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,7 +31,6 @@ CREATE TABLE `inventory` (
   `itemID` int(11) NOT NULL,
   `genericName` varchar(32) NOT NULL,
   `dosage` varchar(32) NOT NULL,
-  `brand` varchar(32) NOT NULL,
   `category` varchar(32) NOT NULL,
   `addDate` date NOT NULL,
   `expDate` date NOT NULL,
@@ -42,8 +41,8 @@ CREATE TABLE `inventory` (
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `brand`, `category`, `addDate`, `expDate`, `quantity`) VALUES
-(2, 'paracetamol', '12', 'tempra', 'qweq', '2025-11-02', '2025-11-17', 86);
+INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `category`, `addDate`, `expDate`, `quantity`) VALUES
+(2, 'paracetamol', '12', 'qweq', '2025-11-02', '2025-11-17', 86);
 
 -- --------------------------------------------------------
 
@@ -81,6 +80,7 @@ CREATE TABLE `studentrecord` (
   `name` varchar(32) NOT NULL,
   `idNum` int(11) NOT NULL,
   `gender` varchar(10) DEFAULT NULL,
+  `role` varchar(50) NOT NULL DEFAULT 'Student',
   `department` varchar(30) NOT NULL,
   `section` varchar(50) DEFAULT NULL,
   `complaint` varchar(255) NOT NULL,
@@ -91,8 +91,11 @@ CREATE TABLE `studentrecord` (
 -- Dumping data for table `studentrecord`
 --
 
-INSERT INTO `studentrecord` (`ID`, `name`, `idNum`, `gender`, `department`, `section`, `complaint`, `visitDate`) VALUES
-(1, '123', 123, NULL, '123', NULL, '123', '2025-11-20');
+INSERT INTO `studentrecord` (`ID`, `name`, `idNum`, `gender`, `role`, `department`, `section`, `complaint`, `visitDate`) VALUES
+(1, '123', 123, NULL, 'Student', '123', NULL, '123', '2025-11-20'),
+(2, 'Juan', 0, 'Male', 'Student', '', '', '', '0000-00-00'),
+(3, 'Juan de', 0, '', 'Non-Teaching Staff', '', '', 'Fever', '2025-12-03'),
+(4, 'redloie', 0, '', 'Non-Teaching Staff', '', '', 'Fainting', '2025-12-03');
 
 -- --------------------------------------------------------
 
@@ -115,7 +118,8 @@ CREATE TABLE `student_vitals` (
 --
 
 INSERT INTO `student_vitals` (`vitalID`, `studentID`, `vitalDate`, `temperature`, `bloodPressure`, `pulse`, `respiratoryRate`) VALUES
-(2, 1, '2025-11-24', 999.9, '123/78', 123, 12);
+(2, 1, '2025-11-24', 999.9, '123/78', 123, 12),
+(3, 2, '0000-00-00', 999.9, '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -198,13 +202,13 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT for table `studentrecord`
 --
 ALTER TABLE `studentrecord`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `student_vitals`
 --
 ALTER TABLE `student_vitals`
-  MODIFY `vitalID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `vitalID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `transaction`

@@ -17,14 +17,15 @@ class oop_class {
         }
     }
 
-    // INSERT - Added section
-    public function insert_data($name, $gender, $idNum, $department, $section, $complaint, $visitDate){
-        $insert = "INSERT INTO studentrecord(name, gender, idNum, department, section, complaint, visitDate) 
-                   VALUES(:sName, :gender, :IDnum, :Department, :Section, :Complaint, :VisitDate)";
+    // INSERT - UPDATED to include role
+    public function insert_data($name, $gender, $role, $idNum, $department, $section, $complaint, $visitDate){
+        $insert = "INSERT INTO studentrecord(name, gender, role, idNum, department, section, complaint, visitDate) 
+                    VALUES(:sName, :gender, :role, :IDnum, :Department, :Section, :Complaint, :VisitDate)";
         $stmt = $this->conn->prepare($insert);
         $result = $stmt->execute([
             ':sName'=>$name,
             ':gender'=>$gender,
+            ':role'=>$role, // ADDED BINDING
             ':IDnum'=>$idNum,
             ':Department'=>$department,
             ':Section'=>$section,
@@ -37,10 +38,11 @@ class oop_class {
         }
     }
 
-    // SHOW ALL – NO CHANGES NEEDED
+    // SHOW ALL – Added role to select
     public function show_data(){
         $select = "SELECT 
             sr.*,
+            sr.role,  /* Ensuring role is included explicitly */
             sv.temperature,
             sv.bloodPressure,
             sv.pulse,
@@ -83,7 +85,7 @@ class oop_class {
         }
     }
 
-    // SHOW ONE – NO CHANGES NEEDED
+    // SHOW ONE – No change needed as sr.* is used
     public function show_update_data($ID){
         $select = "SELECT 
             sr.*,
@@ -105,11 +107,12 @@ class oop_class {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // UPDATE - Added section
-    public function update_data($name, $gender, $idNum, $department, $section, $complaint, $visitDate, $ID){
+    // UPDATE - UPDATED to include role
+    public function update_data($name, $gender, $role, $idNum, $department, $section, $complaint, $visitDate, $ID){
         $update = "UPDATE studentrecord SET 
             name = :sName, 
             gender = :gender,
+            role = :role, /* ADDED ROLE */
             idNum = :IDnum, 
             department = :Department, 
             section = :Section,
@@ -120,6 +123,7 @@ class oop_class {
         $result = $stmt->execute([
             ':sName'=>$name,
             ':gender'=>$gender,
+            ':role'=>$role, // ADDED BINDING
             ':IDnum'=>$idNum,
             ':Department'=>$department,
             ':Section'=>$section,
@@ -133,7 +137,7 @@ class oop_class {
         }
     }
 
-    // SHOW ONE WITH VITALS – NO CHANGES NEEDED
+    // SHOW ONE WITH VITALS – No change needed
     public function show_update_data_with_vitals($ID){
         $select = "SELECT 
             sr.*,
@@ -155,14 +159,15 @@ class oop_class {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // UPDATE WITH VITALS - Added section
-    public function update_data_with_vitals($name, $gender, $idNum, $department, $section, $complaint, $visitDate, $ID, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate){
+    // UPDATE WITH VITALS - UPDATED to include role
+    public function update_data_with_vitals($name, $gender, $role, $idNum, $department, $section, $complaint, $visitDate, $ID, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate){
         $this->conn->beginTransaction();
         
         try {
             $update_record = "UPDATE studentrecord SET 
                 name = :sName, 
                 gender = :gender,
+                role = :role, /* ADDED ROLE */
                 idNum = :IDnum, 
                 department = :Department, 
                 section = :Section,
@@ -173,6 +178,7 @@ class oop_class {
             $stmt1->execute([
                 ':sName'=>$name,
                 ':gender'=>$gender,
+                ':role'=>$role, // ADDED BINDING
                 ':IDnum'=>$idNum,
                 ':Department'=>$department,
                 ':Section'=>$section,
@@ -181,14 +187,15 @@ class oop_class {
                 ':id' => $ID
             ]);
 
+            // Vitals Upsert logic remains the same...
             $upsert_vitals = "INSERT INTO student_vitals (studentID, vitalDate, temperature, bloodPressure, pulse, respiratoryRate) 
-                             VALUES (:studentID, :vitalDate, :temperature, :bloodPressure, :pulse, :respiratoryRate)
-                             ON DUPLICATE KEY UPDATE
-                             temperature = :temperature2, 
-                             bloodPressure = :bloodPressure2, 
-                             pulse = :pulse2, 
-                             respiratoryRate = :respiratoryRate2, 
-                             vitalDate = :vitalDate2";
+                              VALUES (:studentID, :vitalDate, :temperature, :bloodPressure, :pulse, :respiratoryRate)
+                              ON DUPLICATE KEY UPDATE
+                              temperature = :temperature2, 
+                              bloodPressure = :bloodPressure2, 
+                              pulse = :pulse2, 
+                              respiratoryRate = :respiratoryRate2, 
+                              vitalDate = :vitalDate2";
             $stmt2 = $this->conn->prepare($upsert_vitals);
             $stmt2->execute([
                 ':studentID' => $ID,
@@ -212,17 +219,18 @@ class oop_class {
         }
     }
 
-    // INSERT WITH VITALS - Added section
-    public function insert_data_with_vitals($name, $gender, $idNum, $department, $section, $complaint, $visitDate, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate){
+    // INSERT WITH VITALS - UPDATED to include role
+    public function insert_data_with_vitals($name, $gender, $role, $idNum, $department, $section, $complaint, $visitDate, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate){
         $this->conn->beginTransaction();
         
         try {
-            $insert_record = "INSERT INTO studentrecord(name, gender, idNum, department, section, complaint, visitDate) 
-                             VALUES(:sName, :gender, :IDnum, :Department, :Section, :Complaint, :VisitDate)";
+            $insert_record = "INSERT INTO studentrecord(name, gender, role, idNum, department, section, complaint, visitDate) 
+                              VALUES(:sName, :gender, :Role, :IDnum, :Department, :Section, :Complaint, :VisitDate)"; // <-- ADDED role column name
             $stmt1 = $this->conn->prepare($insert_record);
             $stmt1->execute([
                 ':sName'=>$name,
                 ':gender'=>$gender,
+                ':Role'=>$role, // <-- ADDED BINDING
                 ':IDnum'=>$idNum,
                 ':Department'=>$department,
                 ':Section'=>$section,
@@ -253,6 +261,5 @@ class oop_class {
             echo "<script>alert('Add Failed: " . addslashes($e->getMessage()) . "');</script>";
         }
     }
-
 }
 ?>

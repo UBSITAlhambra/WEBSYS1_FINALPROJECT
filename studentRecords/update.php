@@ -16,6 +16,8 @@ if (isset($_GET['id'])) {
 if (isset($_POST['enter'])) {
     $name = $_POST['name'] ?? '';
     $gender = $_POST['gender'] ?? '';
+    $role = $_POST['role'] ?? 'Student'; // <<< ADDED ROLE RETRIEVAL
+    $section = $_POST['section'] ?? ''; // <<< ADDED SECTION RETRIEVAL
     $idNum = $_POST['idNum'] ?? '';
     $department = $_POST['department'] ?? '';
     $complaint = $_POST['complaint'] ?? '';
@@ -28,7 +30,8 @@ if (isset($_POST['enter'])) {
     $respiratoryRate = $_POST['respiratoryRate'] ?? null;
     $vitalDate = $_POST['vitalDate'] ?? date('Y-m-d');
 
-    $oop->update_data_with_vitals($name, $gender, $idNum, $department,$section, $complaint, $visitDate, $ID, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate);
+    // UPDATED FUNCTION CALL TO INCLUDE $role AND $section
+    $oop->update_data_with_vitals($name, $gender, $role, $idNum, $department, $section, $complaint, $visitDate, $ID, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate);
 }
 ?>
 
@@ -78,20 +81,20 @@ h2 {
 }
 
 .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 20px;
+margin-bottom: 20px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+margin-bottom: 20px;
 }
 
 .form-section {
-    margin-bottom: 30px;
-    padding-bottom: 25px;
-    border-bottom: 2px solid #f0f0f0;
+margin-bottom: 30px;
+padding-bottom: 25px;
+border-bottom: 2px solid #f0f0f0;
 }
 
 .form-section:last-child {
@@ -130,9 +133,9 @@ input:focus, select:focus {
 }
 
 .button-group {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
 }
 
 .btn {
@@ -166,37 +169,89 @@ input:focus, select:focus {
     transform: translateY(-2px);
 }
 
-#section-group {
-    display: none;
+/* Added necessary required field indicator */
+.required-label::after {
+    content: ' *';
+    color: red;
 }
 
 @media (max-width: 900px) {
     .main-content { 
-        margin-left: 0; 
-        padding: 20px; 
-    }
-    .form-container {
-        padding: 25px;
-    }
-    .form-row {
-        grid-template-columns: 1fr;
-    }
+     margin-left: 0; 
+     padding: 20px; 
+     }
+.form-container {
+padding: 25px;
+}
+.form-row {
+grid-template-columns: 1fr;
+}
 }
 </style>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const gradeSelect = document.getElementById("department");
-    const sectionGroup = document.getElementById("section-group");
-
-    function toggleSection() {
-        sectionGroup.style.display = gradeSelect.value ? "block" : "none";
+    // Call toggleFields on load to set initial state based on saved 'role'
+    toggleFields(); 
+    
+    const roleSelect = document.getElementById("role");
+    if (roleSelect) {
+        roleSelect.addEventListener("change", toggleFields);
     }
-
-    gradeSelect.addEventListener("change", toggleSection);
-
-    toggleSection(); // Initial load
 });
+
+function toggleFields() {
+    const role = document.getElementById('role').value;
+    const isStudent = (role === 'Student');
+
+    // Elements to dynamically manage
+    const fields = [
+        { id: 'idNum', labelId: 'idNumLabel', placeholder: isStudent ? 'Student ID Number (LRN)' : 'Optional Staff ID' },
+        { id: 'department', labelId: 'gradeLabel' },
+        { id: 'section', labelId: 'sectionLabel' }
+    ];
+
+    const gradeSectionRow = document.getElementById('gradeSectionRow');
+    const genderSelect = document.getElementById('gender');
+
+    // 1. Manage visibility of Grade/Section row
+    gradeSectionRow.style.display = isStudent ? 'grid' : 'none';
+
+    // 2. Manage 'required' attribute and labels
+    fields.forEach(field => {
+        const element = document.getElementById(field.id);
+        const label = document.getElementById(field.labelId);
+        
+        if (!element || !label) return;
+
+        if (isStudent) {
+            // Student: Required
+            element.setAttribute('required', 'required');
+            label.classList.add('required-label');
+        } else {
+            // Staff: Optional, remove requirement
+            element.removeAttribute('required');
+            label.classList.remove('required-label');
+            element.value = ''; // Clear value for non-student fields
+        }
+
+        if (field.placeholder) {
+            element.setAttribute('placeholder', field.placeholder);
+        }
+    });
+
+    // 3. Manage Gender required state
+    const genderLabel = document.querySelector('label[for="gender"]');
+    if (genderLabel) {
+        if (isStudent) {
+            genderSelect.setAttribute('required', 'required');
+            genderLabel.classList.add('required-label');
+        } else {
+            genderSelect.removeAttribute('required');
+            genderLabel.classList.remove('required-label');
+        }
+    }
+}
 </script>
 
 </head>
@@ -206,84 +261,92 @@ document.addEventListener("DOMContentLoaded", function () {
 <h2>Update Clinic Record</h2>
 
 <?php if (!empty($show_update_data)): 
-    $row = $show_update_data;
+$row = $show_update_data;
 ?>
 <div class="form-container">
 <form method="POST">
+    <input type="hidden" name="id" value="<?= $row['ID'] ?>">
 
-    <!-- Student Information -->
-    <div class="form-section">
-        <h3>Student Information</h3>
+<div class="form-section">
+    <h3>Patient Information</h3>
 
-        <div class="form-row">
+<div class="form-row">
+    <div class="form-group">
+        <label class="required-label">Student Name</label>
+        <input type="text" name="name" value="<?= htmlspecialchars($row['name']) ?>" required>
+</div>
+
+        <div class="form-group">
+                <label for="gender" id="genderLabel">Gender</label>
+                <select name="gender" id="gender">
+                <option value="">Select Gender</option> 
+                <option value="Male" <?= $row['gender']=='Male'?'selected':'' ?>>Male</option>
+                <option value="Female" <?= $row['gender']=='Female'?'selected':'' ?>>Female</option>
+</select>
+</div>
+    </div>
+
+    <div class="form-row">
             <div class="form-group">
-                <label>Student Name *</label>
-                <input type="text" name="name" value="<?= htmlspecialchars($row['name']) ?>" required>
-            </div>
-
-            <div class="form-group">
-                <label>Gender *</label>
-                <select name="gender" required>
-                    <option value="Male"   <?= $row['gender']=='Male'?'selected':'' ?>>Male</option>
-                    <option value="Female" <?= $row['gender']=='Female'?'selected':'' ?>>Female</option>
+                <label for="role" class="required-label">Status/Role</label>
+                <select name="role" id="role" required>
+                    <option value="Student" <?= $row['role']=='Student'?'selected':'' ?>>Regular Student</option>
+                    <option value="Teaching Staff" <?= $row['role']=='Teaching Staff'?'selected':'' ?>>Teaching Staff</option>
+                    <option value="Non-Teaching Staff" <?= $row['role']=='Non-Teaching Staff'?'selected':'' ?>>Non-Teaching Staff</option>
                 </select>
+            </div>
+            
+                <div class="form-group">
+            <label id="idNumLabel">Student ID Number</label>
+                <input type="text" name="idNum" id="idNum" value="<?= htmlspecialchars($row['idNum']) ?>">
             </div>
         </div>
 
-        <div class="form-row">
+            <div class="form-row" id="gradeSectionRow">
             <div class="form-group">
-                <label>Student ID Number *</label>
-                <input type="text" name="idNum" value="<?= $row['idNum'] ?>" required>
-            </div>
-
-            <div class="form-group">
-                <label>Grade Level *</label>
-                <select name="department" id="department" required>
+                <label id="gradeLabel">Grade Level</label>
+                <select name="department" id="department">
                     <option value="">Select Grade Level</option>
                     <?php 
                     foreach(["Grade 7","Grade 8","Grade 9","Grade 10","Grade 11","Grade 12"] as $grade) {
                         echo "<option value='$grade' ".($row['department']==$grade?'selected':'').">$grade</option>";
                     }
                     ?>
-                </select>
+            </select>
+            </div>
+
+            <div class="form-group">
+                <label id="sectionLabel">Section</label>
+                <input type="text" name="section" id="section" value="<?= htmlspecialchars($row['section']) ?>">
             </div>
         </div>
 
-        <div class="form-group" id="section-group">
-            <label>Section *</label>
-            <input type="text" name="section" value="<?= htmlspecialchars($row['section']) ?>" required>
-        </div>
-
         <div class="form-group">
-            <label>Complaint *</label>
+            <label class="required-label">Complaint</label>
             <select name="complaint" required>
                 <option value="">Select Complaint</option>
                 <?php
                 $complaints = [
-                    "Fever","Stomach ache","Menstrual pains (dysmenorrhea)",
-                    "Headache","Sore throat","Cough and cold symptoms",
-                    "Minor injuries (sprains, cuts, bruises)","Dizziness or fainting",
-                    "Asthma exacerbation","Allergic reactions","Influenza (flu)",
-                    "Strep throat","Mononucleosis (Mono)",
-                    "Pink eye (conjunctivitis)","Vomiting and diarrhea (gastroenteritis)",
+                    "Fever","Stomach ache","Dysmenorrhea","Headache","Sore throat","Cough", "Colds",
+                    "Minor injuries (sprains, cuts, bruises)","Dizziness","Fainting","Toothache",
+                    "Allergy","Strep throat","Pink eye (conjunctivitis)","Hyperacidity",
                     "Nosebleeds","Chickenpox","Hand, foot, and mouth disease"
                 ];
                 foreach($complaints as $c){
-                    echo "<option value='$c' ".($row['complaint']==$c?'selected':'').">$c</option>";
+                     echo "<option value='$c' ".($row['complaint']==$c?'selected':'').">$c</option>";
                 }
                 ?>
             </select>
         </div>
 
         <div class="form-group">
-            <label>Visit Date *</label>
+            <label>Visit Date</label>
             <input type="date" name="visitDate" value="<?= $row['visitDate'] ?>" required>
         </div>
     </div>
 
-    <!-- Vitals Section -->
-    <div class="form-section">
-        <h3>Vital Signs</h3>
+        <div class="form-section">
+        <h3>Vital Signs (Optional)</h3>
 
         <div class="form-row">
             <div class="form-group">
@@ -299,21 +362,19 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="form-row">
             <div class="form-group">
                 <label>Pulse (bpm)</label>
-                <input type="number" name="pulse" value="<?= $row['pulse'] ?>" min="40" max="200">
+            <input type="number" name="pulse" value="<?= $row['pulse'] ?>" min="40" max="200">
             </div>
             <div class="form-group">
                 <label>Respiratory Rate (rpm)</label>
                 <input type="number" name="respiratoryRate" value="<?= $row['respiratoryRate'] ?>" min="10" max="40">
             </div>
-        </div>
+    </div>
 
         <div class="form-group">
             <label>Vitals Date</label>
             <input type="date" name="vitalDate" value="<?= $row['vitalDate'] ?: date('Y-m-d') ?>">
         </div>
     </div>
-
-    <input type="hidden" name="id" value="<?= $row['ID'] ?>">
 
     <div class="button-group">
         <button type="submit" name="enter" class="btn btn-update">Update Record</button>

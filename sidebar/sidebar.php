@@ -86,7 +86,7 @@
 
         <a class="nav-link <?= ($activePage=='visits'?'active':'') ?>" 
            href="../studentRecords/">
-            Student Visits
+             Visits
         </a>
         
         <a class="nav-link <?= ($activePage=='transaction'?'active':'') ?>" 
