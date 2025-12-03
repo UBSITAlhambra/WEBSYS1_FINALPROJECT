@@ -17,10 +17,10 @@ class oop_class {
         }
     }
 
-    // INSERT - Added section
+    // INSERT (Expanded to include gender and section)
     public function insert_data($name, $gender, $idNum, $department, $section, $complaint, $visitDate){
         $insert = "INSERT INTO studentrecord(name, gender, idNum, department, section, complaint, visitDate) 
-                   VALUES(:sName, :gender, :IDnum, :Department, :Section, :Complaint, :VisitDate)";
+                    VALUES(:sName, :gender, :IDnum, :Department, :Section, :Complaint, :VisitDate)";
         $stmt = $this->conn->prepare($insert);
         $result = $stmt->execute([
             ':sName'=>$name,
@@ -33,11 +33,12 @@ class oop_class {
         ]);
 
         if($result){
+            // Redirect to Vitals form after successful record creation
             echo "<script>window.location='../studentVital/add.php';</script>";
         }
     }
 
-    // SHOW ALL – NO CHANGES NEEDED
+    // SHOW ALL (Expanded to JOIN with student_vitals for dashboard table view)
     public function show_data(){
         $select = "SELECT 
             sr.*,
@@ -49,17 +50,18 @@ class oop_class {
         FROM studentrecord sr
         LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
             AND sv.vitalDate = (
+                -- Subquery to find the MAX (most recent) vital date for this student
                 SELECT MAX(vitalDate) 
                 FROM student_vitals sv2 
                 WHERE sv2.studentID = sr.ID
             )
-        ORDER BY sr.visitDate DESC;";
+        ORDER BY sr.visitDate DESC";
         $stmt = $this->conn->prepare($select);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // DELETE – NO CHANGES NEEDED
+    // DELETE (Handles deletion in both studentrecord and student_vitals using transactions)
     public function delete_data($ID){
         $this->conn->beginTransaction();
         
@@ -83,29 +85,18 @@ class oop_class {
         }
     }
 
-    // SHOW ONE – NO CHANGES NEEDED
+    // SHOW ONE (Used for fetching record data, updated to include new fields)
     public function show_update_data($ID){
         $select = "SELECT 
-            sr.*,
-            sv.temperature,
-            sv.bloodPressure,
-            sv.pulse,
-            sv.respiratoryRate,
-            sv.vitalDate
+            sr.*
         FROM studentrecord sr
-        LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
-            AND sv.vitalDate = (
-                SELECT MAX(vitalDate) 
-                FROM student_vitals sv2 
-                WHERE sv2.studentID = sr.ID
-            )
         WHERE sr.ID = :id";
         $stmt = $this->conn->prepare($select);
         $stmt->execute([':id' => $ID]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // UPDATE - Added section
+    // UPDATE (Expanded to include gender and section)
     public function update_data($name, $gender, $idNum, $department, $section, $complaint, $visitDate, $ID){
         $update = "UPDATE studentrecord SET 
             name = :sName, 
@@ -133,7 +124,7 @@ class oop_class {
         }
     }
 
-    // SHOW ONE WITH VITALS – NO CHANGES NEEDED
+    // SHOW ONE WITH VITALS (Used for updating the vitals form)
     public function show_update_data_with_vitals($ID){
         $select = "SELECT 
             sr.*,
@@ -155,11 +146,12 @@ class oop_class {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // UPDATE WITH VITALS - Added section
+    // UPDATE WITH VITALS (Handles updating both student record and vitals table)
     public function update_data_with_vitals($name, $gender, $idNum, $department, $section, $complaint, $visitDate, $ID, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate){
         $this->conn->beginTransaction();
         
         try {
+            // 1. Update Student Record
             $update_record = "UPDATE studentrecord SET 
                 name = :sName, 
                 gender = :gender,
@@ -181,28 +173,32 @@ class oop_class {
                 ':id' => $ID
             ]);
 
-            $upsert_vitals = "INSERT INTO student_vitals (studentID, vitalDate, temperature, bloodPressure, pulse, respiratoryRate) 
-                             VALUES (:studentID, :vitalDate, :temperature, :bloodPressure, :pulse, :respiratoryRate)
-                             ON DUPLICATE KEY UPDATE
-                             temperature = :temperature2, 
-                             bloodPressure = :bloodPressure2, 
-                             pulse = :pulse2, 
-                             respiratoryRate = :respiratoryRate2, 
-                             vitalDate = :vitalDate2";
-            $stmt2 = $this->conn->prepare($upsert_vitals);
-            $stmt2->execute([
-                ':studentID' => $ID,
-                ':vitalDate' => $vitalDate,
-                ':temperature' => $temperature,
-                ':bloodPressure' => $bloodPressure,
-                ':pulse' => $pulse,
-                ':respiratoryRate' => $respiratoryRate,
-                ':temperature2' => $temperature,
-                ':bloodPressure2' => $bloodPressure,
-                ':pulse2' => $pulse,
-                ':respiratoryRate2' => $respiratoryRate,
-                ':vitalDate2' => $vitalDate
-            ]);
+            // 2. Insert/Update Vitals Record (using ON DUPLICATE KEY UPDATE logic)
+            // Note: This requires studentID and vitalDate to be a unique key/primary key combination
+            if ($temperature || $bloodPressure || $pulse || $respiratoryRate) {
+                $upsert_vitals = "INSERT INTO student_vitals (studentID, vitalDate, temperature, bloodPressure, pulse, respiratoryRate) 
+                                 VALUES (:studentID, :vitalDate, :temperature, :bloodPressure, :pulse, :respiratoryRate)
+                                 ON DUPLICATE KEY UPDATE
+                                 temperature = :temperature2, 
+                                 bloodPressure = :bloodPressure2, 
+                                 pulse = :pulse2, 
+                                 respiratoryRate = :respiratoryRate2, 
+                                 vitalDate = :vitalDate2";
+                $stmt2 = $this->conn->prepare($upsert_vitals);
+                $stmt2->execute([
+                    ':studentID' => $ID,
+                    ':vitalDate' => $vitalDate,
+                    ':temperature' => $temperature,
+                    ':bloodPressure' => $bloodPressure,
+                    ':pulse' => $pulse,
+                    ':respiratoryRate' => $respiratoryRate,
+                    ':temperature2' => $temperature,
+                    ':bloodPressure2' => $bloodPressure,
+                    ':pulse2' => $pulse,
+                    ':respiratoryRate2' => $respiratoryRate,
+                    ':vitalDate2' => $vitalDate
+                ]);
+            }
 
             $this->conn->commit();
             echo "<script>alert('Update Complete'); window.location='index.php';</script>";
@@ -211,14 +207,15 @@ class oop_class {
             echo "<script>alert('Update Failed: " . addslashes($e->getMessage()) . "');</script>";
         }
     }
-
-    // INSERT WITH VITALS - Added section
+    
+    // INSERT WITH VITALS (Handles inserting both student record and vitals table for new records)
     public function insert_data_with_vitals($name, $gender, $idNum, $department, $section, $complaint, $visitDate, $temperature, $bloodPressure, $pulse, $respiratoryRate, $vitalDate){
         $this->conn->beginTransaction();
         
         try {
+            // 1. Insert Student Record
             $insert_record = "INSERT INTO studentrecord(name, gender, idNum, department, section, complaint, visitDate) 
-                             VALUES(:sName, :gender, :IDnum, :Department, :Section, :Complaint, :VisitDate)";
+                              VALUES(:sName, :gender, :IDnum, :Department, :Section, :Complaint, :VisitDate)";
             $stmt1 = $this->conn->prepare($insert_record);
             $stmt1->execute([
                 ':sName'=>$name,
@@ -232,6 +229,7 @@ class oop_class {
             
             $studentID = $this->conn->lastInsertId();
             
+            // 2. Insert Vitals Record
             if ($temperature || $bloodPressure || $pulse || $respiratoryRate) {
                 $insert_vitals = "INSERT INTO student_vitals (studentID, vitalDate, temperature, bloodPressure, pulse, respiratoryRate) 
                                  VALUES (:studentID, :vitalDate, :temperature, :bloodPressure, :pulse, :respiratoryRate)";
@@ -254,5 +252,33 @@ class oop_class {
         }
     }
 
+
+    // SEARCH FUNCTION
+    public function search_studentRecords($searchTerm) {
+        $term = '%' . $searchTerm . '%';
+        $search = "SELECT 
+            sr.*,
+            sv.temperature,
+            sv.bloodPressure,
+            sv.pulse,
+            sv.respiratoryRate,
+            sv.vitalDate
+        FROM studentrecord sr
+        LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
+            AND sv.vitalDate = (
+                SELECT MAX(vitalDate) 
+                FROM student_vitals sv2 
+                WHERE sv2.studentID = sr.ID
+            )
+        WHERE sr.name LIKE :term 
+        OR sr.idNum LIKE :term 
+        OR sr.department LIKE :term
+        OR sr.complaint LIKE :term
+        ORDER BY sr.visitDate DESC";
+        
+        $stmt = $this->conn->prepare($search);
+        $stmt->execute([':term' => $term]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    }
 }
 ?>

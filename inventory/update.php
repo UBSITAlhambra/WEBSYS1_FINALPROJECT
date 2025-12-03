@@ -1,12 +1,12 @@
 <?php
-session_start();
-include "oop.php";
-$oop = new oop_class();
+    session_start();
+    include "oop.php";
+    $oop = new oop_class();
 
-if (isset($_GET['id'])) {
-    $ID = $_GET['id'];
-    $show_update_data = $oop->show_update_data($ID);
-}
+    if (isset($_GET['id'])) {
+        $ID = $_GET['id'];
+        $show_update_data = $oop->show_update_data($ID);
+    }
 
 if (isset($_POST['enter'])) {
     $genericName = $_POST['genericName'] ?? '';
@@ -42,7 +42,7 @@ if (isset($_POST['enter'])) {
             border-radius: 12px;
             box-shadow: 0 6px 18px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 750px;
+            max-width: 900px;
             animation: fadeIn 0.5s ease-in-out;
         }
         table {
@@ -56,7 +56,7 @@ if (isset($_POST['enter'])) {
             background: #4a90e2;
             color: #fff;
             padding: 12px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             text-align: center;
         }
         td {
@@ -66,11 +66,11 @@ if (isset($_POST['enter'])) {
         }
         input[type="text"], 
         input[type="date"] {
-            width: 90%;
-            padding: 10px;
+            width: 95%; 
+            padding: 8px 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             transition: border 0.3s, box-shadow 0.3s;
         }
         input:focus {
@@ -112,6 +112,7 @@ if (isset($_POST['enter'])) {
             <th>Dosage</th>
             <th>Brand</th>
             <th>Category</th>
+            <th>Quantity</th>
             <th>Add Date</th>
             <th>Expiry Date</th>
         </tr>
@@ -120,6 +121,7 @@ if (isset($_POST['enter'])) {
             <td><input type="text" name="dosage" value="<?= htmlspecialchars($row['dosage']) ?>" required></td>
             <td><input type="text" name="quantity" value="<?= htmlspecialchars($row['quantity']) ?>" required></td>
             <td><input type="text" name="category" value="<?= htmlspecialchars($row['category']) ?>" required></td>
+            <td><input type="text" name="quantity" value="<?= htmlspecialchars($row['quantity']) ?>" required></td>
             <td><input type="date" name="addDate" value="<?= htmlspecialchars($row['addDate']) ?>" required></td>
             <td><input type="date" name="expDate" value="<?= htmlspecialchars($row['expDate']) ?>" required></td>
         </tr>
