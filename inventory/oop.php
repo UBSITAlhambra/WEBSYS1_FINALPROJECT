@@ -90,10 +90,9 @@
         //SEARCH FUNCTION
         public function search_inventory($searchTerm) {
             $term = '%' . $searchTerm . '%';
-            $search = "SELECT itemID, genericName, dosage, brand, category, quantity, addDate, expDate 
+            $search = "SELECT itemID, genericName, dosage, category, quantity, addDate, expDate 
                     FROM inventory 
                     WHERE genericName LIKE :term 
-                    OR brand LIKE :term 
                     OR category LIKE :term
                     OR dosage LIKE :term
                     ORDER BY genericName ASC";

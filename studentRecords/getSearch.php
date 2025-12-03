@@ -24,7 +24,7 @@
         <?php else: ?>
             <tr style="background-color: #f2f2f2;">
                 <td style="font-weight: bold;">Name</td>
-                <td style="font-weight: bold;">ID #</td>
+                <td style="font-weight: bold;">LRN</td>
                 <td style="font-weight: bold;">Department</td>
                 <td style="font-weight: bold;">Complaint</td>
             </tr>

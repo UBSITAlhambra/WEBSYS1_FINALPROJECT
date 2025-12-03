@@ -4,7 +4,9 @@ include "oop.php";
 $oop = new oop_class();
 $activePage = 'transaction';
 include '../sidebar/sidebar.php';
-
+    if(!isset($_SESSION['user_id'])){
+        header('Location: ../login/');
+    }
 $medicineName = '';
 $studentName  = '';
 $row = null;

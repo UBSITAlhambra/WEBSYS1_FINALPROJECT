@@ -4,7 +4,9 @@ include "oop.php";
 $oop = new oop_class();
 $activePage = 'transaction';
 include '../sidebar/sidebar.php';
-
+    if(!isset($_SESSION['user_id'])){
+        header('Location: ../login/');
+    }
 // Fetch medicine names
 $conn = $oop->get_connection();
 $medicineStmt = $conn->prepare("SELECT genericName FROM inventory ORDER BY genericName ASC");
@@ -181,17 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <!-- Transaction Info -->
                 <div class="form-section">
                     <h3>Transaction Details</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="quantity">Quantity *</label>
-                            <input type="text" id="quantity" name="quantity" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="transactionDate">Transaction Date *</label>
-                            <input type="date" id="transactionDate" name="transactionDate" value="<?= date('Y-m-d') ?>" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
+                     <div class="form-row">
                         <div class="form-group">
                             <label for="medicineName">Medicine *</label>
                             <select id="medicineName" name="medicineName" required>
@@ -215,6 +207,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </select>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quantity">Quantity *</label>
+                            <input type="text" id="quantity" name="quantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transactionDate">Transaction Date *</label>
+                            <input type="date" id="transactionDate" name="transactionDate" value="<?= date('Y-m-d') ?>" required>
+                        </div>
+                    </div>
+                   
                 </div>
 
                 <!-- Remarks Section -->

@@ -46,6 +46,7 @@
                 LEFT JOIN inventory i ON t.itemID = i.itemID
                 LEFT JOIN studentrecord s ON t.studentID = s.ID
                 ORDER BY t.transactionID DESC
+                LIMIT 10
             ";
             $stmt = $this->conn->prepare($select);
             $stmt->execute();
@@ -95,28 +96,34 @@
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     // Fetch student records along with their latest vitals
-    public function show_studentRecords_with_vitals(){
-        $select = "
-            SELECT 
-            sr.*,
-            sv.temperature,
-            sv.bloodPressure,
-            sv.pulse,
-            sv.respiratoryRate,
-            sv.vitalDate
+    // Fetch student records with latest visit + medicine info for dashboard
+    public function show_studentRecords_with_vitals() {
+        $sql = "
+            SELECT
+                sr.ID,
+                sr.name,
+                sr.idNum,
+                sr.gender,
+                sr.department,
+                sr.section,
+                sr.complaint,
+                sr.visitDate,
+                i.genericName,
+                t.quantity,
+                t.remarks
             FROM studentrecord sr
-            LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
-            AND sv.vitalDate = (
-                SELECT MAX(vitalDate) 
-                FROM student_vitals sv2 
-                WHERE sv2.studentID = sr.ID
-            )
+            LEFT JOIN `transaction` t 
+                ON t.studentID = sr.ID
+            LEFT JOIN inventory i 
+                ON i.itemID = t.itemID
             ORDER BY sr.visitDate DESC
+            LIMIT 10
         ";
-        $stmt = $this->conn->prepare($select);
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt;
-        }
+    }
+
     // =======================
     // USER ACCOUNT FUNCTIONS
     // =======================
