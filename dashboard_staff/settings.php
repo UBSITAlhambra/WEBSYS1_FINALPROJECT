@@ -1,16 +1,34 @@
 <?php
 include 'pdo.php';
+session_start();
+
 $oop = new oop_class();
 
-// session_start();
-// if (!isset($_SESSION['staff_id'])) {
-//     header('Location: ../login/index.php');
-//     exit();
-// }
+// Require login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login/index.php");
+    exit();
+}
 
-// Placeholder until login works
-$staffName = "Clinic Staff";
-$staffEmail = "staff@example.com";
+$userID = $_SESSION['user_id'];
+
+// Fetch user data
+$user = $oop->get_user($userID); // Line 16 - This call might return false on failure
+
+// --- FIX START ---
+// Initialize with default values
+$staffName = 'N/A';
+$staffEmail = 'N/A';
+
+// Check if $user is a valid array before trying to access array offsets (Line 18, 19)
+if (is_array($user)) {
+    $staffName = trim($user['FirstName'] . " " . $user['MiddleName'] . " " . $user['LastName']);
+    $staffEmail = $user['Email'];
+} else {
+    // Optionally log this error if the user ID is present but the user record is missing
+    // error_log("User ID " . $userID . " found in session but not in database.");
+}
+// --- FIX END ---
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +52,6 @@ $staffEmail = "staff@example.com";
 <body class="bg-light">
 
 <?php 
-    // highlight Settings tab
     $activePage = 'settings'; 
     include '../sidebar/sidebar.php';
 ?>
@@ -60,12 +77,14 @@ $staffEmail = "staff@example.com";
 
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" name="full_name" value="<?= $staffName ?>">
+                                <input type="text" class="form-control" name="full_name" 
+                                        value="<?= htmlspecialchars($staffName) ?>" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" value="<?= $staffEmail ?>">
+                                <input type="email" class="form-control" name="email" 
+                                        value="<?= htmlspecialchars($staffEmail) ?>" required>
                             </div>
                         </div>
                     </div>
@@ -92,7 +111,6 @@ $staffEmail = "staff@example.com";
                                 <label class="form-label">Confirm New Password</label>
                                 <input type="password" class="form-control" name="confirm_password">
                             </div>
-                        </div>
                     </div>
                 </div>
 

@@ -87,38 +87,87 @@
             return $this->conn->query($sql);
         }
 
-        // --- AJAX SEARCH BY STUDENT ID NUMBER ---
-        public function search_by_idNum($idNum) {
-            $sql = "SELECT * FROM studentrecord WHERE idNum = :idNum LIMIT 1";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute([':idNum' => $idNum]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        }
-         //NOTIFICATION FUNCTIONS
-        //Checks inventory for items with quantity below the threshold (50).
-        public function get_low_stock_items($threshold = 50) {
-            $sql = "SELECT itemID, genericName, quantity, category 
-                    FROM inventory 
-                    WHERE quantity < :threshold 
-                    ORDER BY quantity ASC";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':threshold', $threshold, PDO::PARAM_INT);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        //Checks inventory for items expiring within the next 90 days.
-        public function get_expiring_items($days = 90) {
-            $expiry_date = date('Y-m-d', strtotime("+$days days"));
-            
-            $sql = "SELECT itemID, genericName, expDate, quantity 
-                    FROM inventory 
-                    WHERE expDate <= :expiry_date AND expDate >= CURDATE()
-                    ORDER BY expDate ASC";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':expiry_date', $expiry_date, PDO::PARAM_STR);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
+    // --- AJAX SEARCH BY STUDENT ID NUMBER ---
+    public function search_by_idNum($idNum) {
+        $sql = "SELECT * FROM studentrecord WHERE idNum = :idNum LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':idNum' => $idNum]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    // Fetch student records along with their latest vitals
+    public function show_studentRecords_with_vitals(){
+        $select = "
+            SELECT 
+            sr.*,
+            sv.temperature,
+            sv.bloodPressure,
+            sv.pulse,
+            sv.respiratoryRate,
+            sv.vitalDate
+            FROM studentrecord sr
+            LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
+            AND sv.vitalDate = (
+                SELECT MAX(vitalDate) 
+                FROM student_vitals sv2 
+                WHERE sv2.studentID = sr.ID
+            )
+            ORDER BY sr.visitDate DESC
+        ";
+        $stmt = $this->conn->prepare($select);
+        $stmt->execute();
+        return $stmt;
+        }
+    // =======================
+    // USER ACCOUNT FUNCTIONS
+    // =======================
+
+    // Fetch staff user by ID
+    public function get_user($id) {
+        $sql = "SELECT * FROM login WHERE ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Update user WITHOUT password change
+    public function update_user_no_password($id, $first, $middle, $last, $email) {
+        $sql = "UPDATE login SET 
+            FirstName=?, MiddleName=?, LastName=?, Email=?
+            WHERE ID=?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$first, $middle, $last, $email, $id]);
+    }
+
+    // Update user WITH password change
+    public function update_user_with_password($id, $first, $middle, $last, $email, $password) {
+        $hashed = password_hash($password, PASSWORD_BCRYPT);
+        $sql = "UPDATE login SET 
+            FirstName=?, MiddleName=?, LastName=?, Email=?, Password=?
+            WHERE ID=?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$first, $middle, $last, $email, $hashed, $id]);
+    }
+    //NOTIFICATION
+    public function get_low_stock_items($threshold = 50) {
+        $sql = "SELECT itemID, genericName, quantity, category 
+                FROM inventory 
+                WHERE quantity < :threshold 
+                ORDER BY quantity ASC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':threshold', $threshold, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function get_expiring_items($days = 90) {
+        $expiry_date = date('Y-m-d', strtotime("+$days days"));
+        $sql = "SELECT itemID, genericName, expDate, quantity 
+                FROM inventory 
+                WHERE expDate <= :expiry_date
+                ORDER BY expDate ASC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':expiry_date', $expiry_date, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
 ?>

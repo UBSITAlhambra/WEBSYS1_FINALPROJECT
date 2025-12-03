@@ -17,19 +17,19 @@
             }
         }
 
-        public function insert_data($genericName, $dosage, $brand, $category, $quantity, $addDate, $expDate){
-            $insert = "INSERT INTO inventory(genericName, dosage, brand, category, addDate, expDate, quantity) 
-                        VALUES(:genericname, :Dosage, :Brand, :Category, :AddDate, :ExpDate, :Quantity)";
-            $stmt = $this->conn->prepare($insert);
-            $result = $stmt->execute([
-                ':genericname'=>$genericName,
-                ':Dosage'=>$dosage,
-                ':Brand'=>$brand,
-                ':Category'=>$category,
-                ':AddDate'=>$addDate,
-                ':ExpDate'=>$expDate,
-                ':Quantity'=>$quantity
-            ]);
+    // INSERT INVENTORY ITEM
+    public function insert_data($genericName, $dosage, $category, $quantity, $addDate, $expDate){
+        $insert = "INSERT INTO inventory(genericName, dosage, category, addDate, expDate, quantity) 
+                   VALUES(:genericname, :Dosage, :Category, :AddDate, :ExpDate, :Quantity)";
+        $stmt = $this->conn->prepare($insert);
+        $result = $stmt->execute([
+            ':genericname'=>$genericName,
+            ':Dosage'=>$dosage,
+            ':Category'=>$category,
+            ':AddDate'=>$addDate,
+            ':ExpDate'=>$expDate,
+            ':Quantity'=>$quantity
+        ]);
 
             if($result){
                 echo "<script>alert('Insert Complete'); window.location='index.php';</script>";
@@ -60,28 +60,27 @@
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
-        public function update_data($genericName, $dosage, $brand, $category, $addDate, $expDate, $quantity, $ID){
-            $update = "UPDATE inventory SET 
-                            genericName = :genericname,
-                            dosage = :Dosage,
-                            brand = :Brand,
-                            category = :Category,
-                            addDate = :AddDate,
-                            expDate = :ExpDate,
-                            quantity = :Quantity
-                        WHERE itemID = :id";
+    // UPDATE ITEM
+    public function update_data($genericName, $dosage, $category, $addDate, $expDate, $quantity, $ID){
+        $update = "UPDATE inventory SET 
+                       genericName = :genericname,
+                       dosage = :Dosage,
+                       category = :Category,
+                       addDate = :AddDate,
+                       expDate = :ExpDate,
+                       quantity = :Quantity
+                   WHERE itemID = :id";
 
-            $stmt = $this->conn->prepare($update);
-            $result = $stmt->execute([
-                ':genericname'=>$genericName,
-                ':Dosage'=>$dosage,
-                ':Brand'=>$brand,
-                ':Category'=>$category,
-                ':AddDate'=>$addDate,
-                ':ExpDate'=>$expDate,
-                ':Quantity'=>$quantity,
-                ':id'=>$ID
-            ]);
+        $stmt = $this->conn->prepare($update);
+        $result = $stmt->execute([
+            ':genericname'=>$genericName,
+            ':Dosage'=>$dosage,
+            ':Category'=>$category,
+            ':AddDate'=>$addDate,
+            ':ExpDate'=>$expDate,
+            ':Quantity'=>$quantity,
+            ':id'=>$ID
+        ]);
 
             if($result){
                 echo "<script>alert('Update Complete'); window.location='index.php';</script>";

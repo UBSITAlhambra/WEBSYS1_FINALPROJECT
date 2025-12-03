@@ -88,21 +88,17 @@
            href="../studentRecords/">
             Student Visits
         </a>
-
+        
+        <a class="nav-link <?= ($activePage=='transaction'?'active':'') ?>" 
+           href="../transaction/">
+            Treatment
+        </a>
+        
         <a class="nav-link <?= ($activePage=='inventory'?'active':'') ?>" 
            href="../inventory/">
             Clinic Inventory
         </a>
-
-        
-        <a class="nav-link <?= ($activePage=='vitals'?'active':'') ?>" 
-           href="../studentVital/">
-            Student Vitals
-        </a>
-        <a class="nav-link <?= ($activePage=='transaction'?'active':'') ?>" 
-           href="../transaction/">
-            View Transactions
-        </a>
+       
         <a class="nav-link <?= ($activePage=='reports'?'active':'') ?>" 
            href="../report_analytics/">
             Clinic Report Summary

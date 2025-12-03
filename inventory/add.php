@@ -5,12 +5,11 @@
     if (isset($_POST['add'])) {
         $genericName = $_POST['genericName'] ?? '';
         $dosage = $_POST['dosage'] ?? '';
-        $brand = $_POST['brand'] ?? '';
         $category = $_POST['category'] ?? '';
         $quantity = $_POST['quantity'] ?? ''; 
         $addDate = $_POST['addDate'] ?? '';
         $expDate = $_POST['expDate'] ?? '';
-        $oop->insert_data($genericName, $dosage, $brand, $category, $quantity, $addDate, $expDate);
+        $oop->insert_data($genericName, $dosage, $category, $quantity, $addDate, $expDate);
     }
 ?>
 
@@ -46,7 +45,8 @@
             font-weight: 600;
         }
         input[type="text"], 
-        input[type="date"] {
+        input[type="date"],
+        select { /* Added select to apply the same styling */
             width: 80%;
             padding: 14px;
             margin: 14px 0;
@@ -55,8 +55,20 @@
             font-size: 1rem;
             transition: border 0.3s, box-shadow 0.3s;
             text-align: center;
+            /* Ensure the select box is visually consistent */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            cursor: pointer;
+            background-color: white;
+            color: #333;
         }
-        input:focus {
+        /* Specific alignment for select text */
+        select {
+            text-align-last: center; /* Center text in Firefox */
+            padding-right: 14px; /* Ensure space for potential dropdown arrow */
+        }
+        input:focus, select:focus {
             border-color: #4a90e2;
             outline: none;
             box-shadow: 0 0 6px rgba(74,144,226,0.3);
@@ -92,12 +104,11 @@
         <h1>Add Inventory Item</h1>
         <input type="text" name="genericName" placeholder="Generic Name" required> 
         <input type="text" name="dosage" placeholder="Dosage" required>
-        <input type="text" name="brand" placeholder="Brand" required>
         <input type="text" name="category" placeholder="Category" required>
         <input type="text" name="quantity" placeholder="Quantity" required>
         <input type="date" name="addDate" placeholder="Add Date" required>
         <input type="date" name="expDate" placeholder="Expiry Date" required>
+        
         <button name="add">➕ ADD</button>
     </form>
-</body>
 </html>
