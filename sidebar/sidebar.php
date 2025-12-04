@@ -75,7 +75,7 @@
 
 <aside class="sidebar">
 
-    <h4 class="fw-bold text-white mb-4">School Clinic </h4>
+    <h4 class="fw-bold text-white mb-4">Baguio City National High School Clinic </h4>
 
     <nav class="nav flex-column">
 
