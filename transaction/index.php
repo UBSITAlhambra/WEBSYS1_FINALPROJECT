@@ -282,7 +282,7 @@ if (!empty($searchTerm)) {
 
     <?php if (empty($data) && !empty($searchTerm)): ?>
         <div style="padding: 50px; text-align: center;">
-            <h1>No Transaction Records Found for "<?= htmlspecialchars($searchTerm) ?>"</h1>
+            <h1>No Treatment Records Found for "<?= htmlspecialchars($searchTerm) ?>"</h1>
             <p>Please try a different search term or <a href="index.php">clear the search filter</a></p>
         </div>
     <?php else: ?>
@@ -314,12 +314,12 @@ if (!empty($searchTerm)) {
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
-                <tr><td colspan="6" style="color:#b53d3d;font-weight:bold;">No Transaction Records Found.</td></tr>
+                <tr><td colspan="6" style="color:#b53d3d;font-weight:bold;">No Treatment Records Found.</td></tr>
             <?php endif; ?>
         </table>
     <?php endif; ?>
 
-    <a href="add.php" class="btn add-btn">Add New Transaction</a>
+    <a href="add.php" class="btn add-btn">Add New Treatment</a>
 </div>
 </body>
 </html>

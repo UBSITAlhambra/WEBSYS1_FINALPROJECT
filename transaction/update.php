@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Update Transaction</title>
+    <title>Update Treatment</title>
     <style>
         :root {
             --primary-maroon: #800000;
@@ -189,14 +189,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="main-content">
-        <h2>Update Transaction</h2>
+        <h2>Update Treatment</h2>
 
         <div class="form-container">
             <?php if (!empty($row)): ?>
                 <form method="POST" action="">
                     <!-- Transaction Info -->
                     <div class="form-section">
-                        <h3>Transaction Details</h3>
+                        <h3>Treatment Details</h3>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="quantity">Quantity *</label>
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                        value="<?= htmlspecialchars($row['quantity']) ?>" required>
                             </div>
                             <div class="form-group">
-                                <label for="transactionDate">Transaction Date *</label>
+                                <label for="transactionDate">Treatment Date *</label>
                                 <input type="date" id="transactionDate" name="transactionDate" 
                                        value="<?= htmlspecialchars($row['transactionDate']) ?>" required>
                             </div>
@@ -236,12 +236,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="hidden" name="transactionID" value="<?= htmlspecialchars($row['transactionID']) ?>">
 
                     <div class="button-group">
-                        <button type="submit" class="btn btn-update">Update Transaction</button>
+                        <button type="submit" class="btn btn-update">Update Treatment</button>
                         <a href="index.php" class="btn btn-cancel">Cancel</a>
                     </div>
                 </form>
             <?php else: ?>
-                <p>No transaction found for this ID.</p>
+                <p>No treatment found for this ID.</p>
             <?php endif; ?>
         </div>
     </div>
