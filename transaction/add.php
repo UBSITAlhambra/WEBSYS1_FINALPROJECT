@@ -14,7 +14,7 @@ $medicineStmt->execute();
 $medicines = $medicineStmt->fetchAll(PDO::FETCH_COLUMN);
 
 // Fetch student names + visitDate (MOST RECENT FIRST)
-$studentStmt = $conn->prepare("SELECT name, visitDate FROM studentrecord ORDER BY visitDate DESC");
+$studentStmt = $conn->prepare("SELECT name, visitDate FROM studentrecord ORDER BY visitDate DESC limit 5");
 $studentStmt->execute();
 $students = $studentStmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Add New Transaction</title>
+    <title>Add New Treatment</title>
     <style>
         :root {
             --primary-maroon: #800000;
@@ -176,13 +176,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="main-content">
-        <h2>Add New Transaction</h2>
+        <h2>Add New Treatment</h2>
         
         <div class="form-container">
             <form method="POST" action="">
                 <!-- Transaction Info -->
                 <div class="form-section">
-                    <h3>Transaction Details</h3>
+                    <h3>Treatment Details</h3>
                      <div class="form-row">
                         <div class="form-group">
                             <label for="medicineName">Medicine *</label>
@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <input type="text" id="quantity" name="quantity" required>
                         </div>
                         <div class="form-group">
-                            <label for="transactionDate">Transaction Date *</label>
+                            <label for="transactionDate">Treatment Date *</label>
                             <input type="date" id="transactionDate" name="transactionDate" value="<?= date('Y-m-d') ?>" required>
                         </div>
                     </div>
@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
 
                 <div class="button-group">
-                    <button type="submit" name="add" class="btn btn-add">Add Transaction</button>
+                    <button type="submit" name="add" class="btn btn-add">Finish Treatment</button>
                     <a href="index.php" class="btn btn-cancel">Cancel</a>
                 </div>
             </form>
