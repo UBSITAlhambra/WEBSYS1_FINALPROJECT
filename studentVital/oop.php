@@ -100,7 +100,7 @@ class studentVitals {
 
     /* FETCH STUDENTS (for dropdown) */
     public function fetch_students() {
-        $fetch = "SELECT ID, name FROM studentrecord ORDER BY name ASC";
+        $fetch = "SELECT ID, name FROM studentrecord ORDER BY name DESC";
 
         $fetch = $this->conn->prepare($fetch);
         $fetch->execute();

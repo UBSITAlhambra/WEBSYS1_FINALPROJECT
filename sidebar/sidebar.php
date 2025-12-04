@@ -75,7 +75,7 @@
 
 <aside class="sidebar">
 
-    <h4 class="fw-bold text-white mb-4">School Clinic </h4>
+    <h4 class="fw-bold text-white mb-4">Baguio City National High School Clinic </h4>
 
     <nav class="nav flex-column">
 
@@ -86,19 +86,19 @@
 
         <a class="nav-link <?= ($activePage=='visits'?'active':'') ?>" 
            href="../studentRecords/">
-            Student Visits
+             Visits
         </a>
-
+        
+        <a class="nav-link <?= ($activePage=='transaction'?'active':'') ?>" 
+           href="../transaction/">
+            Treatment
+        </a>
+        
         <a class="nav-link <?= ($activePage=='inventory'?'active':'') ?>" 
            href="../inventory/">
             Clinic Inventory
         </a>
-
-        
-        <a class="nav-link <?= ($activePage=='vitals'?'active':'') ?>" 
-           href="../studentVital/">
-            Student Vitals
-        </a>
+       
         <a class="nav-link <?= ($activePage=='reports'?'active':'') ?>" 
            href="../report_analytics/">
             Clinic Report Summary
@@ -128,3 +128,4 @@
 </aside>
 
 <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</aside>

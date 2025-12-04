@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2025 at 07:36 PM
+-- Generation Time: Dec 04, 2025 at 01:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -31,7 +31,6 @@ CREATE TABLE `inventory` (
   `itemID` int(11) NOT NULL,
   `genericName` varchar(32) NOT NULL,
   `dosage` varchar(32) NOT NULL,
-  `brand` varchar(32) NOT NULL,
   `category` varchar(32) NOT NULL,
   `addDate` date NOT NULL,
   `expDate` date NOT NULL,
@@ -42,8 +41,8 @@ CREATE TABLE `inventory` (
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `brand`, `category`, `addDate`, `expDate`, `quantity`) VALUES
-(2, 'paracetamol', '12', 'tempra', 'qweq', '2025-11-02', '2025-11-17', 86);
+INSERT INTO `inventory` (`itemID`, `genericName`, `dosage`, `category`, `addDate`, `expDate`, `quantity`) VALUES
+(2, 'paracetamol', '12', 'qweq', '2025-11-02', '2025-11-17', 86);
 
 -- --------------------------------------------------------
 
@@ -80,7 +79,10 @@ CREATE TABLE `studentrecord` (
   `ID` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   `idNum` int(11) NOT NULL,
+  `gender` varchar(10) DEFAULT NULL,
+  `role` varchar(50) NOT NULL DEFAULT 'Student',
   `department` varchar(30) NOT NULL,
+  `section` varchar(50) DEFAULT NULL,
   `complaint` varchar(255) NOT NULL,
   `visitDate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -89,8 +91,9 @@ CREATE TABLE `studentrecord` (
 -- Dumping data for table `studentrecord`
 --
 
-INSERT INTO `studentrecord` (`ID`, `name`, `idNum`, `department`, `complaint`, `visitDate`) VALUES
-(1, '123', 123, '123', '123', '2025-11-20');
+INSERT INTO `studentrecord` (`ID`, `name`, `idNum`, `gender`, `role`, `department`, `section`, `complaint`, `visitDate`) VALUES
+(1, '123', 123, NULL, 'Student', '123', NULL, '123', '2025-11-20'),
+(2, 'Jessie de los santos', 1234561, 'Male', 'Student', 'Grade 11', 'ABM', 'Dysmenorrhea', '2025-12-04');
 
 -- --------------------------------------------------------
 
@@ -126,16 +129,17 @@ CREATE TABLE `transaction` (
   `quantity` int(11) NOT NULL,
   `transactionDate` date NOT NULL,
   `itemID` int(11) DEFAULT NULL,
-  `studentID` int(11) DEFAULT NULL
+  `studentID` int(11) DEFAULT NULL,
+  `remarks` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `transaction`
 --
 
-INSERT INTO `transaction` (`transactionID`, `quantity`, `transactionDate`, `itemID`, `studentID`) VALUES
-(4, 12, '2025-11-20', 2, 1),
-(5, 12, '2025-11-20', 2, 1);
+INSERT INTO `transaction` (`transactionID`, `quantity`, `transactionDate`, `itemID`, `studentID`, `remarks`) VALUES
+(4, 12, '2025-11-20', 2, 1, NULL),
+(5, 12, '2025-11-20', 2, 1, NULL);
 
 --
 -- Indexes for dumped tables
@@ -195,7 +199,7 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT for table `studentrecord`
 --
 ALTER TABLE `studentrecord`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `student_vitals`
