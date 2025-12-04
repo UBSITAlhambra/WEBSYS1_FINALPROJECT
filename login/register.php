@@ -1,4 +1,11 @@
 <?php
+// FILE: login/register.php
+
+// 1. START THE SESSION at the very beginning of the script for security and future compatibility
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Adjust path if functions.php is in a different location relative to this file
 include 'functions.php'; 
 
@@ -27,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $clean_lname = htmlspecialchars($lname);
         $clean_email = filter_var($email, FILTER_SANITIZE_EMAIL); 
         
+        // This method handles database INSERT and redirects to login/index.php
         $auth->register($clean_fname, $clean_mname, $clean_lname, $clean_email, $password);
     }
 }

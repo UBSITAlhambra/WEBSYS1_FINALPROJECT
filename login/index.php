@@ -1,8 +1,15 @@
 <?php
+// FILE: login/index.php
+
+// 1. START THE SESSION at the very beginning of the script
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 include 'functions.php';
 
 $auth = new AuthSystem();
-$error_message = '';
+$error_message = ''; // Local variable to hold immediate form errors
 
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
@@ -12,9 +19,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_message = "Please fill in both email and password fields.";
     } else {
         $clean_email = htmlspecialchars($email);
+        // The $auth->login() method handles the database check, sets $_SESSION vars, 
+        // and redirects upon success.
         $auth->login($clean_email, $password);
+        
+        // If login fails, the method should handle displaying an alert 
+        // via PHP script output (as seen in your functions.php).
     }
 }
+
+// 2. Display any temporary session messages (e.g., "You have been logged out")
+// This is a placeholder structure for robust error/message passing.
+$session_message = $_SESSION['message'] ?? '';
+unset($_SESSION['message']); // Clear message after displaying
+
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <?php if (!empty($error_message)): ?>
                     <div class="alert alert-danger text-center" role="alert"><?php echo $error_message; ?></div>
+                <?php endif; ?>
+                
+                <?php if (!empty($session_message)): ?>
+                    <div class="alert alert-info text-center" role="alert"><?php echo $session_message; ?></div>
                 <?php endif; ?>
                 
                 <form action="index.php" method="POST">
