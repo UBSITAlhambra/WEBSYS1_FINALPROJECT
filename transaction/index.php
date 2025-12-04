@@ -319,7 +319,7 @@ if (!empty($searchTerm)) {
         </table>
     <?php endif; ?>
 
-    <a href="add.php" class="btn add-btn">➕ Add New Item</a>
+    <a href="add.php" class="btn add-btn">Add New Transaction</a>
 </div>
 </body>
 </html>

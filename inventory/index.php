@@ -271,7 +271,7 @@ tr:hover { background: #ffeaea; }
         </div>
     <?php endif; ?>
 
-    <a href="add.php" class="btn add-btn">➕ Add New Item</a>
+    <a href="add.php" class="btn add-btn">Add New Item</a>
 </div>
 
 <script type="text/javascript">

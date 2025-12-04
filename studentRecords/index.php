@@ -357,7 +357,7 @@ tr:hover { background: #ffeaea; }
         </table>
     <?php endif; ?>
     
-    <a href="add.php" class="btn add-btn">➕ Add New Item</a>
+    <a href="add.php" class="btn add-btn">Add New Person</a>
 </div>
 </body>
 </html>
