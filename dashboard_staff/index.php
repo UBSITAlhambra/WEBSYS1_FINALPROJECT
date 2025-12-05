@@ -231,38 +231,100 @@
 
     <div class="bg-white rounded p-4 shadow-sm">
         
-    <!--ALERT-->
-        <?php if ($total_alerts > 0): 
-            $count_low = count($low_stock_items);
-            $plural_s = ($count_low > 1) ? 's' : '';
-            ?>
-            <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
-                <i class="fas fa-exclamation-triangle flex-shrink-0 me-3" style="font-size: 1.5rem;"></i>
-                <div>
-                    <h4 class="alert-heading mb-1">INVENTORY ALERT (<?= $total_alerts ?> Issue<?= $plural_s ?>)</h4>
+<!-- ALERT -->
+<?php if ($total_alerts > 0): ?>
+    <!-- Centered prominent yellow banner -->
+    <div style="position: fixed; top: 25px; left: 0; right: 0; z-index: 9999; display: flex; justify-content: center; pointer-events: none;">
+        <div class="p-3 d-flex align-items-center rounded shadow-lg" 
+             style="background: linear-gradient(to right, #fff3cd, #ffecb5); border: 3px solid #ffc107; 
+                    color: #856404; min-width: 500px; max-width: 700px; pointer-events: auto;">
+            <!-- Warning Icon -->
+            <div class="me-3" style="font-size: 1.8rem; color: #ff9800;">
+                <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            
+            <!-- Content -->
+            <div class="flex-grow-1 text-center">
+                <h5 class="fw-bold mb-2" style="color: #856404; font-size: 1.2rem;">
+                    <i class="fas fa-bell me-2"></i>INVENTORY ALERT
+                </h5>
+                <div class="d-flex justify-content-center gap-4">
                     <?php if (!empty($low_stock_items)): ?>
-                        <?php 
-                            $count_low = count($low_stock_items);
-                            $plural_s = ($count_low > 1) ? 's' : '';
-                            $verb_is_are = ($count_low > 1) ? 'are' : 'is';
-                        ?>
-                        <p class="mb-1">
-                            <?= $count_low ?> item<?= $plural_s ?> <?= $verb_is_are ?> low on stock. Check here <a href="../inventory/" class="alert-link">Inventory List</a> now.
-                        </p>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-white rounded-circle p-2 me-2" style="color: #dc3545;">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div class="text-start">
+                                <div class="fw-bold" style="font-size: 1.1rem;"><?= count($low_stock_items) ?></div>
+                                <small>Low Stock</small>
+                            </div>
+                        </div>
                     <?php endif; ?>
+                    
                     <?php if (!empty($expiring_items)): ?>
-                        <?php 
-                            $count_exp = count($expiring_items);
-                            $plural_s = ($count_exp > 1) ? 's' : '';
-                            $verb_is_are = ($count_exp > 1) ? 'are' : 'is';
-                        ?>
-                        <p class="mb-0">
-                            <?= $count_exp ?> item<?= $plural_s ?> <?= $verb_is_are ?> expiring within 90 days.
-                        </p>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-white rounded-circle p-2 me-2" style="color: #ff9800;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="text-start">
+                                <div class="fw-bold" style="font-size: 1.1rem;"><?= count($expiring_items) ?></div>
+                                <small>Expiring Soon</small>
+                            </div>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
-        <?php endif; ?>
+            
+            <!-- Action Button -->
+            <a href="../inventory/" class="btn btn-warning btn-sm ms-4 px-3 fw-bold" 
+               style="border-radius: 5px; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <i class="fas fa-clipboard-list me-1"></i> View
+            </a>
+        </div>
+    </div>
+    
+    <style>
+    div[style*="position: fixed"] > div {
+        animation: slideInDown 0.5s ease, gentlePulse 3s infinite;
+    }
+    
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes gentlePulse {
+        0% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); }
+        50% { box-shadow: 0 4px 20px rgba(255, 193, 7, 0.5); }
+        100% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); }
+    }
+    
+    @media (max-width: 768px) {
+        div[style*="position: fixed"] > div {
+            min-width: unset !important;
+            width: 90%;
+            margin: 0 auto;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px !important;
+        }
+        div[style*="position: fixed"] > div .me-3 {
+            margin-bottom: 15px;
+        }
+        div[style*="position: fixed"] > div .btn {
+            margin-top: 15px;
+            margin-left: 0 !important;
+            width: 100%;
+        }
+    }
+    </style>
+<?php endif; ?>
 
         <!-- Header -->
         <div class="d-flex justify-content-between flex-wrap">

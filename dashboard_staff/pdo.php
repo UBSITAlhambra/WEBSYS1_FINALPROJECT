@@ -19,7 +19,7 @@
 
         // Fetch whole inventory table
         public function show_inventory(){
-            $select = "SELECT * FROM inventory";
+            $select = "SELECT * FROM inventory ORDER BY ExpDate Asc";
             $stmt = $this->conn->prepare($select);
             $stmt->execute();
             return $stmt;
@@ -45,7 +45,7 @@
                 FROM transaction t
                 LEFT JOIN inventory i ON t.itemID = i.itemID
                 LEFT JOIN studentrecord s ON t.studentID = s.ID
-                ORDER BY t.transactionID DESC
+                ORDER BY t.transactionDate DESC
                 LIMIT 10
             ";
             $stmt = $this->conn->prepare($select);
@@ -165,7 +165,7 @@
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function get_expiring_items($days = 90) {
+    public function get_expiring_items($days = 10) {
         $expiry_date = date('Y-m-d', strtotime("+$days days"));
         $sql = "SELECT itemID, genericName, expDate, quantity 
                 FROM inventory 
