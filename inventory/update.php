@@ -17,9 +17,9 @@ if (isset($_POST['enter'])) {
     $genericName = $_POST['genericName'] ?? '';
     $dosage      = $_POST['dosage'] ?? '';
     $category    = $_POST['category'] ?? '';
+    $quantity    = $_POST['quantity'] ?? '';
     $addDate     = $_POST['addDate'] ?? '';
     $expDate     = $_POST['expDate'] ?? '';
-    $quantity    = $_POST['quantity'] ?? '';
     $ID          = $_POST['id'] ?? '';
     $oop->update_data($genericName, $dosage, $category, $quantity, $addDate, $expDate, $ID);
 }
