@@ -37,7 +37,7 @@
         }
 
         public function show_data(){
-            $select = "SELECT * FROM inventory ORDER BY addDate DESC";
+            $select = "SELECT * FROM inventory ORDER BY expDate ASC";
             $stmt = $this->conn->prepare($select);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -61,7 +61,7 @@
         }
 
     // UPDATE ITEM
-    public function update_data($genericName, $dosage, $category, $addDate, $expDate, $quantity, $ID){
+    public function update_data($genericName, $dosage, $category, $quantity, $addDate, $expDate,  $ID){
         $update = "UPDATE inventory SET 
                        genericName = :genericname,
                        dosage = :Dosage,
