@@ -1,21 +1,21 @@
 <?php
-session_start();
+// 1. INCLUDE THE GUARD FIRST (Handles session, auth check, and No-Cache headers)
+include '../login/auth_guard.php'; 
+
 include "oop.php";
 $reports = new reports();
-    if(!isset($_SESSION['user_id'])){
-        header('Location: ../login/');
-    }
-// Fetch analytics
+
+// 2. FETCH ANALYTICS ONLY AFTER AUTH IS CONFIRMED
 $topMeds = $reports->top_medicines();
 $monthlyVisits = $reports->visits_per_month();
 $topComplaints = $reports->top_complaints();
 $topStudents = $reports->top_students();
-
-// Fetch summary (Grade + Section)
 $summary = $reports->get_summary_by_department();
 
-// Get selected filter grade
 $filterGrade = isset($_GET['grade']) ? $_GET['grade'] : "";
+
+$activePage = 'reports'; 
+include '../sidebar/sidebar.php'; 
 ?>
 <?php $activePage = 'reports'; ?>
 <?php include '../sidebar/sidebar.php'; ?>
@@ -231,5 +231,13 @@ tr:hover { background: #ffeaea; }
 </section>
 
 </div>
+
+<script>
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
 </body>
 </html>

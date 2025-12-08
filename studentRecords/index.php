@@ -1,12 +1,9 @@
 <?php
-session_start();
+include '../login/auth_guard.php';
 include 'oop.php';
 $student = new oop_class();
 $activePage = 'visits';
 include '../sidebar/sidebar.php'; 
-    if(!isset($_SESSION['user_id'])){
-        header('Location: ../login/');
-    }
 $page_title = 'BCNHS Clinic Records';
 ?>
 <!DOCTYPE html>
@@ -255,7 +252,15 @@ tr:hover { background: #ffeaea; }
 </div>
 
 <script type="text/javascript">
-    // --- LIVE SEARCH & FILTER FUNCTION ---
+    // --- 1. CACHE BREAKER (History Fix) ---
+    // This runs independently to force a reload if the user hits the "Back" button
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
+    // --- 2. LIVE SEARCH & FILTER FUNCTION ---
     function loadRecords() {
         const search = document.getElementById('search_input').value;
         const role = document.getElementById('filter_role').value;
@@ -263,7 +268,6 @@ tr:hover { background: #ffeaea; }
         const complaint = document.getElementById('filter_complaint').value;
         const tbody = document.getElementById('recordsTableBody');
 
-        // Build URL
         const url = `fetch_records.php?search=${encodeURIComponent(search)}&role=${encodeURIComponent(role)}&dept=${encodeURIComponent(dept)}&complaint=${encodeURIComponent(complaint)}`;
 
         fetch(url)
@@ -274,15 +278,10 @@ tr:hover { background: #ffeaea; }
             .catch(error => console.error("Error loading records:", error));
     }
 
-    // --- EVENT LISTENERS ---
+    // --- 3. EVENT LISTENERS ---
     document.addEventListener('DOMContentLoaded', () => {
-        // Load data immediately
         loadRecords();
-
-        // Listen for Search typing
         document.getElementById('search_input').addEventListener('input', loadRecords);
-
-        // Listen for Dropdown changes
         document.getElementById('filter_role').addEventListener('change', loadRecords);
         document.getElementById('filter_dept').addEventListener('change', loadRecords);
         document.getElementById('filter_complaint').addEventListener('change', loadRecords);
@@ -304,7 +303,7 @@ tr:hover { background: #ffeaea; }
         toggleFilename();
     });
 
-    // --- DELETION POPUP LOGIC ---
+    // --- 4. DELETION POPUP LOGIC ---
     window.confirmDeletion = function(event, recordId) {
         event.preventDefault(); 
         const overlay = document.createElement('div');
@@ -322,19 +321,18 @@ tr:hover { background: #ffeaea; }
             <button onclick="closeDeletionMessage()" style="background-color: #95a5a6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Cancel</button>
         `;
         document.body.appendChild(confirmationMessage);
-        
-        window.performDeletion = function(id) {
-            window.location.href = `delete.php?id=${id}`;
-            closeDeletionMessage();
-        }
+    }
 
-        window.closeDeletionMessage = function() {
-            const msg = document.querySelector('.deletion-message');
-            const ov = document.getElementById('overlay');
-            if (msg) msg.remove();
-            if (ov) ov.remove();
-        }
-        return false;
+    window.performDeletion = function(id) {
+        window.location.href = `delete.php?id=${id}`;
+        closeDeletionMessage();
+    }
+
+    window.closeDeletionMessage = function() {
+        const msg = document.querySelector('.deletion-message');
+        const ov = document.getElementById('overlay');
+        if (msg) msg.remove();
+        if (ov) ov.remove();
     }
 </script>
 </body>

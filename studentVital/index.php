@@ -1,7 +1,13 @@
 <?php
+// 1. INCLUDE THE GUARD FIRST (Prevents unauthorized access and browser caching)
+include '../login/auth_guard.php'; 
+
 include "oop.php";
 $studentVitals = new studentVitals();
+
+// 2. FETCH SENSITIVE MEDICAL DATA ONLY AFTER AUTH IS VERIFIED
 $data = $studentVitals->show_data();
+
 $activePage = 'vitals';
 include '../sidebar/sidebar.php';
 ?>
@@ -117,7 +123,14 @@ include '../sidebar/sidebar.php';
             </tr>
         <?php endif; ?>
     </table>
-    <a href="add.php" class="btn add-btn">➕ Add New Vital Record</a>
+    <a href="add.php" class="btn add-btn"> Add New Vital Record</a>
 </div>
+<script>
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
 </body>
 </html>
