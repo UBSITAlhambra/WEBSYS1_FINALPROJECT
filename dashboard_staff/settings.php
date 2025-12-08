@@ -1,34 +1,27 @@
 <?php
-include 'pdo.php';
-session_start();
+// 1. INCLUDE THE GUARD FIRST (Handles session_start, auth check, and No-Cache headers)
+include '../login/auth_guard.php'; 
 
+include 'pdo.php';
 $oop = new oop_class();
 
-// Require login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login/index.php");
-    exit();
-}
-
+// The guard guarantees $_SESSION['user_id'] is set, so it's safe to use
 $userID = $_SESSION['user_id'];
 
-// Fetch user data
-$user = $oop->get_user($userID); // Line 16 - This call might return false on failure
+// 2. Fetch user data (Ensure your method name matches, e.g., get_user)
+$user = $oop->get_user($userID); 
 
-// --- FIX START ---
-// Initialize with default values
+// Default fallbacks
 $staffName = 'N/A';
 $staffEmail = 'N/A';
 
-// Check if $user is a valid array before trying to access array offsets (Line 18, 19)
 if (is_array($user)) {
+    // Construct the name based on your database columns
     $staffName = trim($user['FirstName'] . " " . $user['MiddleName'] . " " . $user['LastName']);
     $staffEmail = $user['Email'];
-} else {
-    // Optionally log this error if the user ID is present but the user record is missing
-    // error_log("User ID " . $userID . " found in session but not in database.");
 }
-// --- FIX END ---
+
+$activePage = 'settings'; 
 ?>
 
 <!DOCTYPE html>
@@ -130,5 +123,14 @@ if (is_array($user)) {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>
 </body>
 </html>
