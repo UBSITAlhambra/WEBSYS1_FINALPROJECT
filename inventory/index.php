@@ -1,16 +1,12 @@
 <?php
-session_start();
+include '../login/auth_guard.php'; 
 include 'oop.php';
 $inventory = new oop_class();
 $activePage = 'inventory';
-include '../sidebar/sidebar.php'; 
-    if(!isset($_SESSION['user_id'])){
-        header('Location: ../login/');
-    }
-
-// Initial page load data
 $data = $inventory->show_data();
 $page_title = 'Inventory List';
+
+include '../sidebar/sidebar.php'; 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -315,6 +311,12 @@ document.addEventListener('DOMContentLoaded', () => {
     formatSelect.addEventListener('change', toggleFilename);
     toggleFilename();
 });
+
+window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
 </script>
 </body>
 </html>

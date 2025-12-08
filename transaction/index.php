@@ -1,20 +1,23 @@
 <?php
-session_start();
+// 1. INCLUDE THE GUARD FIRST (Handles session, security check, and browser cache disabling)
+include '../login/auth_guard.php'; 
+
 include "oop.php";
 $oop = new oop_class();
 $activePage = 'transactions';
-include '../sidebar/sidebar.php';
-    if(!isset($_SESSION['user_id'])){
-        header('Location: ../login/');
-    }
+
+// Sidebar inclusion
+include '../sidebar/sidebar.php'; 
+
 $searchTerm = $_GET['search'] ?? '';
 $page_title = 'Treatment Records';
 
+// 2. FETCH DATA ONLY AFTER AUTH IS CONFIRMED
 if (!empty($searchTerm)) {
-    $data = $oop->search_transactions_by_name($searchTerm); // array
+    $data = $oop->search_transactions_by_name($searchTerm); 
     $page_title = 'Search Results for: ' . htmlspecialchars($searchTerm);
 } else {
-    $data = $oop->show_data(); // array
+    $data = $oop->show_data(); 
 }
 ?>
 <!DOCTYPE html>
@@ -321,5 +324,12 @@ if (!empty($searchTerm)) {
 
     <a href="add.php" class="btn add-btn">Add New Treatment</a>
 </div>
+<script>
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
 </body>
 </html>

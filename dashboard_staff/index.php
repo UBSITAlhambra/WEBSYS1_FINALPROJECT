@@ -514,6 +514,19 @@ function ajaxSearch() {
     xhr.open("GET", "searchStudent.php?idNum=" + encodeURIComponent(id), true);
     xhr.send();
 }
+
+    /**
+     * This script detects if the user reached this page using 
+     * the "Back" or "Forward" buttons in their browser.
+     */
+    window.addEventListener('pageshow', function (event) {
+        // If event.persisted is true, the page was loaded from cache
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            // Force a reload, which will trigger auth_guard.php to kick them out
+            window.location.reload();
+        }
+    });
+
 </script>
 
 </body>

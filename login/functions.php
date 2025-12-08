@@ -107,6 +107,12 @@ class AuthSystem {
     
     return $stmt->rowCount() > 0; 
 }
-    // NOTE: Your student tracking CRUD methods would be placed here.
+    // NOTE: Your student tracking CRUD methods would be placed here.    
+    public function clear_session() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        session_unset();
+        session_destroy();
+    }
 }
+
 ?>
