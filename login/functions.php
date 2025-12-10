@@ -79,6 +79,7 @@ class AuthSystem {
             $_SESSION['user_id'] = $user['ID'];
             $_SESSION['fullname'] = trim($user['FirstName'] . ' ' . $user['MiddleName'] . ' ' . $user['LastName']);
             $_SESSION['role'] = $user['Role'];
+            $_SESSION['first_name'] = $user['FirstName'];
 
             header("location: ../dashboard_staff/"); 
             exit;

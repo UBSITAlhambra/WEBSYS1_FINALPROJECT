@@ -227,8 +227,8 @@ tr:hover { background: #ffeaea; }
 
             <select id="filter_status">
                 <option value="all">Show All Status</option>
-                <option value="low_stock">Low Stock (≤10)</option>
-                <option value="near_expiry">Expiring Soon (30 Days)</option>
+                <option value="low_stock">Low Stock (≤=25)</option>
+                <option value="near_expiry">Expiring Soon (45 Days)</option>
                 <option value="expired">Expired</option>
             </select>
         </div>

@@ -105,7 +105,7 @@
         //Checks inventory for items with quantity BELOW THE DEFINED THRESHOLD.
         //Change the value of the variable "threshold" if needed
         //Threshold is currently set to 50
-        public function get_low_stock_items($threshold = 50) {
+        public function get_low_stock_items($threshold = 25) {
             $sql = "SELECT itemID, genericName, quantity, category 
                     FROM inventory 
                     WHERE quantity < :threshold 

@@ -96,13 +96,14 @@
     
     <?php 
     if (session_status() === PHP_SESSION_NONE) { session_start(); }
-    $role = $_SESSION['role'] ?? 'Guest'; 
+    $role = $_SESSION['role'] ?? 'Guest';
+    $first_name = $_SESSION['first_name'];
     ?>
     
     <a class="logout-link" href="../login/logout.php">Logout</a>
 
     <div class="text-white-50 small pt-3 text-center">
-        Logged in as: <?= htmlspecialchars($role); ?>
+        Logged in as: <?= htmlspecialchars($first_name) . " (" . htmlspecialchars($role) . ")" ?>
     </div>
 
 </aside>

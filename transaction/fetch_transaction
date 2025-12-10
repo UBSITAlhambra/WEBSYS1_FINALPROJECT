@@ -1,0 +1,48 @@
+<?php
+    // transaction/fetch_transactions.php
+    // This script generates the HTML table rows based on the search term for the main index page.
+
+    include 'oop.php';
+    $oop = new oop_class();
+
+    // Get the search term from JavaScript
+    $search = $_GET['search'] ?? '';
+
+    // Fetch data based on search term (or all data if empty)
+    if (!empty($search)) {
+        // We use the dedicated search function from oop.php
+        $data = $oop->search_transactions_by_name($search);
+    } else {
+        // Load all transactions
+        $data = $oop->show_data();
+    }
+
+    // If no data found from database
+    if (empty($data)) {
+        echo '<tr><td colspan="5" style="color:#b53d3d;font-weight:bold;padding:20px;">No transaction records found.</td></tr>';
+        exit;
+    }
+
+    // Loop through data and generate table rows
+    foreach ($data as $row) {
+        // IMPORTANT: Table columns in transaction/index.php are:
+        // Medicine, Student, Quantity, Date, Remarks, Action
+        ?>
+        <tr>
+            <td><?= htmlspecialchars($row['medicineName'] ?? '') ?></td>
+            <td><?= htmlspecialchars($row['studentName'] ?? '') ?></td>
+            <td><?= htmlspecialchars($row['quantity'] ?? '') ?></td>
+            <td><?= htmlspecialchars($row['transactionDate'] ?? '') ?></td>
+            <td><?= htmlspecialchars($row['remarks'] ?? '') ?></td>
+            <td class="table-actions">
+                <a class="btn update" href="update.php?id=<?= $row['transactionID']; ?>">Edit</a>
+                <a class="btn delete"
+                href="delete.php?id=<?= $row['transactionID']; ?>"
+                onclick="return confirm('Delete this record?');">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        <?php
+    }
+?>
