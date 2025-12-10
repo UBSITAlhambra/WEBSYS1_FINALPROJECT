@@ -8,8 +8,15 @@
     $results = $oop->search_studentRecords($safeSearchTerm);
 ?>
 <style>
-.search-result-table tr:hover { background-color: #e9e9e9; cursor: pointer; }
-.search-result-table td { border: none; padding: 6px 8px; font-size: 12px; }
+    .search-result-table tr:hover {
+        background-color: #e9e9e9;
+        cursor: pointer;
+    }
+    .search-result-table td {
+        border: none;
+        padding: 6px 8px;
+        font-size: 12px;
+    }
 </style>
 
 <div style="max-height: 300px; overflow-y: auto; position:relative; z-index:999;">

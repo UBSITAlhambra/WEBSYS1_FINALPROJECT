@@ -22,7 +22,6 @@ $results = $oop->search_inventory($safeSearchTerm);
         <?php else: ?>
             <tr style="background-color: #f2f2f2;">
                 <td style="font-weight: bold;">Name</td>
-                <td style="font-weight: bold;">Brand</td>
                 <td style="font-weight: bold;">Qty</td>
                 <td style="font-weight: bold;">Expiry</td>
             </tr>
@@ -30,7 +29,6 @@ $results = $oop->search_inventory($safeSearchTerm);
             <?php foreach ($results as $row): ?>
                 <tr onclick="getData('<?= htmlspecialchars($row['genericName'], ENT_QUOTES) ?>')">
                     <td><?= htmlspecialchars($row['genericName']) ?></td>
-                    <td><?= htmlspecialchars($row['brand']) ?></td>
                     <td><?= htmlspecialchars($row['quantity']) ?></td>
                     <td><?= htmlspecialchars($row['expDate']) ?></td>
                 </tr>

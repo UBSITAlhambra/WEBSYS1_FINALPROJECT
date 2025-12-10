@@ -214,7 +214,7 @@ tr:hover { background: #ffeaea; }
         </div>
 
         <form method="GET" action="export.php" class="export-form">
-            <input type="text" name="filename" id="filename-input" class="filename-input" placeholder="Filename"> 
+            <input type="text" name="filename" id="filename-input" class="filename-input" placeholder="Filename (Optional)"> 
             <select name="format" id="export-format-select" class="filter-select" style="width: 100px;">
                 <option value="csv">CSV</option>
                 <option value="json">JSON</option>
@@ -294,10 +294,8 @@ tr:hover { background: #ffeaea; }
         function toggleFilename() {
             if (formatSelect.value === 'csv' || formatSelect.value === 'sql') {
                 filenameInput.style.display = 'inline-block';
-                filenameInput.setAttribute('required', 'required');
             } else {
                 filenameInput.style.display = 'none';
-                filenameInput.removeAttribute('required');
             }
         }
         formatSelect.addEventListener('change', toggleFilename);
