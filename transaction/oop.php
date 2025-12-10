@@ -104,19 +104,19 @@
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-        public function delete_data($transactionID) {
-            $delete = "DELETE FROM transaction WHERE transactionID = :id";
-            $stmt = $this->conn->prepare($delete);
-            $stmt->execute([':id' => $transactionID]);
-            echo "<script>alert('Transaction Deleted'); window.location='index.php';</script>";
-        }
+    public function delete_data($transactionID) {
+        $delete = "DELETE FROM transaction WHERE transactionID = :id";
+        $stmt = $this->conn->prepare($delete);
+        $stmt->execute([':id' => $transactionID]);
+        echo "<script>alert('Transaction Deleted'); window.location='index.php';</script>";
+    }
 
-        public function show_update_data($transactionID) {
-            $select = "SELECT * FROM transaction WHERE transactionID = :id";
-            $stmt = $this->conn->prepare($select);
-            $stmt->execute([':id' => $transactionID]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        }
+    public function show_update_data($transactionID) {
+        $select = "SELECT * FROM transaction WHERE transactionID = :id";
+        $stmt = $this->conn->prepare($select);
+        $stmt->execute([':id' => $transactionID]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     // UPDATE using NAME + inventory update + remarks
     public function update_data($quantity, $transactionDate, $medicineName, $studentName, $remarks, $transactionID) {
@@ -218,7 +218,7 @@
         }
         
         //SEARCH FUNCTION
-        public function search_transactions_by_name($searchTerm) {
+    public function search_transactions_by_name($searchTerm) {
         $term = '%' . $searchTerm . '%';
         $search = "
             SELECT 
@@ -242,6 +242,33 @@
         $stmt = $this->conn->prepare($search);
         $stmt->execute([':term' => $term]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
-}
     }
+    // --- NEW: DEDICATED EXPORT FUNCTION ---
+    /**
+     * Fetches all transaction data, including expanded student/vitals fields, for export.
+     */
+    public function get_export_data() {
+        $select = "
+            SELECT 
+                t.transactionID,
+                t.quantity,
+                t.transactionDate,
+                t.remarks,
+                i.genericName AS medicineName,
+                s.name AS studentName,
+                s.gender,
+                s.role,
+                s.department,
+                s.section,
+                s.complaint
+            FROM transaction t
+            LEFT JOIN inventory i ON t.itemID = i.itemID
+            LEFT JOIN studentrecord s ON t.studentID = s.ID
+            ORDER BY t.transactionID DESC
+        ";
+        $stmt = $this->conn->prepare($select);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
 ?>

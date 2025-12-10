@@ -263,7 +263,7 @@ if (!empty($searchTerm)) {
                    name="filename" 
                    id="filename-input"
                    class="filename-input" 
-                   placeholder="Optional Filename"> 
+                   placeholder="Filename (Optional)"> 
             <select name="format" id="export-format-select" class="export-select">
                 <option value="csv">CSV (Spreadsheet)</option>
                 <option value="json">JSON (Data)</option>
@@ -272,7 +272,7 @@ if (!empty($searchTerm)) {
             <button type="submit" class="btn update" 
                     style="background-color: #555;" 
                     onclick="return confirm('Exporting all transaction records now. Continue?');">
-                Export Data
+                Export
             </button>
         </form>
     </div>
