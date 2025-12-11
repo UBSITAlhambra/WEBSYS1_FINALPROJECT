@@ -18,7 +18,7 @@
             $sql_content .= "SET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";\n";
             $sql_content .= "START TRANSACTION;\n\n";
             $table_name = 'inventory';
-            $columns = ['itemID', 'genericName', 'dosage', 'brand', 'quantity', 'category', 'addDate', 'expDate'];
+            $columns = ['itemID', 'genericName', 'dosage', 'quantity', 'category', 'addDate', 'expDate'];
             $column_list = implode(', ', $columns);
             $sql_content .= "/*!40000 ALTER TABLE `{$table_name}` DISABLE KEYS */; \n";
             if (!empty($data)) {
@@ -50,11 +50,11 @@
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
             $output = fopen('php://output', 'w');
-            $header_row = ['ID', 'Generic Name', 'Dosage', 'Brand', 'Quantity', 'Category', 'Added Date', 'Expiry Date'];
+            $header_row = ['ID', 'Generic Name', 'Dosage', 'Quantity', 'Category', 'Added Date', 'Expiry Date'];
             fputcsv($output, $header_row);
             if (!empty($data)) {
                 foreach ($data as $row) {
-                    $csv_row = [$row['itemID'], $row['genericName'], $row['dosage'], $row['brand'], $row['quantity'], $row['category'], $row['addDate'], $row['expDate']];
+                    $csv_row = [$row['itemID'], $row['genericName'], $row['dosage'], $row['quantity'], $row['category'], $row['addDate'], $row['expDate']];
                     fputcsv($output, $csv_row);
                 }
             }

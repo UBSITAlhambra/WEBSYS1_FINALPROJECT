@@ -234,7 +234,7 @@ tr:hover { background: #ffeaea; }
         </div>
 
         <form method="GET" action="export.php">
-            <input type="text" name="filename" id="filename-input" class="filename-input" placeholder="Filename"> 
+            <input type="text" name="filename" id="filename-input" class="filename-input" placeholder="Filename (Optional)"> 
             <select name="format" id="export-format-select" class="export-select">
                 <option value="csv">CSV</option>
                 <option value="json">JSON</option>

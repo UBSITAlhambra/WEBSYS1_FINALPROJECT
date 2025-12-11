@@ -5,7 +5,7 @@
     $format = strtolower($_GET['format'] ?? 'csv');
     $base_name = $_GET['filename'] ?? 'student_records_export';
     $clean_base_name = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $base_name);
-    $final_name_base = empty(trim($clean_base_name, '_')) ? 'Student_Records' : $clean_base_name;
+    $final_name_base = empty(trim($clean_base_name, '_')) ? 'Clinic Records' : $clean_base_name;
 
     switch ($format) {
         case 'sql':

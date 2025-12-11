@@ -38,6 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8" />
     <title>Add New Treatment</title>
+    <!-- jQuery (Required for Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <style>
         :root {
             --primary-maroon: #800000;
@@ -236,5 +245,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
     </div>
+
+
 </body>
+<script>
+$(document).ready(function() {
+    $('#medicineName').select2({
+        placeholder: "-- Select Medicine --",
+        allowClear: true
+    });
+
+    $('#studentName').select2({
+        placeholder: "-- Select Student --",
+        allowClear: true
+    });
+});
+</script>
 </html>
