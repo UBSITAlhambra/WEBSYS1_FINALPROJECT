@@ -155,7 +155,7 @@
         return $stmt->execute([$first, $middle, $last, $email, $hashed, $id]);
     }
     //NOTIFICATION
-    public function get_low_stock_items($threshold = 50) {
+    public function get_low_stock_items($threshold = 10) {
         $sql = "SELECT itemID, genericName, quantity, category 
                 FROM inventory 
                 WHERE quantity < :threshold 
@@ -176,5 +176,24 @@
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // Add this method to your oop.php class
+
+// Get student's recent visits with medicine details
+public function get_student_recent_visits($idNum) {
+    $sql = "SELECT sr.*, t.quantity as medicine_quantity, 
+                   t.remarks, i.genericName,
+                   sv.temperature, sv.bloodPressure, sv.pulse, sv.respiratoryRate
+            FROM studentrecord sr
+            LEFT JOIN transaction t ON sr.ID = t.studentID
+            LEFT JOIN inventory i ON t.itemID = i.itemID
+            LEFT JOIN student_vitals sv ON sr.ID = sv.studentID
+            WHERE sr.idNum = :idNum
+            ORDER BY sr.visitDate DESC
+            LIMIT 10";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':idNum', $idNum, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt;
+}
 }
 ?>

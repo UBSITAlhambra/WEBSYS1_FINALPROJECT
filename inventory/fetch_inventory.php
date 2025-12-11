@@ -35,7 +35,7 @@ foreach ($data as $row) {
     // Determine Status
     $isLowStock = ($quantity <= 10);
     $isExpired = ($daysUntilExpiry <= 0);
-    $isNearExpiry = ($daysUntilExpiry > 0 && $daysUntilExpiry <= 30);
+    $isNearExpiry = ($daysUntilExpiry > 0 && $daysUntilExpiry <= 10);
     
     // FILTER LOGIC: Skip row if it doesn't match the selected filter
     if ($filter === 'low_stock' && !$isLowStock) continue;

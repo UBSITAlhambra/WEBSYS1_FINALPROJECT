@@ -6,8 +6,8 @@
         header('Location: ../login/');
     }
     //NOTIFICATION
-    $low_stock_items = $oop->get_low_stock_items(50); 
-    $expiring_items = $oop->get_expiring_items(90);
+    $low_stock_items = $oop->get_low_stock_items(10); 
+    $expiring_items = $oop->get_expiring_items(10);
     $total_alerts = count($low_stock_items) + count($expiring_items);
 
     $fetch_inventory = $oop->show_inventory();
@@ -339,8 +339,10 @@
 
         <!-- ROWS -->
         <div class="row g-4 mt-2">
+            <center><h5>Search Student Record</h5></center>
             <!-- AJAX SEARCH BAR -->
             <div class="search-bar">
+                <br>
                 <input type="text" id="searchBox" placeholder="Enter Student LRN" oninput="ajaxSearch(this.value)">
                 <button class="search-btn" onclick="ajaxSearch()">Search</button>
             </div>
