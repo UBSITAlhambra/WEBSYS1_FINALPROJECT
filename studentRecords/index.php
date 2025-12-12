@@ -185,8 +185,8 @@ tr:hover { background: #ffeaea; }
             <select id="filter_role" class="filter-select">
                 <option value="all">All Roles</option>
                 <option value="Student">Student</option>
-                <option value="Faculty">Faculty</option>
-                <option value="Staff">Staff</option>
+                <option value="Teaching Staff">Faculty</option>
+                <option value="Non-Teaching Staff">Staff</option>
             </select>
 
             <select id="filter_dept" class="filter-select">

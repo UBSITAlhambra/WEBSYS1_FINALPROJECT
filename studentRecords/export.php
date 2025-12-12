@@ -18,7 +18,7 @@
             $sql_content .= "START TRANSACTION;\n\n";
 
             $table_name = 'studentrecord';
-            $columns = ['ID', 'name', 'idNum', 'department','section', 'complaint', 'visitDate'];
+            $columns = ['ID', 'name', 'idNum','role', 'department','section', 'complaint', 'visitDate'];
             $column_list = implode(', ', $columns);
 
             $sql_content .= "/*!40000 ALTER TABLE `{$table_name}` DISABLE KEYS */; \n";
@@ -54,7 +54,7 @@
             header('Content-Disposition: attachment; filename="' . $filename . '"');
             $output = fopen('php://output', 'w');
 
-            $header_row = ['ID', 'Name', 'ID Number', 'Department','Section', 'Complaint', 'Visit Date'];
+            $header_row = ['ID', 'Name', 'ID Number','Role', 'Department','Section', 'Complaint', 'Visit Date'];
             fputcsv($output, $header_row);
 
             if (!empty($data)) {
@@ -63,6 +63,7 @@
                         $row['ID'], 
                         $row['name'], 
                         $row['idNum'], 
+                        $row['role'],
                         $row['department'], 
                         $row['section'],
                         $row['complaint'], 

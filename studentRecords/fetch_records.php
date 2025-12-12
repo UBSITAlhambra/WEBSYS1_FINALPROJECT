@@ -29,7 +29,7 @@ foreach ($data as $row) {
     // Skip this row if it doesn't match the selected filters
     
     // Role Filter (Exact match)
-    if ($roleFilter !== 'all' && stripos($row['role'], $roleFilter) === false) {
+    if ($roleFilter !== 'all' && strtolower($row['role']) !== strtolower($roleFilter)) {
         continue;
     }
 
