@@ -302,7 +302,7 @@ if (isset($_POST['add'])) {
         
         // Fields required only for Students (and optional for Staff)
         const studentRequiredFields = [
-            { id: 'idNum', label: document.getElementById('idNumLabel'), required: true, newText: 'Student ID Number (LRN)' },
+            { id: 'idNum', label: document.getElementById('idNumLabel'), required: true, newText: 'Student ID Number (12 digits for LRN)' },
             { id: 'department', label: document.getElementById('gradeLabel'), required: true, newText: 'Grade Level' },
             { id: 'section', label: document.getElementById('sectionLabel'), required: true, newText: 'Section' },
             { id: 'gender', label: document.querySelector('label[for="gender"]'), required: true, newText: 'Gender' },
@@ -324,7 +324,7 @@ if (isset($_POST['add'])) {
                     label.classList.add('required-label');
                 }
                 // Update placeholder/text for context
-                if (field.id === 'idNum') element.setAttribute('placeholder', 'Student ID Number (LRN)');
+                if (field.id === 'idNum') element.setAttribute('placeholder', 'Student ID Number (12 digits for LRN)');
                 
             } else {
                 // If staff is selected, fields are OPTIONAL (nulls are passed to PHP)

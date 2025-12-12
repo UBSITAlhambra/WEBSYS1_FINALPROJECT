@@ -49,7 +49,7 @@ foreach ($data as $row) {
         <td><?= htmlspecialchars($row['name'] ?? 'N/A') ?></td>
         <td><?= htmlspecialchars($row['gender'] ?? 'N/A') ?></td>
         <td><?= htmlspecialchars($row['idNum'] ?? 'N/A') ?></td>
-        <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td> 
+        <td><?= htmlspecialchars($row['department'] ?? 'N/A'  )  ?>- <?= htmlspecialchars($row['section'] ?? 'N/A'  )  ?></td> 
         <td><?= htmlspecialchars($row['role'] ?? 'N/A') ?></td> 
         <td><?= htmlspecialchars($row['complaint'] ?? 'N/A') ?></td>
         <td><?= htmlspecialchars($row['temperature'] ?? 'N/A') ?></td>

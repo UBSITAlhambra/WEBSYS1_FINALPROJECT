@@ -78,7 +78,7 @@ INSERT INTO `login` (`ID`, `FirstName`, `MiddleName`, `LastName`, `Email`, `Pass
 CREATE TABLE `studentrecord` (
   `ID` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `idNum` int(11) NOT NULL,
+  `idNum` int(12) NOT NULL,
   `gender` varchar(10) DEFAULT NULL,
   `role` varchar(50) NOT NULL DEFAULT 'Student',
   `department` varchar(30) NOT NULL,
@@ -103,7 +103,7 @@ INSERT INTO `studentrecord` (`ID`, `name`, `idNum`, `gender`, `role`, `departmen
 
 CREATE TABLE `student_vitals` (
   `vitalID` int(11) NOT NULL,
-  `studentID` int(11) NOT NULL,
+  `studentID` int(12) NOT NULL,
   `vitalDate` date NOT NULL,
   `temperature` decimal(4,1) DEFAULT NULL,
   `bloodPressure` varchar(20) DEFAULT NULL,
