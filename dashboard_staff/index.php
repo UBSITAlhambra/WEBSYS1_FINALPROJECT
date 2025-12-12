@@ -329,7 +329,7 @@
         <!-- Header -->
         <div class="d-flex justify-content-between flex-wrap">
             <div>
-                <h2 class="fw-bold mb-1">Welcome, Clinic Staff!</h2>
+                <h2 class="fw-bold mb-1">Welcome, <?php echo $_SESSION['fullname'];?>!</h2>
                 <p class="text-muted">Overview of today's activity</p>
             </div>
             <div class="text-muted small">
@@ -527,6 +527,7 @@ function ajaxSearch() {
             // Force a reload, which will trigger auth_guard.php to kick them out
             window.location.reload();
         }
+        function Executesearch
     });
 
 </script>

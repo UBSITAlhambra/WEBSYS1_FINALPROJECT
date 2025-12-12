@@ -1,3 +1,4 @@
+
 <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 <style>
     :root {
@@ -102,6 +103,8 @@
     <a class="logout-link" href="../login/logout.php">Logout</a>
 
     <div class="text-white-50 small pt-3 text-center">
+    <br> <?php echo $_SESSION['fullname'];?><br>
+    
         Logged in as: <?= htmlspecialchars($role); ?>
     </div>
 
