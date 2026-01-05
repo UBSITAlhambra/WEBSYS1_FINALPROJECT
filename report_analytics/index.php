@@ -1,11 +1,11 @@
 <?php
-// 1. INCLUDE THE GUARD FIRST (Handles session, auth check, and No-Cache headers)
+// 1. INCLUDE THE GUARD FIRST
 include '../login/auth_guard.php'; 
 
 include "oop.php";
 $reports = new reports();
 
-// 2. FETCH ANALYTICS ONLY AFTER AUTH IS CONFIRMED
+// 2. FETCH ANALYTICS
 $topMeds = $reports->top_medicines();
 $monthlyVisits = $reports->visits_per_month();
 $topComplaints = $reports->top_complaints();
@@ -17,222 +17,261 @@ $filterGrade = isset($_GET['grade']) ? $_GET['grade'] : "";
 $activePage = 'reports'; 
 include '../sidebar/sidebar.php'; 
 ?>
-<?php $activePage = 'reports'; ?>
-<?php include '../sidebar/sidebar.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Clinic Reports & Analytics</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Reports Summary</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
-/* ---------- GLOBAL STYLING ---------- */
-:root {
-    --primary-maroon: #800000;
-    --light-bg: #f8f8f8;
-    --box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
+    <style>
+        :root {
+            --primary-maroon: #800000;
+            --accent-maroon: #a52a2a;
+            --bg-gray: #f4f7f6;
+            --text-dark: #333;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
 
-body {
-    margin: 0;
-    background: var(--light-bg);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+        body {
+            margin: 0;
+            background: var(--bg-gray);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            color: var(--text-dark);
+        }
 
-.main-content {
-    margin-left: 250px;
-    padding: 30px 40px;
-    min-height: 100vh;
-}
+        .main-content {
+            margin-left: 250px; /* Aligned with your sidebar width */
+            padding: 40px;
+            transition: var(--transition);
+        }
 
-h2 {
-    color: var(--primary-maroon);
-    text-align: center;
-    margin-bottom: 18px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
+        /* Header Section */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
 
-section {
-    margin: 0 auto 35px auto;
-    max-width: 900px;
-}
+        .dashboard-header h1 {
+            color: var(--primary-maroon);
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 800;
+        }
 
-/* ---------- TABLE STYLE ---------- */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
-}
+        /* Filter Styling */
+        .filter-container {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
 
-th, td {
-    padding: 12px;
-    border: 1px solid #eaeaea;
-    text-align: center;
-    font-size: 0.95rem;
-}
+        .filter-container label {
+            font-weight: 600;
+            color: #666;
+        }
 
-th {
-    background: var(--light-bg);
-    color: var(--primary-maroon);
-    font-weight: 700;
-    border-bottom: 2px solid var(--primary-maroon);
-}
+        .filter-container select {
+            padding: 10px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
 
-tr:nth-child(even) { background: #f7fbfc; }
-tr:hover { background: #ffeaea; }
+        .filter-container select:hover { border-color: var(--primary-maroon); }
 
-/* ---- Styled Dropdown Filter ---- */
-.filter-box {
-    text-align: center;
-    margin-bottom: 25px;
-}
+        /* Card System */
+        .report-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            border-top: 4px solid var(--primary-maroon);
+        }
 
-.filter-form {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: #fff;
-    padding: 12px 20px;
-    border-radius: 10px;
-    box-shadow: var(--box-shadow);
-    border: 1px solid #e3e3e3;
-}
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: var(--primary-maroon);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
 
-.filter-form label {
-    color: var(--primary-maroon);
-    font-weight: 700;
-    font-size: 0.95rem;
-}
+        /* Grid Layout for smaller tables */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
 
-.filter-form select {
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 2px solid #ddd;
-    font-size: 0.95rem;
-    font-weight: 600;
-    background: #fafafa;
-    transition: 0.25s ease;
-}
+        /* Table Modernization */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.filter-form select:hover {
-    border-color: var(--primary-maroon);
-    background: #fff3f3;
-}
+        .styled-table thead tr {
+            background-color: #fcfcfc;
+            color: var(--primary-maroon);
+            text-align: left;
+        }
 
-.filter-form select:focus {
-    outline: none;
-    border-color: var(--primary-maroon);
-    box-shadow: 0 0 6px rgba(128,0,0,0.3);
-}
+        .styled-table th, .styled-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
 
-@media (max-width: 1200px) {
-    .main-content { margin-left: 0; padding: 18px; }
-    table { width: 100%; }
-}
-</style>
+        .styled-table tbody tr:hover {
+            background-color: #fff9f9;
+        }
+
+        /* Badge Styles */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .badge-complaint { background: #fff0f0; color: #d00000; }
+        .badge-student { background: #f0f4ff; color: #0047ab; }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .reports-grid { grid-template-columns: 1fr; }
+            .main-content { margin-left: 0; padding: 20px; }
+        }
+    </style>
 </head>
 
 <body>
-<div class="main-content">
+    <div class="main-content">
+        
+        <header class="dashboard-header">
+            <div>
+                <h1><i class="fas fa-chart-line"></i> Clinic Reports Summary</h1>
+                <p style="color: #888; margin-top: 5px;">Summary of student clinic visits</p>
+            </div>
+            
+            <form method="GET" class="filter-container">
+                <label for="grade"><i class="fas fa-filter"></i> Filter</label>
+                <select id="grade" name="grade" onchange="this.form.submit()">
+                    <option value="">All Grade Levels</option>
+                    <?php for($i=7; $i<=12; $i++): ?>
+                        <option value="Grade <?= $i ?>" <?= ($filterGrade=="Grade $i")?'selected':'' ?>>Grade <?= $i ?></option>
+                    <?php endfor; ?>
+                </select>
+            </form>
+        </header>
 
-<!-- ========================================== -->
-<!-- FILTER BAR                                 -->
-<!-- ========================================== -->
-<h2>Summary Per Grade Level</h2>
+        <section class="report-card">
+            <div class="card-title">
+                <i class="fas fa-table"></i> Grade Level Performance Summary
+            </div>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Grade Level</th>
+                        <th>Section</th>
+                        <th>Top Complaint</th>
+                        <th>Student w/ Most Visits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($summary as $row): ?>
+                        <?php if ($filterGrade == "" || $filterGrade == $row['department']): 
+                            $topComplaint = $reports->top_complaint_by_grade($row['department']);
+                            $topStudent = $reports->top_student_by_grade($row['department']);
+                        ?>
+                            <tr>
+                                <td><strong><?= htmlspecialchars($row['department']) ?></strong></td>
+                                <td><?= htmlspecialchars($row['section']) ?></td>
+                                <td>
+                                    <span class="badge badge-complaint">
+                                        <?= $topComplaint ? htmlspecialchars($topComplaint['complaint']) : "—" ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-student">
+                                        <?= $topStudent ? htmlspecialchars($topStudent['name']) : "—" ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </section>
 
-<div class="filter-box">
-    <form method="GET" class="filter-form">
-        <label for="grade">Filter by Grade:</label>
-        <select id="grade" name="grade" onchange="this.form.submit()">
-            <option value="">Show All Grades</option>
-            <option value="Grade 7"  <?= ($filterGrade=='Grade 7')?'selected':'' ?>>Grade 7</option>
-            <option value="Grade 8"  <?= ($filterGrade=='Grade 8')?'selected':'' ?>>Grade 8</option>
-            <option value="Grade 9"  <?= ($filterGrade=='Grade 9')?'selected':'' ?>>Grade 9</option>
-            <option value="Grade 10" <?= ($filterGrade=='Grade 10')?'selected':'' ?>>Grade 10</option>
-            <option value="Grade 11" <?= ($filterGrade=='Grade 11')?'selected':'' ?>>Grade 11</option>
-            <option value="Grade 12" <?= ($filterGrade=='Grade 12')?'selected':'' ?>>Grade 12</option>
-        </select>
-    </form>
-</div>
+        <div class="reports-grid">
+            
+            <section class="report-card">
+                <div class="card-title">
+                    <i class="fas fa-pills"></i> Most Dispensed
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Medicine</th><th>Quantity</th></tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($topMeds as $m): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($m['medicine']) ?></td>
+                                <td style="font-weight: bold; color: var(--primary-maroon);">
+                                    <?= htmlspecialchars($m['total_dispensed']) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </section>
 
-<!-- ========================================== -->
-<!-- SUMMARY TABLE (PER GRADE TOP 1)           -->
-<!-- ========================================== -->
-<section>
-<table>
-    <tr>
-        <th>Grade Level</th>
-        <th>Section</th>
-        <th>Top Complaint</th>
-        <th>Student w/ Most Visits</th>
-    </tr>
+            <section class="report-card">
+                <div class="card-title">
+                    <i class="fas fa-calendar-alt"></i> Monthly Visit Trends
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Month</th><th>Total Visits</th></tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($monthlyVisits as $month): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($month['month']) ?></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="background: #eee; flex-grow: 1; height: 8px; border-radius: 4px; overflow: hidden;">
+                                            <div style="width: <?= min(($month['total_visits'] * 2), 100) ?>%; background: var(--accent-maroon); height: 100%;"></div>
+                                        </div>
+                                        <span><?= htmlspecialchars($month['total_visits']) ?></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </section>
 
-<?php foreach ($summary as $row): ?>
-    <?php if ($filterGrade == "" || $filterGrade == $row['department']): ?>
+        </div>
+    </div>
 
-        <?php
-        // Get top complaint for this grade
-        $topComplaint = $reports->top_complaint_by_grade($row['department']);
-
-        // Get top student for this grade
-        $topStudent = $reports->top_student_by_grade($row['department']);
-        ?>
-
-        <tr>
-            <td><?= htmlspecialchars($row['department']) ?></td>
-            <td><?= htmlspecialchars($row['section']) ?></td>
-
-            <td><?= $topComplaint ? htmlspecialchars($topComplaint['complaint']) : "No Data" ?></td>
-
-            <td><?= $topStudent ? htmlspecialchars($topStudent['name']) : "No Data" ?></td>
-        </tr>
-
-    <?php endif; ?>
-<?php endforeach; ?>
-
-</table>
-</section>
-
-<!-- ========================================== -->
-<!-- MOST DISPENSED MEDICINES                  -->
-<!-- ========================================== -->
-<h2>Most Dispensed Medicines</h2>
-<section>
-<table>
-    <tr><th>Medicine</th><th>Total Dispensed</th></tr>
-    <?php foreach($topMeds as $m): ?>
-        <tr>
-            <td><?= htmlspecialchars($m['medicine']) ?></td>
-            <td><?= htmlspecialchars($m['total_dispensed']) ?></td>
-        </tr>
-    <?php endforeach; ?>
-</table>
-</section>
-
-<!-- ========================================== -->
-<!-- VISITS PER MONTH                          -->
-<!-- ========================================== -->
-<h2>Visits Per Month</h2>
-<section>
-<table>
-    <tr><th>Month</th><th>Total Visits</th></tr>
-    <?php foreach($monthlyVisits as $month): ?>
-        <tr>
-            <td><?= htmlspecialchars($month['month']) ?></td>
-            <td><?= htmlspecialchars($month['total_visits']) ?></td>
-        </tr>
-    <?php endforeach; ?>
-</table>
-</section>
-
-</div>
-
-<script>
+    <script>
+        // Refresh check for back button
         window.addEventListener('pageshow', function (event) {
             if (event.persisted) {
                 window.location.reload();
